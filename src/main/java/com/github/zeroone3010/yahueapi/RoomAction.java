@@ -14,38 +14,96 @@ import java.util.Optional;
 @JsonInclude(Include.NON_NULL)
 public final class RoomAction {
   private final Boolean on;
+  private final Integer hue;
+  private final Integer sat;
   private final Integer bri;
+  private final Integer ct;
   private final List<Float> xy;
 
   /**
    * @param on         Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
    * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   * @param colorTemperatureInMireks A value from {@code 153} (coldest white) to {@code 500} (warmest white).
    */
   public RoomAction(final boolean on,
-                    final int brightness) {
+                    final int brightness,
+                    final int colorTemperatureInMireks) {
     this.on = on;
     this.bri = brightness;
     this.xy = null;
+    this.hue = null;
+    this.sat = null;
+    this.ct = colorTemperatureInMireks;
   }
 
   /**
    * @param on       Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
    * @param hexColor A hexadecimal color value to be set for the lights -- for example, {@code 00FF00} for green.
    */
-  @JsonCreator
-  public RoomAction(@JsonProperty("on") final boolean on,
-                    @JsonProperty("color") final String hexColor) {
+  public RoomAction(final boolean on,
+                    final String hexColor) {
     this.on = on;
-    final XAndYAndBrightness xAndYAndBrightness = Optional.ofNullable(hexColor)
+    final XAndYAndBrightness xAndYAndBrightness = buildXYAndBrightness(hexColor);
+    this.xy = xAndYAndBrightness.getXY();
+    this.bri = xAndYAndBrightness.getBrightness();
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+  }
+
+  /**
+   * @param on    Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
+   * @param color A color to be set for the lights.
+   */
+  public RoomAction(final boolean on, final Color color) {
+    this.on = on;
+    final XAndYAndBrightness xAndYAndBrightness = rgbToXy(color);
+    this.xy = xAndYAndBrightness.getXY();
+    this.bri = xAndYAndBrightness.getBrightness();
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+  }
+
+  @JsonCreator
+  RoomAction(@JsonProperty("on") final boolean on,
+             @JsonProperty("color") final String hexColor,
+             @JsonProperty("sat") final Integer saturation,
+             @JsonProperty("bri") final Integer brightness,
+             @JsonProperty("hue") final Integer hue,
+             @JsonProperty("ct") final Integer colorTemperature) {
+    if (colorTemperature != null) {
+      this.on = on;
+      this.bri = brightness;
+      this.ct = colorTemperature;
+      this.hue = null;
+      this.sat = null;
+      this.xy = null;
+    } else if (hexColor != null && !hexColor.trim().isEmpty()) {
+      this.on = on;
+      final XAndYAndBrightness xAndYAndBrightness = buildXYAndBrightness(hexColor);
+      this.xy = xAndYAndBrightness.getXY();
+      this.bri = xAndYAndBrightness.getBrightness();
+      this.hue = null;
+      this.sat = null;
+      this.ct = null;
+    } else {
+      this.on = on;
+      this.xy = null;
+      this.bri = brightness;
+      this.hue = hue;
+      this.sat = saturation;
+      this.ct = null;
+    }
+
+  }
+
+  private static XAndYAndBrightness buildXYAndBrightness(final String hexColor) {
+    return Optional.ofNullable(hexColor)
         .map(hex -> Integer.parseInt(hex, 16))
         .map(Color::new)
         .map(RoomAction::rgbToXy)
         .orElse(null);
-    final List<Float> xyColor = new ArrayList<>();
-    xyColor.add(xAndYAndBrightness.getX());
-    xyColor.add(xAndYAndBrightness.getY());
-    this.xy = xyColor;
-    this.bri = xAndYAndBrightness.getBrightness();
   }
 
   public Boolean getOn() {
@@ -58,6 +116,18 @@ public final class RoomAction {
 
   public List<Float> getXy() {
     return xy;
+  }
+
+  public Integer getHue() {
+    return hue;
+  }
+
+  public Integer getSat() {
+    return sat;
+  }
+
+  public Integer getCt() {
+    return 154;
   }
 
   private static XAndYAndBrightness rgbToXy(final Color color) {
@@ -79,7 +149,7 @@ public final class RoomAction {
     return (component > 0.04045f) ? Math.pow((component + 0.055f) / (1.0f + 0.055f), 2.4f) : (component / 12.92f);
   }
 
-  private static class XAndYAndBrightness {
+  private static final class XAndYAndBrightness {
     final float x;
     final float y;
     final int brightness;
@@ -90,12 +160,11 @@ public final class RoomAction {
       this.brightness = brightness;
     }
 
-    float getX() {
-      return x;
-    }
-
-    float getY() {
-      return y;
+    List<Float> getXY() {
+      final List<Float> xyColor = new ArrayList<>();
+      xyColor.add(this.x);
+      xyColor.add(this.y);
+      return xyColor;
     }
 
     int getBrightness() {
