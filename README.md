@@ -37,8 +37,8 @@ Using the rooms and the lights:
 // let's assume we know for a fact it exists and can do the .get() right away:
 final IRoom room = hue.getRoomByName("Basement").get();
 
-// Turn the lights on, make them bright and pink:
-room.setState(new GroupAction(true, 254, java.awt.Color.PINK));
+// Turn the lights on, make them pink:
+room.setState(new RoomAction(true, "FFAFAF"));
 
 // Turn off that single lamp in the corner:
 room.getLightByName("Corner").get().turnOff();
