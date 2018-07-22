@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.Color;
@@ -42,13 +43,7 @@ public final class RoomAction {
    */
   public RoomAction(final boolean on,
                     final String hexColor) {
-    this.on = on;
-    final XAndYAndBrightness xAndYAndBrightness = buildXYAndBrightness(hexColor);
-    this.xy = xAndYAndBrightness.getXY();
-    this.bri = xAndYAndBrightness.getBrightness();
-    this.hue = null;
-    this.sat = null;
-    this.ct = null;
+    this(on, hexToColor(hexColor));
   }
 
   /**
@@ -81,7 +76,7 @@ public final class RoomAction {
       this.xy = null;
     } else if (hexColor != null && !hexColor.trim().isEmpty()) {
       this.on = on;
-      final XAndYAndBrightness xAndYAndBrightness = buildXYAndBrightness(hexColor);
+      final XAndYAndBrightness xAndYAndBrightness = rgbToXy(hexToColor(hexColor));
       this.xy = xAndYAndBrightness.getXY();
       this.bri = xAndYAndBrightness.getBrightness();
       this.hue = null;
@@ -98,11 +93,10 @@ public final class RoomAction {
 
   }
 
-  private static XAndYAndBrightness buildXYAndBrightness(final String hexColor) {
+  private static Color hexToColor(final String hexColor) {
     return Optional.ofNullable(hexColor)
         .map(hex -> Integer.parseInt(hex, 16))
         .map(Color::new)
-        .map(RoomAction::rgbToXy)
         .orElse(null);
   }
 
@@ -147,6 +141,11 @@ public final class RoomAction {
 
   private static double gammaCorrection(float component) {
     return (component > 0.04045f) ? Math.pow((component + 0.055f) / (1.0f + 0.055f), 2.4f) : (component / 12.92f);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
   private static final class XAndYAndBrightness {
