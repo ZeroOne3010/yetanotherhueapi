@@ -121,7 +121,7 @@ public final class RoomAction {
   }
 
   public Integer getCt() {
-    return 154;
+    return ct;
   }
 
   private static XAndYAndBrightness rgbToXy(final Color color) {
