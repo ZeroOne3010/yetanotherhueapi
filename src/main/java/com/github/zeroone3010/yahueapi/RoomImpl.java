@@ -58,7 +58,7 @@ final class RoomImpl implements IRoom {
   }
 
   @Override
-  public void setState(final RoomAction state) {
+  public void setState(final Action state) {
     final String body;
     try {
       body = objectMapper.writeValueAsString(state);

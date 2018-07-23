@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @JsonInclude(Include.NON_NULL)
-public final class RoomAction {
+public final class Action {
   private final Boolean on;
   private final Integer hue;
   private final Integer sat;
@@ -22,13 +22,13 @@ public final class RoomAction {
   private final List<Float> xy;
 
   /**
-   * @param on         Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
+   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
    * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
    * @param colorTemperatureInMireks A value from {@code 153} (coldest white) to {@code 500} (warmest white).
    */
-  public RoomAction(final boolean on,
-                    final int brightness,
-                    final int colorTemperatureInMireks) {
+  public Action(final boolean on,
+                final int brightness,
+                final int colorTemperatureInMireks) {
     this.on = on;
     this.bri = brightness;
     this.xy = null;
@@ -38,19 +38,19 @@ public final class RoomAction {
   }
 
   /**
-   * @param on       Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
-   * @param hexColor A hexadecimal color value to be set for the lights -- for example, {@code 00FF00} for green.
+   * @param on       Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param hexColor A hexadecimal color value to be set for the light(s) -- for example, {@code 00FF00} for green.
    */
-  public RoomAction(final boolean on,
-                    final String hexColor) {
+  public Action(final boolean on,
+                final String hexColor) {
     this(on, hexToColor(hexColor));
   }
 
   /**
-   * @param on    Set to {@code true} to turn all lights on. Set to {@code false} to turn all lights off.
-   * @param color A color to be set for the lights.
+   * @param on    Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param color A color to be set for the light(s).
    */
-  public RoomAction(final boolean on, final Color color) {
+  public Action(final boolean on, final Color color) {
     this.on = on;
     final XAndYAndBrightness xAndYAndBrightness = rgbToXy(color);
     this.xy = xAndYAndBrightness.getXY();
@@ -60,13 +60,16 @@ public final class RoomAction {
     this.ct = null;
   }
 
+  /**
+   * Only to be used from the {@code HueCommandLineInterface} class by its ObjectMapper.
+   */
   @JsonCreator
-  RoomAction(@JsonProperty("on") final boolean on,
-             @JsonProperty("color") final String hexColor,
-             @JsonProperty("sat") final Integer saturation,
-             @JsonProperty("bri") final Integer brightness,
-             @JsonProperty("hue") final Integer hue,
-             @JsonProperty("ct") final Integer colorTemperature) {
+  Action(@JsonProperty("on") final boolean on,
+         @JsonProperty("color") final String hexColor,
+         @JsonProperty("sat") final Integer saturation,
+         @JsonProperty("bri") final Integer brightness,
+         @JsonProperty("hue") final Integer hue,
+         @JsonProperty("ct") final Integer colorTemperature) {
     if (colorTemperature != null) {
       this.on = on;
       this.bri = brightness;
