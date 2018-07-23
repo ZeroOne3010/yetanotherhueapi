@@ -2,6 +2,8 @@ package com.github.zeroone3010.yahueapi;
 
 import org.junit.jupiter.api.Test;
 
+import java.awt.Color;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,11 +20,11 @@ class ActionTest {
   @Test
   void hexColorAndColorConstructorsShouldYieldSameValues() {
     final Action hexColorRed = new Action(true, "FF0000");
-    final Action colorRed = new Action(true, "FF0000");
+    final Action colorRed = new Action(true, Color.RED);
     assertEquals(hexColorRed, colorRed);
 
     final Action hexColorBlue = new Action(true, "0000FF");
-    final Action colorBlue = new Action(true, "0000FF");
+    final Action colorBlue = new Action(true, Color.BLUE);
     assertEquals(hexColorBlue, colorBlue);
   }
 
