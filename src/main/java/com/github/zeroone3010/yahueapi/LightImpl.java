@@ -1,5 +1,6 @@
 package com.github.zeroone3010.yahueapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.zeroone3010.yahueapi.domain.Light;
 import com.github.zeroone3010.yahueapi.domain.LightState;
@@ -15,6 +16,7 @@ final class LightImpl implements ILight {
   private static final String COLOR_MODE = "xy";
   private static final String COLOR_TEMPERATURE_MODE = "ct";
 
+  private static final String ACTION_PATH = "/state";
 
   private final String id;
   private final String name;
@@ -70,6 +72,18 @@ final class LightImpl implements ILight {
   @Override
   public boolean isColorTemperature() {
     return colorTemperature;
+  }
+
+  @Override
+  public void setState(final Action state) {
+    final String body;
+    try {
+      body = objectMapper.writeValueAsString(state);
+    } catch (final JsonProcessingException e) {
+      throw new HueApiException(e);
+    }
+    final String result = HttpUtil.put(baseUrl, ACTION_PATH, body);
+    logger.fine(result);
   }
 
   @Override

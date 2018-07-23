@@ -34,4 +34,10 @@ public interface ILight {
    * @return True if it is a color temperature light, false if it is not.
    */
   boolean isColorTemperature();
+
+  /**
+   * Sets a state for the light.
+   * @param state An action to perform on this light.
+   */
+  void setState(Action state);
 }
