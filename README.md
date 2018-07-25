@@ -42,7 +42,7 @@ Using the rooms and the lights:
 final IRoom room = hue.getRoomByName("Basement").get();
 
 // Turn the lights on, make them pink:
-room.setState(new Action(true, java.awt.Color.PINK));
+room.setState(new State(true, java.awt.Color.PINK));
 
 // Turn off that single lamp in the corner:
 room.getLightByName("Corner").get().turnOff();

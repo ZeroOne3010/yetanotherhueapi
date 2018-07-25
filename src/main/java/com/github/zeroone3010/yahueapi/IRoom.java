@@ -37,7 +37,7 @@ public interface IRoom {
 
   /**
    * Sets a state for the room.
-   * @param state An action to perform on this room.
+   * @param state A state to be set for this room.
    */
-  void setState(Action state);
+  void setState(State state);
 }

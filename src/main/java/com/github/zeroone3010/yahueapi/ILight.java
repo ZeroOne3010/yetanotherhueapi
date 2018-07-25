@@ -37,7 +37,7 @@ public interface ILight {
 
   /**
    * Sets a state for the light.
-   * @param state An action to perform on this light.
+   * @param state A state to be set for this light.
    */
-  void setState(Action state);
+  void setState(State state);
 }

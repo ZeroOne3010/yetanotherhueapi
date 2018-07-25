@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @JsonInclude(Include.NON_NULL)
-public final class Action {
+public final class State {
   private final Boolean on;
   private final Integer hue;
   private final Integer sat;
@@ -26,9 +26,9 @@ public final class Action {
    * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
    * @param colorTemperatureInMireks A value from {@code 153} (coldest white) to {@code 500} (warmest white).
    */
-  public Action(final boolean on,
-                final int brightness,
-                final int colorTemperatureInMireks) {
+  public State(final boolean on,
+               final int brightness,
+               final int colorTemperatureInMireks) {
     this.on = on;
     this.bri = brightness;
     this.xy = null;
@@ -41,8 +41,8 @@ public final class Action {
    * @param on       Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
    * @param hexColor A hexadecimal color value to be set for the light(s) -- for example, {@code 00FF00} for green.
    */
-  public Action(final boolean on,
-                final String hexColor) {
+  public State(final boolean on,
+               final String hexColor) {
     this(on, hexToColor(hexColor));
   }
 
@@ -50,7 +50,7 @@ public final class Action {
    * @param on    Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
    * @param color A color to be set for the light(s).
    */
-  public Action(final boolean on, final Color color) {
+  public State(final boolean on, final Color color) {
     this.on = on;
     final XAndYAndBrightness xAndYAndBrightness = rgbToXy(color);
     this.xy = xAndYAndBrightness.getXY();
@@ -64,12 +64,12 @@ public final class Action {
    * Only to be used from the {@code HueCommandLineInterface} class by its ObjectMapper.
    */
   @JsonCreator
-  Action(@JsonProperty("on") final boolean on,
-         @JsonProperty("color") final String hexColor,
-         @JsonProperty("sat") final Integer saturation,
-         @JsonProperty("bri") final Integer brightness,
-         @JsonProperty("hue") final Integer hue,
-         @JsonProperty("ct") final Integer colorTemperature) {
+  State(@JsonProperty("on") final boolean on,
+        @JsonProperty("color") final String hexColor,
+        @JsonProperty("sat") final Integer saturation,
+        @JsonProperty("bri") final Integer brightness,
+        @JsonProperty("hue") final Integer hue,
+        @JsonProperty("ct") final Integer colorTemperature) {
     if (colorTemperature != null) {
       this.on = on;
       this.bri = brightness;

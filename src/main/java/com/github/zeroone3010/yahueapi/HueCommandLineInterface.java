@@ -24,7 +24,7 @@ public final class HueCommandLineInterface {
       final IRoom targetRoom = hue.getRoomByName(thenRoom).get();
 
       final ObjectMapper objectMapper = new ObjectMapper();
-      targetRoom.setState(objectMapper.readValue(state, Action.class));
+      targetRoom.setState(objectMapper.readValue(state, State.class));
     } else {
       logger.info("No lights on in room '" + conditionRoom + "'.");
     }

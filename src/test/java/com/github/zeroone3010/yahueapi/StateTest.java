@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class ActionTest {
+class StateTest {
 
   private static final String HEX_COLOR = "00FF00";
   private static final Integer SAT = 123;
@@ -19,18 +19,18 @@ class ActionTest {
 
   @Test
   void hexColorAndColorConstructorsShouldYieldSameValues() {
-    final Action hexColorRed = new Action(true, "FF0000");
-    final Action colorRed = new Action(true, Color.RED);
+    final State hexColorRed = new State(true, "FF0000");
+    final State colorRed = new State(true, Color.RED);
     assertEquals(hexColorRed, colorRed);
 
-    final Action hexColorBlue = new Action(true, "0000FF");
-    final Action colorBlue = new Action(true, Color.BLUE);
+    final State hexColorBlue = new State(true, "0000FF");
+    final State colorBlue = new State(true, Color.BLUE);
     assertEquals(hexColorBlue, colorBlue);
   }
 
   @Test
   void jsonCreatorConstructorPrioritizesCtOverOther() {
-    final Action ct = new Action(ON, HEX_COLOR, SAT, BRI, HUE, CT);
+    final State ct = new State(ON, HEX_COLOR, SAT, BRI, HUE, CT);
     assertEquals(ON, ct.getOn());
     assertEquals(BRI, ct.getBri());
     assertEquals(CT, ct.getCt());
@@ -41,7 +41,7 @@ class ActionTest {
 
   @Test
   void jsonCreatorConstructorPrioritizesHexColorOverHueSatBri() {
-    final Action color = new Action(ON, HEX_COLOR, SAT, BRI, HUE, null);
+    final State color = new State(ON, HEX_COLOR, SAT, BRI, HUE, null);
     assertEquals(ON, color.getOn());
     assertNotNull(color.getBri());
     assertNotNull(color.getXy());
@@ -52,7 +52,7 @@ class ActionTest {
 
   @Test
   void jsonCreatorConstructorUsesHueSatBriIfNothingElseGiven() {
-    final Action color = new Action(ON, null, SAT, BRI, HUE, null);
+    final State color = new State(ON, null, SAT, BRI, HUE, null);
     assertEquals(ON, color.getOn());
     assertEquals(HUE, color.getHue());
     assertEquals(SAT, color.getSat());
