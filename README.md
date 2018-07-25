@@ -15,6 +15,7 @@ Usage
 
 If you already have an API key for your Bridge:
 
+[//]: # (init)
 ```java
 final String bridgeIp = "192.168.1.99"; // Fill in the IP address of your Bridge
 final String apiKey = "bn4z908...34jf03jokaf4"; // Fill in an API key to access your Bridge
@@ -22,16 +23,19 @@ final Hue hue = new Hue(bridgeIp, apiKey);
 ```
 
 If you don't have an API key for your bridge:
+
+[//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 ```java
 final String bridgeIp = "192.168.1.99"; // Fill in the IP address of your Bridge
 final String appName = "MyFirstHueApp"; // Fill in the name of your application
-final CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
+final java.util.concurrent.CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
 // Push the button on your Hue Bridge to resolve the apiKey future:
 final Hue hue = new Hue(bridgeIp, apiKey.get());
 ```
 
 Using the rooms and the lights:
 
+[//]: # (requires-init)
 ```java
 // Get a room -- returns Optional.empty() if the room does not exist, but 
 // let's assume we know for a fact it exists and can do the .get() right away:

@@ -67,6 +67,15 @@
             </plugin>
 
         </plugins>
+
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>README.md</include>
+                </includes>
+            </testResource>
+        </testResources>
     </build>
 
     <distributionManagement>
