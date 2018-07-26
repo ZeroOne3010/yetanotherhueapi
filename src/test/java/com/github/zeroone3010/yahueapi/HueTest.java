@@ -39,7 +39,8 @@ class HueTest {
             .withHeader("Content-Type", "application/json")
             .withBody(read)));
 
-    new Hue("localhost:" + wireMockServer.port(), API_KEY);
+    final Hue hue = new Hue("localhost:" + wireMockServer.port(), API_KEY);
+    hue.refresh();
 
     wireMockServer.verify(getRequestedFor(urlEqualTo("/api/" + API_KEY + "/")));
   }

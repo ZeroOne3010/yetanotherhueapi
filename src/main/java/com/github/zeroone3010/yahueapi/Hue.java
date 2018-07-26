@@ -3,11 +3,11 @@ package com.github.zeroone3010.yahueapi;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import com.github.zeroone3010.yahueapi.domain.Group;
 import com.github.zeroone3010.yahueapi.domain.Light;
-import com.github.zeroone3010.yahueapi.domain.Sensor;
-import com.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import com.github.zeroone3010.yahueapi.domain.Root;
+import com.github.zeroone3010.yahueapi.domain.Sensor;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,7 +28,7 @@ public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
 
   private final ObjectMapper objectMapper = new ObjectMapper();
-  private final Root root;
+  private Root root;
   private final String uri;
 
   /**
@@ -40,8 +40,21 @@ public final class Hue {
    */
   public Hue(final String bridgeIp, final String apiKey) {
     this.uri = "http://" + bridgeIp + "/api/" + apiKey + "/";
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
+
+  private void doInitialDataLoadIfRequired() {
+    if (root == null) {
+      refresh();
+    }
+  }
+
+  /**
+   * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
+   * it has been updated since the application was started.
+   */
+  public void refresh() {
     try {
-      objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       root = objectMapper.readValue(new URL(uri), Root.class);
     } catch (final IOException e) {
       throw new HueApiException(e);
@@ -54,6 +67,7 @@ public final class Hue {
    * @return A Set of rooms.
    */
   public Set<IRoom> getRooms() {
+    doInitialDataLoadIfRequired();
     return this.root.getGroups().entrySet().stream()
         .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
         .map(group -> buildRoom(group.getKey(), group.getValue(), root))
@@ -66,6 +80,7 @@ public final class Hue {
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
    */
   public Optional<IRoom> getRoomByName(final String roomName) {
+    doInitialDataLoadIfRequired();
     return this.root.getGroups().entrySet().stream()
         .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
         .filter(room -> Objects.equals(room.getValue().getName(), roomName))
@@ -102,6 +117,7 @@ public final class Hue {
    * @return A Root element, as received from the Bridge REST API.
    */
   public Root getRaw() {
+    doInitialDataLoadIfRequired();
     return this.root;
   }
 
@@ -112,6 +128,7 @@ public final class Hue {
    */
   @Deprecated
   public Set<String> getAllSensorTypes() {
+    doInitialDataLoadIfRequired();
     return this.root.getSensors().values().stream().map(Sensor::getType)
         .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
   }
@@ -123,6 +140,7 @@ public final class Hue {
    */
   @Deprecated
   public Map<String, Sensor> getSensors() {
+    doInitialDataLoadIfRequired();
     return this.root.getSensors();
   }
 
@@ -133,6 +151,7 @@ public final class Hue {
    */
   @Deprecated
   public Map<String, Light> getLights() {
+    doInitialDataLoadIfRequired();
     return this.root.getLights();
   }
 
