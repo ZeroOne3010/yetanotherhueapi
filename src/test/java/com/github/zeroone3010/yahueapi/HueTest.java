@@ -9,14 +9,15 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 class HueTest {
   private static final String API_KEY = "abcd1234";
+  public static final String API_BASE_PATH = "/api/" + API_KEY + "/";
 
   final WireMockServer wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
 
@@ -32,17 +33,13 @@ class HueTest {
 
   @Test
   void testInitialLoading() throws IOException {
-    final String read = readFile("hueRoot.json");
-    wireMockServer.stubFor(get(urlEqualTo("/api/" + API_KEY + "/"))
-        .willReturn(aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(read)));
+    final String hueRoot = readFile("hueRoot.json");
+    wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
 
     final Hue hue = new Hue("localhost:" + wireMockServer.port(), API_KEY);
     hue.refresh();
 
-    wireMockServer.verify(getRequestedFor(urlEqualTo("/api/" + API_KEY + "/")));
+    wireMockServer.verify(getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 
   private String readFile(final String fileName) throws IOException {
