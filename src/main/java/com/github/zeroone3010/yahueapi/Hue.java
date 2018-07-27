@@ -13,8 +13,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,14 +23,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
 
   private final ObjectMapper objectMapper = new ObjectMapper();
-  private Root root;
   private final String uri;
+  private Root root;
+  private Map<String, IRoom> rooms;
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
@@ -59,19 +62,20 @@ public final class Hue {
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
+    this.rooms = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
+        .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
+        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
+        .collect(toMap(IRoom::getName, room -> room)));
   }
 
   /**
    * Returns all the rooms configured into the Bridge.
    *
-   * @return A Set of rooms.
+   * @return A Collection of rooms.
    */
-  public Set<IRoom> getRooms() {
+  public Collection<IRoom> getRooms() {
     doInitialDataLoadIfRequired();
-    return this.root.getGroups().entrySet().stream()
-        .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
-        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
-        .collect(toSet());
+    return Collections.unmodifiableCollection(this.rooms.values());
   }
 
   /**
@@ -81,11 +85,7 @@ public final class Hue {
    */
   public Optional<IRoom> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
-    return this.root.getGroups().entrySet().stream()
-        .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
-        .filter(room -> Objects.equals(room.getValue().getName(), roomName))
-        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
-        .findFirst();
+    return Optional.ofNullable(this.rooms.get(roomName));
   }
 
   private IRoom buildRoom(final String groupId, final Group group, final Root root) {
