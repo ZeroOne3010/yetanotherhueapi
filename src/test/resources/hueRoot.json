@@ -1,1 +1,34 @@
-{}
+{
+  "lights": {
+    "100": {
+      "state": {
+        "colormode": "xy"
+      }
+    },
+    "101": {
+      "state": {
+        "colormode": "ct"
+      }
+    },
+    "200": {
+      "state": {}
+    }
+  },
+  "groups": {
+    "1": {
+      "name": "Living room",
+      "type": "Room",
+      "lights": [
+        "100",
+        "101"
+      ]
+    },
+    "2": {
+      "name": "Bedroom",
+      "type": "Room",
+      "lights": [
+        "200"
+      ]
+    }
+  }
+}
