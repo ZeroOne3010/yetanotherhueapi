@@ -2,32 +2,647 @@
   "lights": {
     "100": {
       "state": {
-        "colormode": "xy"
-      }
+        "on": false,
+        "bri": 254,
+        "hue": 33016,
+        "sat": 53,
+        "effect": "none",
+        "xy": [
+          0.3689,
+          0.3719
+        ],
+        "ct": 230,
+        "alert": "none",
+        "colormode": "xy",
+        "mode": "homeautomation",
+        "reachable": true
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": "2017-11-28T10:00:00"
+      },
+      "type": "Extended color light",
+      "name": "LR 1",
+      "modelid": "LCT003",
+      "manufacturername": "Philips",
+      "productname": "Hue color spot",
+      "capabilities": {
+        "certified": true,
+        "control": {
+          "mindimlevel": 5000,
+          "maxlumen": 250,
+          "colorgamuttype": "B",
+          "colorgamut": [
+            [
+              0.6750,
+              0.3220
+            ],
+            [
+              0.4090,
+              0.5180
+            ],
+            [
+              0.1670,
+              0.0400
+            ]
+          ],
+          "ct": {
+            "min": 153,
+            "max": 500
+          }
+        },
+        "streaming": {
+          "renderer": true,
+          "proxy": true
+        }
+      },
+      "config": {
+        "archetype": "spotbulb",
+        "function": "mixed",
+        "direction": "downwards"
+      },
+      "uniqueid": "00:17:aa:ee:aa:ee:11:22-34",
+      "swversion": "5.105.0.21536"
     },
     "101": {
       "state": {
-        "colormode": "ct"
-      }
+        "on": false,
+        "bri": 254,
+        "ct": 230,
+        "alert": "none",
+        "colormode": "ct",
+        "mode": "homeautomation",
+        "reachable": true
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": "2017-11-28T10:01:01"
+      },
+      "type": "Color temperature light",
+      "name": "LR 2",
+      "modelid": "LTW013",
+      "manufacturername": "Philips",
+      "productname": "Hue ambiance spot",
+      "capabilities": {
+        "certified": true,
+        "control": {
+          "mindimlevel": 1000,
+          "maxlumen": 250,
+          "ct": {
+            "min": 153,
+            "max": 454
+          }
+        },
+        "streaming": {
+          "renderer": false,
+          "proxy": false
+        }
+      },
+      "config": {
+        "archetype": "spotbulb",
+        "function": "functional",
+        "direction": "downwards"
+      },
+      "uniqueid": "00:17:88:bb:bb:bb:cc:cc-11",
+      "swversion": "1.29.0_r21169",
+      "swconfigid": "797DDD7C",
+      "productid": "Philips-LTW013-1-GU10CTv1"
     },
     "200": {
-      "state": {}
+      "state": {
+        "on": true,
+        "bri": 144,
+        "ct": 443,
+        "alert": "none",
+        "colormode": "ct",
+        "mode": "homeautomation",
+        "reachable": true
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": "2018-05-10T11:22:33"
+      },
+      "type": "Color temperature light",
+      "name": "Pendant",
+      "modelid": "LTP003",
+      "manufacturername": "Philips",
+      "productname": "Hue ambiance pendant",
+      "capabilities": {
+        "certified": true,
+        "control": {
+          "mindimlevel": 1000,
+          "maxlumen": 3000,
+          "ct": {
+            "min": 153,
+            "max": 454
+          }
+        },
+        "streaming": {
+          "renderer": false,
+          "proxy": false
+        }
+      },
+      "config": {
+        "archetype": "pendantround",
+        "function": "functional",
+        "direction": "downwards"
+      },
+      "uniqueid": "00:17:88:44:44:33:55:11-00",
+      "swversion": "1.30.4_r23032",
+      "swconfigid": "4DECC9A6",
+      "productid": "ENA_LTP003_1_FairPendant_v1"
+    },
+    "300": {
+      "state": {
+        "on": false,
+        "bri": 254,
+        "hue": 38677,
+        "sat": 61,
+        "effect": "none",
+        "xy": [
+          0.3678,
+          0.3720
+        ],
+        "alert": "select",
+        "colormode": "xy",
+        "mode": "homeautomation",
+        "reachable": true
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": "2017-05-01T15:15:15"
+      },
+      "type": "Color light",
+      "name": "LED strip 1",
+      "modelid": "LST001",
+      "manufacturername": "Philips",
+      "productname": "Hue lightstrip",
+      "capabilities": {
+        "certified": true,
+        "control": {
+          "mindimlevel": 5000,
+          "maxlumen": 120,
+          "colorgamuttype": "A",
+          "colorgamut": [
+            [
+              0.7040,
+              0.2960
+            ],
+            [
+              0.2151,
+              0.7106
+            ],
+            [
+              0.1380,
+              0.0800
+            ]
+          ]
+        },
+        "streaming": {
+          "renderer": true,
+          "proxy": false
+        }
+      },
+      "config": {
+        "archetype": "huelightstrip",
+        "function": "mixed",
+        "direction": "omnidirectional"
+      },
+      "uniqueid": "00:17:88:77:ee:77:ee:77-e1",
+      "swversion": "5.105.1.21778"
     }
   },
   "groups": {
     "1": {
       "name": "Living room",
-      "type": "Room",
       "lights": [
         "100",
         "101"
-      ]
+      ],
+      "type": "Room",
+      "state": {
+        "all_on": false,
+        "any_on": false
+      },
+      "recycle": false,
+      "class": "Living room",
+      "action": {
+        "on": false,
+        "bri": 254,
+        "hue": 33016,
+        "sat": 53,
+        "effect": "none",
+        "xy": [
+          0.3689,
+          0.3719
+        ],
+        "ct": 230,
+        "alert": "none",
+        "colormode": "ct"
+      }
     },
     "2": {
       "name": "Bedroom",
-      "type": "Room",
       "lights": [
         "200"
+      ],
+      "type": "Room",
+      "state": {
+        "all_on": true,
+        "any_on": true
+      },
+      "recycle": false,
+      "class": "Bedroom",
+      "action": {
+        "on": true,
+        "bri": 144,
+        "ct": 443,
+        "alert": "none",
+        "colormode": "ct"
+      }
+    },
+    "3": {
+      "name": "Hallway 1",
+      "lights": [
+        "300"
+      ],
+      "type": "Room",
+      "state": {
+        "all_on": true,
+        "any_on": true
+      },
+      "recycle": false,
+      "class": "Hallway",
+      "action": {
+        "on": true,
+        "bri": 254,
+        "ct": 366,
+        "alert": "none",
+        "colormode": "ct"
+      }
+    }
+  },
+  "config": {
+    "name": "Philips hue",
+    "zigbeechannel": 11,
+    "bridgeid": "123456789ABC",
+    "mac": "00:17:11:22:33:aa",
+    "dhcp": true,
+    "ipaddress": "192.168.1.99",
+    "netmask": "255.255.255.0",
+    "gateway": "192.168.1.1",
+    "proxyaddress": "none",
+    "proxyport": 0,
+    "UTC": "2018-07-29T11:11:11",
+    "localtime": "2018-07-29T14:11:11",
+    "timezone": "Europe/Helsinki",
+    "modelid": "BSB002",
+    "datastoreversion": "71",
+    "swversion": "1806051111",
+    "apiversion": "1.26.0",
+    "swupdate": {
+      "updatestate": 0,
+      "checkforupdate": false,
+      "devicetypes": {
+        "bridge": false,
+        "lights": [],
+        "sensors": []
+      },
+      "url": "",
+      "text": "",
+      "notify": true
+    },
+    "swupdate2": {
+      "checkforupdate": false,
+      "lastchange": "2018-07-19T02:01:01",
+      "bridge": {
+        "state": "noupdates",
+        "lastinstall": "2018-07-19T02:02:02"
+      },
+      "state": "noupdates",
+      "autoinstall": {
+        "updatetime": "T14:00:41",
+        "on": false
+      }
+    },
+    "linkbutton": false,
+    "portalservices": true,
+    "portalconnection": "connected",
+    "portalstate": {
+      "signedon": true,
+      "incoming": false,
+      "outgoing": true,
+      "communication": "disconnected"
+    },
+    "internetservices": {
+      "internet": "connected",
+      "remoteaccess": "connected",
+      "time": "connected",
+      "swupdate": "connected"
+    },
+    "factorynew": false,
+    "replacesbridgeid": null,
+    "backup": {
+      "status": "idle",
+      "errorcode": 0
+    },
+    "starterkitid": "",
+    "whitelist": {
+      "6655664454522131aaaeeaaeaeaeaea": {
+        "last use date": "2018-07-28T23:23:23",
+        "create date": "2015-01-09T19:19:19",
+        "name": "Some application"
+      }
+    }
+  },
+  "schedules": {
+    "1": {
+      "name": "Some Totally Random Schedule",
+      "description": "Does something random",
+      "command": {
+        "address": "/api/6655664454522131aaaeeaaeaeaeaea/sensors/1/state",
+        "body": {
+          "status": 0
+        },
+        "method": "PUT"
+      },
+      "localtime": "PT00:00:10",
+      "time": "PT00:00:10",
+      "created": "2018-07-28T21:12:00",
+      "status": "disabled",
+      "autodelete": false,
+      "starttime": "2018-07-28T21:12:00",
+      "recycle": true
+    }
+  },
+  "scenes": {
+    "sjJk3kjKBJkf3kh": {
+      "name": "Tropical twilight",
+      "lights": [
+        "100",
+        "101"
+      ],
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "recycle": false,
+      "locked": false,
+      "appdata": {
+        "version": 1,
+        "data": "MKoLK_r01_d21"
+      },
+      "picture": "",
+      "lastupdated": "2018-01-19T01:23:45",
+      "version": 2
+    }
+  },
+  "rules": {
+    "1": {
+      "name": "Dimmer Switch 4 on0",
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "created": "2017-07-14T14:04:04",
+      "lasttriggered": "2018-07-27T13:00:13",
+      "timestriggered": 5,
+      "status": "enabled",
+      "recycle": true,
+      "conditions": [
+        {
+          "address": "/sensors/4/state/buttonevent",
+          "operator": "eq",
+          "value": "1000"
+        },
+        {
+          "address": "/sensors/4/state/lastupdated",
+          "operator": "dx"
+        },
+        {
+          "address": "/sensors/5/state/status",
+          "operator": "lt",
+          "value": "1"
+        }
+      ],
+      "actions": [
+        {
+          "address": "/groups/1/action",
+          "method": "PUT",
+          "body": {
+            "on": true
+          }
+        }
+      ]
+    },
+    "2": {
+      "name": "MotionSensor 16.night-on",
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "created": "2017-06-06T19:19:19",
+      "lasttriggered": "2018-07-28T23:22:06",
+      "timestriggered": 888,
+      "status": "enabled",
+      "recycle": true,
+      "conditions": [
+        {
+          "address": "/sensors/18/state/status",
+          "operator": "lt",
+          "value": "1"
+        },
+        {
+          "address": "/config/localtime",
+          "operator": "in",
+          "value": "T23:00:00/T06:00:00"
+        },
+        {
+          "address": "/sensors/17/state/dark",
+          "operator": "eq",
+          "value": "true"
+        },
+        {
+          "address": "/sensors/16/state/presence",
+          "operator": "eq",
+          "value": "true"
+        },
+        {
+          "address": "/sensors/16/state/presence",
+          "operator": "dx"
+        }
+      ],
+      "actions": [
+        {
+          "address": "/groups/3/action",
+          "method": "PUT",
+          "body": {
+            "scene": "sjJk3kjKBJkf3kh"
+          }
+        }
+      ]
+    }
+  },
+  "sensors": {
+    "1": {
+      "state": {
+        "daylight": true,
+        "lastupdated": "2018-07-29T02:22:00"
+      },
+      "config": {
+        "on": true,
+        "configured": true,
+        "sunriseoffset": 30,
+        "sunsetoffset": -30
+      },
+      "name": "Daylight",
+      "type": "Daylight",
+      "modelid": "PHDL00",
+      "manufacturername": "Philips",
+      "swversion": "1.0"
+    },
+    "4": {
+      "state": {
+        "buttonevent": 4002,
+        "lastupdated": "2018-07-28T21:12:00"
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": null
+      },
+      "config": {
+        "on": true,
+        "battery": 100,
+        "reachable": true,
+        "pending": []
+      },
+      "name": "Living room door",
+      "type": "ZLLSwitch",
+      "modelid": "RWL021",
+      "manufacturername": "Philips",
+      "productname": "Hue dimmer switch",
+      "swversion": "5.45.1.17846",
+      "uniqueid": "00:17:88:55:55:55:44:66-22-ffcc",
+      "capabilities": {
+        "certified": true
+      }
+    },
+    "15": {
+      "state": {
+        "temperature": 2953,
+        "lastupdated": "2018-07-29T11:15:51"
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": null
+      },
+      "config": {
+        "on": true,
+        "battery": 100,
+        "reachable": true,
+        "alert": "none",
+        "ledindication": false,
+        "usertest": false,
+        "pending": []
+      },
+      "name": "Hue temperature sensor 1",
+      "type": "ZLLTemperature",
+      "modelid": "SML001",
+      "manufacturername": "Philips",
+      "productname": "Hue temperature sensor",
+      "swversion": "6.1.0.18912",
+      "uniqueid": "00:17:88:97:97:97:97:64-64-bbbb",
+      "capabilities": {
+        "certified": true
+      }
+    },
+    "16": {
+      "state": {
+        "presence": false,
+        "lastupdated": "2018-07-29T06:06:06"
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": null
+      },
+      "config": {
+        "on": true,
+        "battery": 100,
+        "reachable": true,
+        "alert": "none",
+        "ledindication": false,
+        "usertest": false,
+        "sensitivity": 2,
+        "sensitivitymax": 2,
+        "pending": []
+      },
+      "name": "Hallway sensor",
+      "type": "ZLLPresence",
+      "modelid": "SML001",
+      "manufacturername": "Philips",
+      "productname": "Hue motion sensor",
+      "swversion": "6.1.0.18912",
+      "uniqueid": "00:17:88:33:33:33:33:00-00-000a",
+      "capabilities": {
+        "certified": true
+      }
+    },
+    "17": {
+      "state": {
+        "lightlevel": 15621,
+        "dark": true,
+        "daylight": false,
+        "lastupdated": "2018-07-29T03:03:03"
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": null
+      },
+      "config": {
+        "on": true,
+        "battery": 100,
+        "reachable": true,
+        "alert": "none",
+        "tholddark": 16000,
+        "tholdoffset": 7000,
+        "ledindication": false,
+        "usertest": false,
+        "pending": []
+      },
+      "name": "Hue ambient light sensor 1",
+      "type": "ZLLLightLevel",
+      "modelid": "SML001",
+      "manufacturername": "Philips",
+      "productname": "Hue ambient light sensor",
+      "swversion": "6.1.0.18912",
+      "uniqueid": "00:17:88:88:88:88:88:00-88-8800",
+      "capabilities": {
+        "certified": true
+      }
+    },
+    "18": {
+      "state": {
+        "status": 1,
+        "lastupdated": "2018-07-29T11:22:33"
+      },
+      "config": {
+        "on": true,
+        "reachable": true
+      },
+      "name": "MotionSensor 16.Companion",
+      "type": "CLIPGenericStatus",
+      "modelid": "PHA_STATE",
+      "manufacturername": "Philips",
+      "swversion": "1.0",
+      "uniqueid": "MotionSensor 16.Companion",
+      "recycle": true
+    }
+  },
+  "resourcelinks": {
+    "27890": {
+      "name": "MotionSensor 16",
+      "description": "MotionSensor 16 behavior",
+      "type": "Link",
+      "classid": 10020,
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "recycle": false,
+      "links": [
+        "/sensors/16",
+        "/sensors/17",
+        "/sensors/18",
+        "/groups/3",
+        "/scenes/sjJk3kjKBJkf3kh"
       ]
     }
   }

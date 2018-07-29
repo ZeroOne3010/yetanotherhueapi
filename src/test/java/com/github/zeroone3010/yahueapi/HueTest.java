@@ -56,7 +56,7 @@ class HueTest {
   void testGetRooms() throws IOException {
     final Hue hue = createHueAndInitializeMockServer();
 
-    assertEquals(2, hue.getRooms().size());
+    assertEquals(3, hue.getRooms().size());
     hue.getRooms();
     hue.getRooms();
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
