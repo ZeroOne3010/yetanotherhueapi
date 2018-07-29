@@ -27,6 +27,9 @@ final class LightImpl implements ILight {
 
   LightImpl(final String id, final Light light, final URL url, final ObjectMapper objectMapper) {
     this.id = id;
+    if (light == null) {
+      throw new HueApiException("Light " + id + " cannot be found.");
+    }
     this.name = light.getName();
     this.color = Objects.equals(COLOR_MODE, light.getState().getColorMode());
     this.colorTemperature = Objects.equals(COLOR_TEMPERATURE_MODE, light.getState().getColorMode());
