@@ -25,15 +25,9 @@ public interface ILight {
 
   /**
    * Returns info on the type of the light.
-   * @return True if it is a color light, false if it is not.
+   * @return An enum value specifying the color and dimming capabilities of the light.
    */
-  boolean isColor();
-
-  /**
-   * Returns info on the type of the light.
-   * @return True if it is a color temperature light, false if it is not.
-   */
-  boolean isColorTemperature();
+  LightType getType();
 
   /**
    * Sets a state for the light.

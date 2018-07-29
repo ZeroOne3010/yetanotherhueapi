@@ -72,6 +72,17 @@ class HueTest {
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 
+  @Test
+  void testLightTypes() throws IOException {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertEquals(LightType.EXTENDED_COLOR,
+        hue.getRoomByName("Living room").get().getLightByName("LR 1").get().getType());
+    assertEquals(LightType.COLOR_TEMPERATURE,
+        hue.getRoomByName("Living room").get().getLightByName("LR 2").get().getType());
+    assertEquals(LightType.COLOR,
+        hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get().getType());
+  }
+
   private String readFile(final String fileName) throws IOException {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());

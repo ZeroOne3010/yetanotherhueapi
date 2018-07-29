@@ -7,23 +7,18 @@ import com.github.zeroone3010.yahueapi.domain.LightState;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 final class LightImpl implements ILight {
   private static final Logger logger = Logger.getLogger("LightImpl");
   private static final String STATE_PATH = "/state";
-  private static final String COLOR_MODE = "xy";
-  private static final String COLOR_TEMPERATURE_MODE = "ct";
-
   private static final String ACTION_PATH = "/state";
 
   private final String id;
   private final String name;
   private final URL baseUrl;
   private final ObjectMapper objectMapper;
-  private final boolean color;
-  private final boolean colorTemperature;
+  private final LightType type;
 
   LightImpl(final String id, final Light light, final URL url, final ObjectMapper objectMapper) {
     this.id = id;
@@ -31,10 +26,9 @@ final class LightImpl implements ILight {
       throw new HueApiException("Light " + id + " cannot be found.");
     }
     this.name = light.getName();
-    this.color = Objects.equals(COLOR_MODE, light.getState().getColorMode());
-    this.colorTemperature = Objects.equals(COLOR_TEMPERATURE_MODE, light.getState().getColorMode());
     this.baseUrl = url;
     this.objectMapper = objectMapper;
+    this.type = LightType.parseTypeString(light.getType());
   }
 
   @Override
@@ -68,16 +62,6 @@ final class LightImpl implements ILight {
   }
 
   @Override
-  public boolean isColor() {
-    return color;
-  }
-
-  @Override
-  public boolean isColorTemperature() {
-    return colorTemperature;
-  }
-
-  @Override
   public void setState(final State state) {
     final String body;
     try {
@@ -90,12 +74,16 @@ final class LightImpl implements ILight {
   }
 
   @Override
+  public LightType getType() {
+    return type;
+  }
+
+  @Override
   public String toString() {
     return "Light{" +
         "id='" + id + '\'' +
         ", name='" + name + '\'' +
-        ", color=" + color +
-        ", colorTemperature=" + colorTemperature +
+        ", type=" + type +
         '}';
   }
 }
