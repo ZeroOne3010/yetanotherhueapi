@@ -33,7 +33,7 @@ class HueTest {
     wireMockServer.stop();
   }
 
-  private Hue createHueAndInitializeMockServer() throws IOException {
+  private Hue createHueAndInitializeMockServer() {
     final String hueRoot = readFile("hueRoot.json");
     wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
 
@@ -41,7 +41,7 @@ class HueTest {
   }
 
   @Test
-  void testInitializationAndRefresh() throws IOException {
+  void testInitializationAndRefresh() {
     final Hue hue = createHueAndInitializeMockServer();
     wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH)));
 
@@ -53,7 +53,7 @@ class HueTest {
   }
 
   @Test
-  void testGetRooms() throws IOException {
+  void testGetRooms() {
     final Hue hue = createHueAndInitializeMockServer();
 
     assertEquals(3, hue.getRooms().size());
@@ -63,7 +63,7 @@ class HueTest {
   }
 
   @Test
-  void testGetRoomByName() throws IOException {
+  void testGetRoomByName() {
     final Hue hue = createHueAndInitializeMockServer();
 
     assertEquals(2, hue.getRoomByName("Living room").get().getLights().size());
@@ -73,7 +73,7 @@ class HueTest {
   }
 
   @Test
-  void testLightTypes() throws IOException {
+  void testLightTypes() {
     final Hue hue = createHueAndInitializeMockServer();
     assertEquals(LightType.EXTENDED_COLOR,
         hue.getRoomByName("Living room").get().getLightByName("LR 1").get().getType());
@@ -83,9 +83,13 @@ class HueTest {
         hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get().getType());
   }
 
-  private String readFile(final String fileName) throws IOException {
+  private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());
-    return Files.read(file);
+    try {
+      return Files.read(file);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
