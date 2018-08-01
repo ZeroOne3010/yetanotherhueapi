@@ -34,4 +34,10 @@ public interface ILight {
    * @param state A state to be set for this light.
    */
   void setState(State state);
+
+  /**
+   * Gets the state of the light.
+   * @return The current state of the light.
+   */
+  State getState();
 }

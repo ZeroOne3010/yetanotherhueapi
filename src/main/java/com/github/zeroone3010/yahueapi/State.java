@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,37 @@ public final class State {
     this.bri = xAndYAndBrightness.getBrightness();
     this.hue = null;
     this.sat = null;
+    this.ct = null;
+  }
+
+  /**
+   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param xy         The x and y coordinates of the C.I.E. chromaticity diagram
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   */
+  public State(final boolean on, final List<Float> xy, final int brightness) {
+    final List<Float> xyValues = new ArrayList<>(2);
+    xyValues.addAll(xy);
+    this.on = on;
+    this.xy = Collections.unmodifiableList(xyValues);
+    this.bri = brightness;
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+  }
+
+  /**
+   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param hue        Hue, from {@code 0} to {@code 65280}.
+   * @param saturation Saturation, from 0 to 254.
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   */
+  public State(final boolean on, final int hue, final int saturation, final int brightness) {
+    this.on = on;
+    this.xy = null;
+    this.bri = brightness;
+    this.hue = hue;
+    this.sat = saturation;
     this.ct = null;
   }
 

@@ -67,7 +67,7 @@
     "101": {
       "state": {
         "on": false,
-        "bri": 254,
+        "bri": 123,
         "ct": 230,
         "alert": "none",
         "colormode": "ct",
@@ -154,8 +154,8 @@
     },
     "300": {
       "state": {
-        "on": false,
-        "bri": 254,
+        "on": true,
+        "bri": 42,
         "hue": 38677,
         "sat": 61,
         "effect": "none",
@@ -164,7 +164,7 @@
           0.3720
         ],
         "alert": "select",
-        "colormode": "xy",
+        "colormode": "hs",
         "mode": "homeautomation",
         "reachable": true
       },

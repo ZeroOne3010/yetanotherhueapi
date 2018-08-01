@@ -79,6 +79,28 @@ final class LightImpl implements ILight {
   }
 
   @Override
+  public State getState() {
+    try {
+      final LightState state = objectMapper.readValue(baseUrl, Light.class).getState();
+      logger.fine(state.toString());
+      if (state.getColorMode() == null) {
+        return new State(state.isOn(), state.getBrightness(), 0);
+      }
+      switch (state.getColorMode()) {
+        case "xy":
+          return new State(state.isOn(), state.getXy(), state.getBrightness());
+        case "ct":
+          return new State(state.isOn(), state.getBrightness(), state.getCt());
+        case "hs":
+          return new State(state.isOn(), state.getHue(), state.getSaturation(), state.getBrightness());
+      }
+      throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+  }
+
+  @Override
   public String toString() {
     return "Light{" +
         "id='" + id + '\'' +
