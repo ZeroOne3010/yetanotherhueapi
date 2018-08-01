@@ -18,7 +18,7 @@ public class LightState {
     @JsonProperty("effect")
     private String effect;
     @JsonProperty("xy")
-    private List<Integer> xy;
+    private List<Float> xy;
     @JsonProperty("ct")
     private int ct;
     @JsonProperty("alert")
@@ -70,11 +70,11 @@ public class LightState {
         this.effect = effect;
     }
 
-    public List<Integer> getXy() {
+    public List<Float> getXy() {
         return xy;
     }
 
-    public void setXy(List<Integer> xy) {
+    public void setXy(List<Float> xy) {
         this.xy = xy;
     }
 
