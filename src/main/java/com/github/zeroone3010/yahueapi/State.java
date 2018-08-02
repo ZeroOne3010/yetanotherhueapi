@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @JsonInclude(Include.NON_NULL)
@@ -179,8 +180,21 @@ public final class State {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return EqualsBuilder.reflectionEquals(this, obj);
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final State state = (State) o;
+    return Objects.equals(on, state.on) &&
+        Objects.equals(hue, state.hue) &&
+        Objects.equals(sat, state.sat) &&
+        Objects.equals(bri, state.bri) &&
+        Objects.equals(ct, state.ct) &&
+        Objects.equals(xy, state.xy);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(on, hue, sat, bri, ct, xy);
   }
 
   private static final class XAndYAndBrightness {
@@ -207,7 +221,11 @@ public final class State {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this);
+      try {
+        return new ObjectMapper().writeValueAsString(this);
+      } catch (final JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }
