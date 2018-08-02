@@ -12,6 +12,16 @@
     <name>YetAnotherHueApi</name>
 
     <build>
+
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>README.md</include>
+                </includes>
+            </testResource>
+        </testResources>
+
         <plugins>
 
             <plugin>
@@ -32,7 +42,7 @@
                 </dependencies>
             </plugin>
 
-            <!-- Begin "Hosting a Maven repository on GitMub"
+            <!-- Begin "Hosting a Maven repository on GitHub"
                  https://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github -->
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -44,15 +54,6 @@
             </plugin>
 
         </plugins>
-
-        <testResources>
-            <testResource>
-                <directory>${project.basedir}</directory>
-                <includes>
-                    <include>README.md</include>
-                </includes>
-            </testResource>
-        </testResources>
     </build>
 
     <distributionManagement>
@@ -62,7 +63,7 @@
             <url>file://${project.build.directory}/mvn-repo</url>
         </repository>
     </distributionManagement>
-    <!-- End "Hosting a Maven repository on GitHub"s -->
+    <!-- End "Hosting a Maven repository on GitHub" -->
 
     <dependencies>
         <dependency>
