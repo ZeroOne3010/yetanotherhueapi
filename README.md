@@ -4,14 +4,8 @@ Yet Another Hue API
 This is a Java 8 API for the Philips Hue lights. It does not use the official 
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
 
-This library can be used in two ways: 
-1. As a library, included in another project
-2. As a stand-alone software, with a very simple and very limited command line interface
-
 Usage
 -----
-
-### As a library 
 
 If you already have an API key for your Bridge:
 
@@ -48,7 +42,7 @@ room.setState(new State(true, java.awt.Color.PINK));
 room.getLightByName("Corner").get().turnOff();
 ```
 
-#### Including the library with Maven
+### Including the library with Maven
 
 Add the following to your pom.xml file:
 
@@ -67,31 +61,6 @@ Add the following to your pom.xml file:
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
-```
-
-### As stand-alone software
-
-Enter the Bridge IP as the first command line argument. 
-Enter the API key as the second command line argument.
-
-Use the following environment variables to create simple conditional actions:
-* `ifAnyOn`
-* `thenRoom`
-* `state`
-
-For example, to set a red color to Bedroom when there are
-any lights on in the Hallway, use these parameters:
-
-```
--DifAnyOn=Hallway 
--DthenRoom=Bedroom 
--Dstate={\"on\":true,\"color\":\"FF0000\"}
-```
-
-A complete example of a command line:
-
-```
-java -DifAnyOn="Hallway" -DthenRoom="Bedroom" -Dstate="{\"on\":true,\"color\":\"FF0000\"}" -jar yetanotherhueapi-0.0.1-jar-with-dependencies.jar 192.168.1.99 d3908jOKd208jLKJaD8jd2l2djlkncbbMBN39918
 ```
 
 Scope and philosophy
