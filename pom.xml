@@ -20,6 +20,9 @@
                     <include>README.md</include>
                 </includes>
             </testResource>
+            <testResource>
+                <directory>${project.basedir}/src/test/resources</directory>
+            </testResource>
         </testResources>
 
         <plugins>
