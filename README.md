@@ -70,4 +70,5 @@ This library is not intended to have all the possible functionality of the SDK
 or the REST API. Instead it is focusing on the essentials: querying and setting
 the states of the rooms and the lights. And this library should do those 
 essential functions well: in an intuitive and usable way for the programmer.
-The number of external dependencies should also be kept to a minimum.
+The number of external dependencies should be kept to a minimum.
+Version numbering follows the [Semantic Versioning](https://semver.org/).
