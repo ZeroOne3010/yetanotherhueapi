@@ -42,7 +42,24 @@ public final class Hue {
    * @param apiKey   The API key of your application.
    */
   public Hue(final String bridgeIp, final String apiKey) {
-    this.uri = "http://" + bridgeIp + "/api/" + apiKey + "/";
+    this(HueBridgeProtocol.HTTP, bridgeIp, apiKey);
+  }
+
+  /**
+   * A basic constructor for initializing the Hue Bridge connection for this library.
+   * Use the {@code hueBridgeConnectionBuilder} method if you do not have an API key yet.
+   *
+   * @param protocol The desired protocol for the Bridge connection. HTTP or UNVERIFIED_HTTPS,
+   *                 as the certificate that the Bridge uses cannot be verified. Defaults to HTTP
+   *                 when using the other constructor.
+   * @param bridgeIp The IP address of the Hue Bridge.
+   * @param apiKey   The API key of your application.
+   */
+  public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
+    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
+    if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
+      TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+    }
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
