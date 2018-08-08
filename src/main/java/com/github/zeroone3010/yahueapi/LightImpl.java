@@ -13,6 +13,7 @@ final class LightImpl implements ILight {
   private static final Logger logger = Logger.getLogger("LightImpl");
   private static final String STATE_PATH = "/state";
   private static final String ACTION_PATH = "/state";
+  private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 
   private final String id;
   private final String name;
@@ -84,7 +85,7 @@ final class LightImpl implements ILight {
       final LightState state = objectMapper.readValue(baseUrl, Light.class).getState();
       logger.fine(state.toString());
       if (state.getColorMode() == null) {
-        return new State(state.isOn(), state.getBrightness(), 0);
+        return new State(state.isOn(), state.getBrightness(), DIMMABLE_LIGHT_COLOR_TEMPERATURE);
       }
       switch (state.getColorMode()) {
         case "xy":
