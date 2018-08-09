@@ -23,5 +23,16 @@ public class HueTestRun {
                 .flatMap(r -> r.getLightByName(toLight))
                 .ifPresent(light -> light.setState(state))
         );
+
+    System.out.println("Motion sensors:");
+    hue.getMotionSensors().forEach(s -> System.out.println(String.format("%s (%s): Presence %s",
+        s.getName(), s.getId(), s.isPresence())));
+
+    System.out.println("Temperature sensors:");
+    hue.getTemperatureSensors().forEach(s -> System.out.println(String.format("%s (%s): %s °C",
+        s.getName(), s.getId(), s.getDegreesCelsius())));
+
+    System.out.println("Unknown sensors:");
+    hue.getUnknownSensors().forEach(System.out::println);
   }
 }

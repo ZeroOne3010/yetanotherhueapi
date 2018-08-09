@@ -7,7 +7,6 @@ import com.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import com.github.zeroone3010.yahueapi.domain.Group;
 import com.github.zeroone3010.yahueapi.domain.Light;
 import com.github.zeroone3010.yahueapi.domain.Root;
-import com.github.zeroone3010.yahueapi.domain.Sensor;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,13 +15,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
@@ -33,6 +33,7 @@ public final class Hue {
   private final String uri;
   private Root root;
   private Map<String, IRoom> rooms;
+  private Map<String, ISensor> sensors;
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
@@ -83,6 +84,9 @@ public final class Hue {
         .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
         .map(group -> buildRoom(group.getKey(), group.getValue(), root))
         .collect(toMap(IRoom::getName, room -> room)));
+    this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
+        .map(sensor -> buildSensor(sensor.getKey(), root))
+        .collect(toMap(ISensor::getId, sensor -> sensor)));
   }
 
   /**
@@ -127,6 +131,13 @@ public final class Hue {
     }
   }
 
+  private ISensor buildSensor(final String sensorId, final Root root) {
+    return SensorFactory.buildSensor(sensorId,
+        root.getSensors().get(sensorId),
+        uri,
+        objectMapper);
+  }
+
   /**
    * Returns the raw root node information of the REST API. Not required for anything but querying the most
    * technical details of the Bridge setup.
@@ -139,26 +150,67 @@ public final class Hue {
   }
 
   /**
-   * For development/debugging purposes only. Will be removed.
+   * Returns all the sensors configured into the Bridge.
    *
-   * @return Sensor types.
+   * @return A Collection of sensors.
    */
-  @Deprecated
-  public Set<String> getAllSensorTypes() {
+  public Collection<ISensor> getUnknownSensors() {
     doInitialDataLoadIfRequired();
-    return this.root.getSensors().values().stream().map(Sensor::getType)
-        .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
+    return Collections.unmodifiableCollection(this.sensors.values().stream()
+        .filter(s -> SensorType.UNKNOWN.equals(s.getType()))
+        .collect(toList()));
   }
 
   /**
-   * For development/debugging purposes only. Will be removed.
+   * Returns all the temperature sensors configured into the Bridge.
    *
-   * @return Sensors.
+   * @return A Collection of temperature sensors.
    */
-  @Deprecated
-  public Map<String, Sensor> getSensors() {
+  public Collection<ITemperatureSensor> getTemperatureSensors() {
     doInitialDataLoadIfRequired();
-    return this.root.getSensors();
+    return Collections.unmodifiableCollection(this.sensors.values().stream()
+        .filter(s -> SensorType.TEMPERATURE.equals(s.getType()))
+        .map(ITemperatureSensor.class::cast)
+        .collect(toList()));
+  }
+
+  /**
+   * Returns all the motion sensors configured into the Bridge.
+   *
+   * @return A Collection of motion sensors.
+   */
+  public Collection<IMotionSensor> getMotionSensors() {
+    doInitialDataLoadIfRequired();
+    return Collections.unmodifiableCollection(this.sensors.values().stream()
+        .filter(s -> SensorType.MOTION.equals(s.getType()))
+        .map(IMotionSensor.class::cast)
+        .collect(toList()));
+  }
+
+  /**
+   * Returns a specific sensor by its name.
+   *
+   * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
+   */
+  public Optional<ITemperatureSensor> getTemperatureSensorByName(final String sensorName) {
+    doInitialDataLoadIfRequired();
+    return getTemperatureSensors().stream()
+        .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
+        .map(ITemperatureSensor.class::cast)
+        .findFirst();
+  }
+
+  /**
+   * Returns a specific sensor by its name.
+   *
+   * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
+   */
+  public Optional<IMotionSensor> getMotionSensorByName(final String sensorName) {
+    doInitialDataLoadIfRequired();
+    return getMotionSensors().stream()
+        .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
+        .map(IMotionSensor.class::cast)
+        .findFirst();
   }
 
   /**

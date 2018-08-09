@@ -549,7 +549,7 @@
     },
     "16": {
       "state": {
-        "presence": false,
+        "presence": true,
         "lastupdated": "2018-07-29T06:06:06"
       },
       "swupdate": {
