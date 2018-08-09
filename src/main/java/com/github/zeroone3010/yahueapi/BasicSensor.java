@@ -56,6 +56,16 @@ class BasicSensor implements ISensor {
     }
   }
 
+  protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
+    try {
+      final Map<String, Object> state = objectMapper.readValue(baseUrl, Sensor.class).getState();
+      logger.fine(state.toString());
+      return type.cast(state.get(stateValueKey));
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+  }
+
   @Override
   public String toString() {
     return "Sensor{" +

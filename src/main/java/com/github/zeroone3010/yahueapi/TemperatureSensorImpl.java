@@ -3,11 +3,9 @@ package com.github.zeroone3010.yahueapi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.zeroone3010.yahueapi.domain.Sensor;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.util.Map;
 import java.util.logging.Logger;
 
 final class TemperatureSensorImpl extends BasicSensor implements ITemperatureSensor {
@@ -28,13 +26,7 @@ final class TemperatureSensorImpl extends BasicSensor implements ITemperatureSen
 
   @Override
   public BigDecimal getDegreesCelsius() {
-    try {
-      final Map<String, Object> state = super.objectMapper.readValue(baseUrl, Sensor.class).getState();
-      logger.fine(state.toString());
-      return convertCenticelsiusToCelsius((int) state.get("temperature"));
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
+    return convertCenticelsiusToCelsius(readStateValue("temperature", Integer.class));
   }
 
   private static BigDecimal convertCenticelsiusToCelsius(final int centicelsius) {
