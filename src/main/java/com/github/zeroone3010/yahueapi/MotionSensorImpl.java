@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.net.URL;
-import java.util.logging.Logger;
 
 final class MotionSensorImpl extends BasicSensor implements MotionSensor {
-  private static final Logger logger = Logger.getLogger("MotionSensorImpl");
 
   MotionSensorImpl(final String id, final SensorDto sensor, final URL url, final ObjectMapper objectMapper) {
     super(id, sensor, url, objectMapper);
