@@ -3,6 +3,7 @@ Yet Another Hue API
 
 This is a Java 8 API for the Philips Hue lights. It does not use the official 
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
+This library has been confirmed to work with the Philips Hue Bridge API version 1.26.0.
 
 Usage
 -----
