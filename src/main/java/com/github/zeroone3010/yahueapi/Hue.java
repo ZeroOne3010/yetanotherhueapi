@@ -176,6 +176,15 @@ public final class Hue {
     return getSensorsByType(SensorType.MOTION, MotionSensor.class);
   }
 
+  /**
+   * Returns all the daylight sensors configured into the Bridge.
+   *
+   * @return A Collection of daylight sensors.
+   */
+  public Collection<DaylightSensor> getDaylightSensors() {
+    return getSensorsByType(SensorType.DAYLIGHT, DaylightSensor.class);
+  }
+
   private <T> Collection<T> getSensorsByType(final SensorType type, final Class<T> sensorClass) {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()

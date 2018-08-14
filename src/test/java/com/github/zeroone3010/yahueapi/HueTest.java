@@ -53,6 +53,7 @@ class HueTest {
     final String light100;
     final String light101;
     final String light300;
+    final String sensor1; // the daylight sensor
     final String sensor15; // the temperature sensor
     final String sensor16; // the motion sensor
 
@@ -61,6 +62,7 @@ class HueTest {
       light100 = objectMapper.writeValueAsString(jsonNode.get("lights").get("100"));
       light101 = objectMapper.writeValueAsString(jsonNode.get("lights").get("101"));
       light300 = objectMapper.writeValueAsString(jsonNode.get("lights").get("300"));
+      sensor1 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("1"));
       sensor15 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("15"));
       sensor16 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("16"));
     } catch (final IOException e) {
@@ -71,6 +73,7 @@ class HueTest {
     wireMockServer.stubFor(get(API_BASE_PATH + "lights/100").willReturn(okJson(light100)));
     wireMockServer.stubFor(get(API_BASE_PATH + "lights/101").willReturn(okJson(light101)));
     wireMockServer.stubFor(get(API_BASE_PATH + "lights/300").willReturn(okJson(light300)));
+    wireMockServer.stubFor(get(API_BASE_PATH + "sensors/1").willReturn(okJson(sensor1)));
     wireMockServer.stubFor(get(API_BASE_PATH + "sensors/15").willReturn(okJson(sensor15)));
     wireMockServer.stubFor(get(API_BASE_PATH + "sensors/16").willReturn(okJson(sensor16)));
 
@@ -172,7 +175,7 @@ class HueTest {
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
     final Collection<Sensor> sensors = hue.getUnknownSensors();
-    assertEquals(4, sensors.size());
+    assertEquals(3, sensors.size());
   }
 
   @Test
@@ -212,6 +215,15 @@ class HueTest {
         .map(TemperatureSensor::getDegreesCelsius)
         .map(BigDecimal::doubleValue).get();
     assertEquals(29.53d, temperature);
+  }
+
+  @Test
+  void testDaylightSensor() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Boolean daylight = hue.getDaylightSensors().stream()
+        .map(DaylightSensor::isDaylightTime)
+        .findFirst().get();
+    assertTrue(daylight);
   }
 
   private String readFile(final String fileName) {

@@ -32,6 +32,10 @@ public class HueTestRun {
     hue.getTemperatureSensors().forEach(s -> System.out.println(String.format("%s (%s): %s °C",
         s.getName(), s.getId(), s.getDegreesCelsius())));
 
+    System.out.println("Daylight sensors:");
+    hue.getDaylightSensors().forEach(s -> System.out.println(String.format("%s (%s): Is daylight: %s",
+        s.getName(), s.getId(), s.isDaylightTime())));
+
     System.out.println("Unknown sensors:");
     hue.getUnknownSensors().forEach(System.out::println);
   }

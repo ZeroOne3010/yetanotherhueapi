@@ -23,6 +23,8 @@ final class SensorFactory {
         return new MotionSensorImpl(id, sensor, url, objectMapper);
       case TEMPERATURE:
         return new TemperatureSensorImpl(id, sensor, url, objectMapper);
+      case DAYLIGHT:
+        return new DaylightSensorImpl(id, sensor, url, objectMapper);
       default:
         return new BasicSensor(id, sensor, url, objectMapper);
     }
