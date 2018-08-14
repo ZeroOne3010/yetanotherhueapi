@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HueTest {
   private static final String API_KEY = "abcd1234";
-  public static final String API_BASE_PATH = "/api/" + API_KEY + "/";
+  private static final String API_BASE_PATH = "/api/" + API_KEY + "/";
   private static final String MOTION_SENSOR_NAME = "Hallway sensor";
-  public static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
+  private static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
 
   final WireMockServer wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
 
