@@ -1,7 +1,7 @@
 package com.github.zeroone3010.yahueapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.zeroone3010.yahueapi.domain.Sensor;
+import com.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.logging.Logger;
 
-class BasicSensor implements ISensor {
+class BasicSensor implements Sensor {
   private static final Logger logger = Logger.getLogger("SensorImpl");
   private static final String UTC_SUFFIX = "+00:00[UTC]";
 
@@ -19,7 +19,7 @@ class BasicSensor implements ISensor {
   protected final SensorType type;
   protected final ObjectMapper objectMapper;
 
-  BasicSensor(final String id, final Sensor sensor, final URL url, final ObjectMapper objectMapper) {
+  BasicSensor(final String id, final SensorDto sensor, final URL url, final ObjectMapper objectMapper) {
     this.id = id;
     if (sensor == null) {
       throw new HueApiException("Sensor " + id + " cannot be found.");
@@ -48,7 +48,7 @@ class BasicSensor implements ISensor {
   @Override
   public ZonedDateTime getLastUpdated() {
     try {
-      final Map<String, Object> state = objectMapper.readValue(baseUrl, Sensor.class).getState();
+      final Map<String, Object> state = objectMapper.readValue(baseUrl, SensorDto.class).getState();
       logger.info(state.toString());
       return ZonedDateTime.parse(String.valueOf(state.get("lastupdated") + UTC_SUFFIX));
     } catch (final IOException e) {
@@ -58,7 +58,7 @@ class BasicSensor implements ISensor {
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
     try {
-      final Map<String, Object> state = objectMapper.readValue(baseUrl, Sensor.class).getState();
+      final Map<String, Object> state = objectMapper.readValue(baseUrl, SensorDto.class).getState();
       logger.fine(state.toString());
       return type.cast(state.get(stateValueKey));
     } catch (final IOException e) {

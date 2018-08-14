@@ -1,6 +1,6 @@
 package com.github.zeroone3010.yahueapi;
 
-public interface IMotionSensor extends ISensor {
+public interface MotionSensor extends Sensor {
   /**
    * Whether presence has been detected.
    *

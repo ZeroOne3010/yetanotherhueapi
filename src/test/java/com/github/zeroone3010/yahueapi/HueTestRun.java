@@ -17,7 +17,7 @@ public class HueTestRun {
     final Hue hue = new Hue(HueBridgeProtocol.UNVERIFIED_HTTPS, ip, apiKey);
     hue.getRoomByName(fromRoom)
         .flatMap(r -> r.getLightByName(fromLight))
-        .map(ILight::getState)
+        .map(Light::getState)
         .ifPresent(state ->
             hue.getRoomByName(toRoom)
                 .flatMap(r -> r.getLightByName(toLight))

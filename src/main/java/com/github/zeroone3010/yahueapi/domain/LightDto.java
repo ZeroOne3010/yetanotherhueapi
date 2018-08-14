@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-public class Light {
+public class LightDto {
   private LightState state;
   private ComponentSoftwareUpdate swupdate;
   private String type;

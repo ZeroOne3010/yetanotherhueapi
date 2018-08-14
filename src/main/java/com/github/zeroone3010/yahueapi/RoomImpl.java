@@ -13,17 +13,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
-final class RoomImpl implements IRoom {
+final class RoomImpl implements Room {
   private static final Logger logger = Logger.getLogger("RoomImpl");
 
   private static final String ACTION_PATH = "/action";
 
   private final ObjectMapper objectMapper;
   private final URL baseUrl;
-  private final Set<ILight> lights;
+  private final Set<Light> lights;
   private final String name;
 
-  RoomImpl(final ObjectMapper objectMapper, final URL baseUrl, final Group group, final Set<ILight> lights) {
+  RoomImpl(final ObjectMapper objectMapper, final URL baseUrl, final Group group, final Set<Light> lights) {
     this.objectMapper = objectMapper;
     this.baseUrl = baseUrl;
     this.lights = lights;
@@ -36,12 +36,12 @@ final class RoomImpl implements IRoom {
   }
 
   @Override
-  public Collection<ILight> getLights() {
+  public Collection<Light> getLights() {
     return lights;
   }
 
   @Override
-  public Optional<ILight> getLightByName(final String lightName) {
+  public Optional<Light> getLightByName(final String lightName) {
     return lights.stream()
         .filter(light -> Objects.equals(light.getName(), lightName))
         .findFirst();

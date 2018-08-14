@@ -33,7 +33,7 @@ Using the rooms and the lights:
 ```java
 // Get a room -- returns Optional.empty() if the room does not exist, but 
 // let's assume we know for a fact it exists and can do the .get() right away:
-final IRoom room = hue.getRoomByName("Basement").get();
+final Room room = hue.getRoomByName("Basement").get();
 
 // Turn the lights on, make them pink:
 room.setState(new State(true, java.awt.Color.PINK));

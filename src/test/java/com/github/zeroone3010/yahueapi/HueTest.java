@@ -171,7 +171,7 @@ class HueTest {
   @Test
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
-    final Collection<ISensor> sensors = hue.getUnknownSensors();
+    final Collection<Sensor> sensors = hue.getUnknownSensors();
     assertEquals(4, sensors.size());
   }
 
@@ -192,7 +192,7 @@ class HueTest {
   @Test
   void testMotionSensorLastUpdated() {
     final Hue hue = createHueAndInitializeMockServer();
-    final ZonedDateTime actual = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(ISensor::getLastUpdated).get();
+    final ZonedDateTime actual = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(Sensor::getLastUpdated).get();
     final ZonedDateTime expected = ZonedDateTime.of(LocalDate.of(2018, Month.JULY, 29),
         LocalTime.of(6, 6, 6), ZoneId.of("UTC"));
     assertEquals(expected, actual);
@@ -201,7 +201,7 @@ class HueTest {
   @Test
   void testMotionSensorPresence() {
     final Hue hue = createHueAndInitializeMockServer();
-    final boolean presence = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(IMotionSensor::isPresence).get();
+    final boolean presence = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(MotionSensor::isPresence).get();
     assertTrue(presence);
   }
 
@@ -209,7 +209,7 @@ class HueTest {
   void testTemperatureSensorTemperature() {
     final Hue hue = createHueAndInitializeMockServer();
     final double temperature = hue.getTemperatureSensorByName(TEMPERATURE_SENSOR_NAME)
-        .map(ITemperatureSensor::getDegreesCelsius)
+        .map(TemperatureSensor::getDegreesCelsius)
         .map(BigDecimal::doubleValue).get();
     assertEquals(29.53d, temperature);
   }

@@ -2,14 +2,14 @@ package com.github.zeroone3010.yahueapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.zeroone3010.yahueapi.domain.Light;
+import com.github.zeroone3010.yahueapi.domain.LightDto;
 import com.github.zeroone3010.yahueapi.domain.LightState;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-final class LightImpl implements ILight {
+final class LightImpl implements Light {
   private static final Logger logger = Logger.getLogger("LightImpl");
   private static final String STATE_PATH = "/state";
   private static final String ACTION_PATH = "/state";
@@ -21,7 +21,7 @@ final class LightImpl implements ILight {
   private final ObjectMapper objectMapper;
   private final LightType type;
 
-  LightImpl(final String id, final Light light, final URL url, final ObjectMapper objectMapper) {
+  LightImpl(final String id, final LightDto light, final URL url, final ObjectMapper objectMapper) {
     this.id = id;
     if (light == null) {
       throw new HueApiException("Light " + id + " cannot be found.");
@@ -54,7 +54,7 @@ final class LightImpl implements ILight {
   @Override
   public boolean isOn() {
     try {
-      final LightState state = objectMapper.readValue(baseUrl, Light.class).getState();
+      final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
       logger.fine(state.toString());
       return state.isOn();
     } catch (final IOException e) {
@@ -82,7 +82,7 @@ final class LightImpl implements ILight {
   @Override
   public State getState() {
     try {
-      final LightState state = objectMapper.readValue(baseUrl, Light.class).getState();
+      final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
       logger.fine(state.toString());
       if (state.getColorMode() == null) {
         return new State(state.isOn(), state.getBrightness(), DIMMABLE_LIGHT_COLOR_TEMPERATURE);

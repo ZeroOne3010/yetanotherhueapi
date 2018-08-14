@@ -2,7 +2,7 @@ package com.github.zeroone3010.yahueapi;
 
 import java.time.ZonedDateTime;
 
-public interface ISensor {
+public interface Sensor {
   /**
    * Returns the human readable name of the sensor.
    *

@@ -1,7 +1,7 @@
 package com.github.zeroone3010.yahueapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.zeroone3010.yahueapi.domain.Sensor;
+import com.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,8 +9,8 @@ import java.net.URL;
 final class SensorFactory {
   private SensorFactory() { /* prevent */ }
 
-  static ISensor buildSensor(final String id, final Sensor sensor, final String bridgeUri,
-                             final ObjectMapper objectMapper) {
+  static Sensor buildSensor(final String id, final SensorDto sensor, final String bridgeUri,
+                            final ObjectMapper objectMapper) {
     if (sensor == null) {
       throw new HueApiException("Sensor " + id + " cannot be found.");
     }

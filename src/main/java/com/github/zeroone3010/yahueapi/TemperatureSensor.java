@@ -2,7 +2,7 @@ package com.github.zeroone3010.yahueapi;
 
 import java.math.BigDecimal;
 
-public interface ITemperatureSensor extends ISensor {
+public interface TemperatureSensor extends Sensor {
   /**
    * Returns the detected temperature in degrees Celcius.
    *

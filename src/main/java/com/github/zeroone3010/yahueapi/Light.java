@@ -1,6 +1,6 @@
 package com.github.zeroone3010.yahueapi;
 
-public interface ILight {
+public interface Light {
   /**
    * Returns the name of the light, as set by the user.
    * @return Name of the light.

@@ -8,7 +8,7 @@ import java.util.Map;
 public class Root {
 
   @JsonProperty("lights")
-  private Map<String, Light> lights;
+  private Map<String, LightDto> lights;
   @JsonProperty("groups")
   private Map<String, Group> groups;
   @JsonProperty("config")
@@ -20,15 +20,15 @@ public class Root {
   @JsonIgnore
   private Map<String, Rule> rules;
   @JsonProperty("sensors")
-  private Map<String, Sensor> sensors;
+  private Map<String, SensorDto> sensors;
   @JsonIgnore
   private Map<String, ResourceLink> resourcelinks;
 
-  public Map<String, Light> getLights() {
+  public Map<String, LightDto> getLights() {
     return lights;
   }
 
-  public void setLights(Map<String, Light> lights) {
+  public void setLights(Map<String, LightDto> lights) {
     this.lights = lights;
   }
 
@@ -72,11 +72,11 @@ public class Root {
     this.rules = rules;
   }
 
-  public Map<String, Sensor> getSensors() {
+  public Map<String, SensorDto> getSensors() {
     return sensors;
   }
 
-  public void setSensors(Map<String, Sensor> sensors) {
+  public void setSensors(Map<String, SensorDto> sensors) {
     this.sensors = sensors;
   }
 

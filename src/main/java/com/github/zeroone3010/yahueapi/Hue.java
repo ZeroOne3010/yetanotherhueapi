@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import com.github.zeroone3010.yahueapi.domain.Group;
-import com.github.zeroone3010.yahueapi.domain.Light;
+import com.github.zeroone3010.yahueapi.domain.LightDto;
 import com.github.zeroone3010.yahueapi.domain.Root;
 
 import java.io.IOException;
@@ -32,8 +32,8 @@ public final class Hue {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final String uri;
   private Root root;
-  private Map<String, IRoom> rooms;
-  private Map<String, ISensor> sensors;
+  private Map<String, Room> rooms;
+  private Map<String, Sensor> sensors;
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
@@ -83,10 +83,10 @@ public final class Hue {
     this.rooms = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
         .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
         .map(group -> buildRoom(group.getKey(), group.getValue(), root))
-        .collect(toMap(IRoom::getName, room -> room)));
+        .collect(toMap(Room::getName, room -> room)));
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
-        .collect(toMap(ISensor::getId, sensor -> sensor)));
+        .collect(toMap(Sensor::getId, sensor -> sensor)));
   }
 
   /**
@@ -94,7 +94,7 @@ public final class Hue {
    *
    * @return A Collection of rooms.
    */
-  public Collection<IRoom> getRooms() {
+  public Collection<Room> getRooms() {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.rooms.values());
   }
@@ -104,13 +104,13 @@ public final class Hue {
    *
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
    */
-  public Optional<IRoom> getRoomByName(final String roomName) {
+  public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.rooms.get(roomName));
   }
 
-  private IRoom buildRoom(final String groupId, final Group group, final Root root) {
-    final Set<ILight> lights = group.getLights().stream()
+  private Room buildRoom(final String groupId, final Group group, final Root root) {
+    final Set<Light> lights = group.getLights().stream()
         .map(lightId -> buildLight(lightId, root))
         .collect(toSet());
     try {
@@ -120,7 +120,7 @@ public final class Hue {
     }
   }
 
-  private ILight buildLight(final String lightId, final Root root) {
+  private Light buildLight(final String lightId, final Root root) {
     try {
       return new LightImpl(lightId,
           root.getLights().get(lightId),
@@ -131,7 +131,7 @@ public final class Hue {
     }
   }
 
-  private ISensor buildSensor(final String sensorId, final Root root) {
+  private Sensor buildSensor(final String sensorId, final Root root) {
     return SensorFactory.buildSensor(sensorId,
         root.getSensors().get(sensorId),
         uri,
@@ -154,7 +154,7 @@ public final class Hue {
    *
    * @return A Collection of sensors.
    */
-  public Collection<ISensor> getUnknownSensors() {
+  public Collection<Sensor> getUnknownSensors() {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()
         .filter(s -> SensorType.UNKNOWN.equals(s.getType()))
@@ -166,11 +166,11 @@ public final class Hue {
    *
    * @return A Collection of temperature sensors.
    */
-  public Collection<ITemperatureSensor> getTemperatureSensors() {
+  public Collection<TemperatureSensor> getTemperatureSensors() {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()
         .filter(s -> SensorType.TEMPERATURE.equals(s.getType()))
-        .map(ITemperatureSensor.class::cast)
+        .map(TemperatureSensor.class::cast)
         .collect(toList()));
   }
 
@@ -179,11 +179,11 @@ public final class Hue {
    *
    * @return A Collection of motion sensors.
    */
-  public Collection<IMotionSensor> getMotionSensors() {
+  public Collection<MotionSensor> getMotionSensors() {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()
         .filter(s -> SensorType.MOTION.equals(s.getType()))
-        .map(IMotionSensor.class::cast)
+        .map(MotionSensor.class::cast)
         .collect(toList()));
   }
 
@@ -192,11 +192,11 @@ public final class Hue {
    *
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
    */
-  public Optional<ITemperatureSensor> getTemperatureSensorByName(final String sensorName) {
+  public Optional<TemperatureSensor> getTemperatureSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
     return getTemperatureSensors().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
-        .map(ITemperatureSensor.class::cast)
+        .map(TemperatureSensor.class::cast)
         .findFirst();
   }
 
@@ -205,11 +205,11 @@ public final class Hue {
    *
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
    */
-  public Optional<IMotionSensor> getMotionSensorByName(final String sensorName) {
+  public Optional<MotionSensor> getMotionSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
     return getMotionSensors().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
-        .map(IMotionSensor.class::cast)
+        .map(MotionSensor.class::cast)
         .findFirst();
   }
 
@@ -219,7 +219,7 @@ public final class Hue {
    * @return Lights.
    */
   @Deprecated
-  public Map<String, Light> getLights() {
+  public Map<String, LightDto> getLights() {
     doInitialDataLoadIfRequired();
     return this.root.getLights();
   }

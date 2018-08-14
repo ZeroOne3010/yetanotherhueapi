@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-public class Sensor {
+public class SensorDto {
   @JsonProperty("name")
   private String name;
   @JsonProperty("type")
