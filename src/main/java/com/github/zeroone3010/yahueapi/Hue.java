@@ -155,10 +155,7 @@ public final class Hue {
    * @return A Collection of sensors.
    */
   public Collection<Sensor> getUnknownSensors() {
-    doInitialDataLoadIfRequired();
-    return Collections.unmodifiableCollection(this.sensors.values().stream()
-        .filter(s -> SensorType.UNKNOWN.equals(s.getType()))
-        .collect(toList()));
+    return getSensorsByType(SensorType.UNKNOWN, Sensor.class);
   }
 
   /**
@@ -167,11 +164,7 @@ public final class Hue {
    * @return A Collection of temperature sensors.
    */
   public Collection<TemperatureSensor> getTemperatureSensors() {
-    doInitialDataLoadIfRequired();
-    return Collections.unmodifiableCollection(this.sensors.values().stream()
-        .filter(s -> SensorType.TEMPERATURE.equals(s.getType()))
-        .map(TemperatureSensor.class::cast)
-        .collect(toList()));
+    return getSensorsByType(SensorType.TEMPERATURE, TemperatureSensor.class);
   }
 
   /**
@@ -180,10 +173,14 @@ public final class Hue {
    * @return A Collection of motion sensors.
    */
   public Collection<MotionSensor> getMotionSensors() {
+    return getSensorsByType(SensorType.MOTION, MotionSensor.class);
+  }
+
+  private <T> Collection<T> getSensorsByType(final SensorType type, final Class<T> sensorClass) {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()
-        .filter(s -> SensorType.MOTION.equals(s.getType()))
-        .map(MotionSensor.class::cast)
+        .filter(s -> type.equals(s.getType()))
+        .map(sensorClass::cast)
         .collect(toList()));
   }
 
