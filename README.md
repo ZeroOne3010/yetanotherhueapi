@@ -59,7 +59,7 @@ Add the following to your pom.xml file:
         <dependency>
             <groupId>com.github.zeroone3010</groupId>
             <artifactId>yetanotherhueapi</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
