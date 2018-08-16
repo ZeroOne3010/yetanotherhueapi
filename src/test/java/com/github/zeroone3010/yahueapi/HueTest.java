@@ -1,5 +1,6 @@
 package com.github.zeroone3010.yahueapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jknack.handlebars.internal.Files;
@@ -50,34 +51,26 @@ class HueTest {
     final String hueRoot = readFile("hueRoot.json");
 
     final ObjectMapper objectMapper = new ObjectMapper();
-    final String light100;
-    final String light101;
-    final String light300;
-    final String sensor1; // the daylight sensor
-    final String sensor15; // the temperature sensor
-    final String sensor16; // the motion sensor
-
+    final JsonNode jsonNode;
     try {
-      final JsonNode jsonNode = objectMapper.readTree(hueRoot);
-      light100 = objectMapper.writeValueAsString(jsonNode.get("lights").get("100"));
-      light101 = objectMapper.writeValueAsString(jsonNode.get("lights").get("101"));
-      light300 = objectMapper.writeValueAsString(jsonNode.get("lights").get("300"));
-      sensor1 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("1"));
-      sensor15 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("15"));
-      sensor16 = objectMapper.writeValueAsString(jsonNode.get("sensors").get("16"));
+      jsonNode = objectMapper.readTree(hueRoot);
+      wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
+      mockIndividualGetResponse(jsonNode, "lights", "100");
+      mockIndividualGetResponse(jsonNode, "lights", "101");
+      mockIndividualGetResponse(jsonNode, "lights", "300");
+      mockIndividualGetResponse(jsonNode, "sensors", "1");
+      mockIndividualGetResponse(jsonNode, "sensors", "15");
+      mockIndividualGetResponse(jsonNode, "sensors", "16");
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-
-    wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "lights/100").willReturn(okJson(light100)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "lights/101").willReturn(okJson(light101)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "lights/300").willReturn(okJson(light300)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "sensors/1").willReturn(okJson(sensor1)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "sensors/15").willReturn(okJson(sensor15)));
-    wireMockServer.stubFor(get(API_BASE_PATH + "sensors/16").willReturn(okJson(sensor16)));
-
     return new Hue("localhost:" + wireMockServer.port(), API_KEY);
+  }
+
+  private void mockIndividualGetResponse(final JsonNode hueRoot, final String itemClass, final String id) throws JsonProcessingException {
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final String json = objectMapper.writeValueAsString(hueRoot.get(itemClass).get(id));
+    wireMockServer.stubFor(get(API_BASE_PATH + itemClass + "/" + id).willReturn(okJson(json)));
   }
 
   @Test
