@@ -34,6 +34,7 @@ class HueTest {
   private static final String API_BASE_PATH = "/api/" + API_KEY + "/";
   private static final String MOTION_SENSOR_NAME = "Hallway sensor";
   private static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
+  private static final String DIMMER_SWITCH_NAME = "Living room door";
 
   final WireMockServer wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
 
@@ -59,6 +60,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "lights", "101");
       mockIndividualGetResponse(jsonNode, "lights", "300");
       mockIndividualGetResponse(jsonNode, "sensors", "1");
+      mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
       mockIndividualGetResponse(jsonNode, "sensors", "16");
     } catch (final IOException e) {
@@ -168,7 +170,7 @@ class HueTest {
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
     final Collection<Sensor> sensors = hue.getUnknownSensors();
-    assertEquals(3, sensors.size());
+    assertEquals(2, sensors.size());
   }
 
   @Test
@@ -217,6 +219,23 @@ class HueTest {
         .map(DaylightSensor::isDaylightTime)
         .findFirst().get();
     assertTrue(daylight);
+  }
+
+  @Test
+  void testDimmerSwitchLastUpdated() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final ZonedDateTime actual = hue.getDimmerSwitchByName(DIMMER_SWITCH_NAME).map(Sensor::getLastUpdated).get();
+    final ZonedDateTime expected = ZonedDateTime.of(LocalDate.of(2018, Month.JULY, 28),
+        LocalTime.of(21, 12, 00), ZoneId.of("UTC"));
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void testDimmerSwitchLastButtonEvent() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final DimmerSwitchButtonEvent event = hue.getDimmerSwitchByName(DIMMER_SWITCH_NAME).map(DimmerSwitch::getLatestButtonEvent).get();
+    assertEquals(DimmerSwitchAction.SHORT_RELEASED, event.getAction());
+    assertEquals(DimmerSwitchButton.OFF, event.getButton());
   }
 
   private String readFile(final String fileName) {

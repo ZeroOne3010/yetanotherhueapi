@@ -25,6 +25,8 @@ final class SensorFactory {
         return new TemperatureSensorImpl(id, sensor, url, objectMapper);
       case DAYLIGHT:
         return new DaylightSensorImpl(id, sensor, url, objectMapper);
+      case DIMMER_SWITCH:
+        return new DimmerSwitchImpl(id, sensor, url, objectMapper);
       default:
         return new BasicSensor(id, sensor, url, objectMapper);
     }

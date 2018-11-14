@@ -168,6 +168,15 @@ public final class Hue {
   }
 
   /**
+   * Returns all the dimmer switches configured into the Bridge.
+   *
+   * @return A Collection of dimmer switches.
+   */
+  public Collection<DimmerSwitch> getDimmerSwitches() {
+    return getSensorsByType(SensorType.DIMMER_SWITCH, DimmerSwitch.class);
+  }
+
+  /**
    * Returns all the motion sensors configured into the Bridge.
    *
    * @return A Collection of motion sensors.
@@ -216,6 +225,19 @@ public final class Hue {
     return getMotionSensors().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
         .map(MotionSensor.class::cast)
+        .findFirst();
+  }
+
+  /**
+   * Returns a specific dimmer switch by its name.
+   *
+   * @return A dimmer switch or {@code Optional.empty()} if a dimmer switch with the given name does not exist.
+   */
+  public Optional<DimmerSwitch> getDimmerSwitchByName(final String sensorName) {
+    doInitialDataLoadIfRequired();
+    return getDimmerSwitches().stream()
+        .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
+        .map(DimmerSwitch.class::cast)
         .findFirst();
   }
 
