@@ -3,7 +3,6 @@ package com.github.zeroone3010.yahueapi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.jknack.handlebars.internal.Files;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
@@ -242,7 +243,7 @@ class HueTest {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());
     try {
-      return Files.read(file);
+      return Files.lines(file.toPath()).collect(Collectors.joining());
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
