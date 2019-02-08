@@ -63,6 +63,13 @@ final class LightImpl implements Light {
   }
 
   @Override
+  public void setBrightness(final int brightness) {
+    final String body = String.format("{\"bri\":%d}", brightness);
+    final String result = HttpUtil.put(baseUrl, STATE_PATH, body);
+    logger.fine(result);
+  }
+
+  @Override
   public void setState(final State state) {
     final String body;
     try {

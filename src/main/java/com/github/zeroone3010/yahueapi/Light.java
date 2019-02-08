@@ -24,6 +24,13 @@ public interface Light {
   boolean isOn();
 
   /**
+   * Sets the brightness of the light. If the light is off, does not turn it on, nor does {@code 0} turn it off.
+   *
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   */
+  void setBrightness(int brightness);
+
+  /**
    * Returns info on the type of the light.
    * @return An enum value specifying the color and dimming capabilities of the light.
    */

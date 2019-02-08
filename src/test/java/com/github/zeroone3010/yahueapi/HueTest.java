@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -237,6 +240,20 @@ class HueTest {
     final DimmerSwitchButtonEvent event = hue.getDimmerSwitchByName(DIMMER_SWITCH_NAME).map(DimmerSwitch::getLatestButtonEvent).get();
     assertEquals(DimmerSwitchAction.SHORT_RELEASED, event.getAction());
     assertEquals(DimmerSwitchButton.OFF, event.getButton());
+  }
+
+  @Test
+  void testSetLightBrightness() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/bri\":123}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.setBrightness(42);
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToPattern("{\"bri\":42}", false)));
   }
 
   private String readFile(final String fileName) {
