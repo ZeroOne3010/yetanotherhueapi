@@ -1,9 +1,7 @@
 package com.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -91,42 +89,6 @@ public final class State {
     this.hue = hue;
     this.sat = saturation;
     this.ct = null;
-  }
-
-  /**
-   * Only to be used from the {@code HueCommandLineInterface} class by its ObjectMapper.
-   */
-  @JsonCreator
-  State(@JsonProperty("on") final boolean on,
-        @JsonProperty("color") final String hexColor,
-        @JsonProperty("sat") final Integer saturation,
-        @JsonProperty("bri") final Integer brightness,
-        @JsonProperty("hue") final Integer hue,
-        @JsonProperty("ct") final Integer colorTemperature) {
-    if (colorTemperature != null) {
-      this.on = on;
-      this.bri = brightness;
-      this.ct = colorTemperature;
-      this.hue = null;
-      this.sat = null;
-      this.xy = null;
-    } else if (hexColor != null && !hexColor.trim().isEmpty()) {
-      this.on = on;
-      final XAndYAndBrightness xAndYAndBrightness = rgbToXy(hexToColor(hexColor));
-      this.xy = xAndYAndBrightness.getXY();
-      this.bri = xAndYAndBrightness.getBrightness();
-      this.hue = null;
-      this.sat = null;
-      this.ct = null;
-    } else {
-      this.on = on;
-      this.xy = null;
-      this.bri = brightness;
-      this.hue = hue;
-      this.sat = saturation;
-      this.ct = null;
-    }
-
   }
 
   private static Color hexToColor(final String hexColor) {
