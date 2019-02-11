@@ -4,6 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.BuildStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.ColorStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.ColorTemperatureStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.HueStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.InitialStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.OnOffStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.TransitionTimeStep;
+import com.github.zeroone3010.yahueapi.StateBuilderSteps.XyStep;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -22,120 +32,14 @@ public final class State {
   private final Integer transitiontime;
   private final List<Float> xy;
 
-  /**
-   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param xy         The x and y coordinates of the C.I.E. chromaticity diagram
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
-   * @param transitiontime The time for transition in centiseconds (must be a positive integer)
-   */
-  public State(final boolean on, final List<Float> xy, final int brightness, final int transitiontime) {
-    final List<Float> xyValues = new ArrayList<>(2);
-    xyValues.addAll(xy);
-    this.on = on;
-    this.xy = Collections.unmodifiableList(xyValues);
-    this.bri = brightness;
-    this.hue = null;
-    this.sat = null;
-    this.ct = null;
-    this.transitiontime = transitiontime;
-  }
-
-  /**
-   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param hue        Hue, from {@code 0} to {@code 65280}.
-   * @param saturation Saturation, from 0 to 254.
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
-   * @param transitiontime The time for transition in centiseconds (must be a positive integer)
-   */
-  public State(final boolean on, final int hue, final int saturation, final int brightness, final int transitiontime) {
-    this.on = on;
-    this.xy = null;
-    this.bri = brightness;
-    this.hue = hue;
-    this.sat = saturation;
-    this.ct = null;
-    this.transitiontime = transitiontime;
-  }
-
-  /**
-   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
-   * @param colorTemperatureInMireks A value from {@code 153} (coldest white) to {@code 500} (warmest white).
-   */
-  public State(final boolean on,
-               final int brightness,
-               final int colorTemperatureInMireks) {
-    this.on = on;
-    this.bri = brightness;
-    this.xy = null;
-    this.hue = null;
-    this.sat = null;
-    this.ct = colorTemperatureInMireks;
-    this.transitiontime = null;
-  }
-
-  /**
-   * @param on       Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param hexColor A hexadecimal color value to be set for the light(s) -- for example, {@code 00FF00} for green.
-   */
-  public State(final boolean on,
-               final String hexColor) {
-    this(on, hexToColor(hexColor));
-  }
-
-  /**
-   * @param on    Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param color A color to be set for the light(s).
-   */
-  public State(final boolean on, final Color color) {
-    this.on = on;
-    final XAndYAndBrightness xAndYAndBrightness = rgbToXy(color);
-    this.xy = xAndYAndBrightness.getXY();
-    this.bri = xAndYAndBrightness.getBrightness();
-    this.hue = null;
-    this.sat = null;
-    this.ct = null;
-    this.transitiontime = null;
-  }
-
-  /**
-   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param xy         The x and y coordinates of the C.I.E. chromaticity diagram
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
-   */
-  public State(final boolean on, final List<Float> xy, final int brightness) {
-    final List<Float> xyValues = new ArrayList<>(2);
-    xyValues.addAll(xy);
-    this.on = on;
-    this.xy = Collections.unmodifiableList(xyValues);
-    this.bri = brightness;
-    this.hue = null;
-    this.sat = null;
-    this.ct = null;
-    this.transitiontime = null;
-  }
-
-  /**
-   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
-   * @param hue        Hue, from {@code 0} to {@code 65280}.
-   * @param saturation Saturation, from 0 to 254.
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
-   */
-  public State(final boolean on, final int hue, final int saturation, final int brightness) {
-    this.on = on;
-    this.xy = null;
-    this.bri = brightness;
-    this.hue = hue;
-    this.sat = saturation;
-    this.ct = null;
-    this.transitiontime = null;
-  }
-
-  private static Color hexToColor(final String hexColor) {
-    return Optional.ofNullable(hexColor)
-        .map(hex -> Integer.parseInt(hex, 16))
-        .map(Color::new)
-        .orElse(null);
+  private State(final Builder builder) {
+    this.on = builder.on;
+    this.bri = builder.bri;
+    this.xy = builder.xy;
+    this.hue = builder.hue;
+    this.sat = builder.sat;
+    this.ct = builder.ct;
+    this.transitiontime = builder.transitionTime;
   }
 
   public Boolean getOn() {
@@ -162,25 +66,12 @@ public final class State {
     return ct;
   }
 
-  public Integer getTransitiontime() { return  transitiontime; }
-
-  private static XAndYAndBrightness rgbToXy(final Color color) {
-    final float red = color.getRed() / 255f;
-    final float green = color.getGreen() / 255f;
-    final float blue = color.getBlue() / 255f;
-    final double r = gammaCorrection(red);
-    final double g = gammaCorrection(green);
-    final double b = gammaCorrection(blue);
-    final double rgbX = r * 0.664511f + g * 0.154324f + b * 0.162028f;
-    final double rgbY = r * 0.283881f + g * 0.668433f + b * 0.047685f;
-    final double rgbZ = r * 0.000088f + g * 0.072310f + b * 0.986039f;
-    final float x = (float) (rgbX / (rgbX + rgbY + rgbZ));
-    final float y = (float) (rgbY / (rgbX + rgbY + rgbZ));
-    return new XAndYAndBrightness(x, y, (int) (rgbY * 255f));
+  public Integer getTransitiontime() {
+    return transitiontime;
   }
 
-  private static double gammaCorrection(float component) {
-    return (component > 0.04045f) ? Math.pow((component + 0.055f) / (1.0f + 0.055f), 2.4f) : (component / 12.92f);
+  public static InitialStep builder() {
+    return new Builder();
   }
 
   @Override
@@ -200,6 +91,115 @@ public final class State {
   public int hashCode() {
     return Objects.hash(on, hue, sat, bri, ct, xy);
   }
+
+
+  public static final class Builder implements InitialStep, HueStep, SaturationStep, BrightnessStep, XyStep, ColorStep, ColorTemperatureStep, TransitionTimeStep, BuildStep, OnOffStep {
+    private Boolean on;
+    private Integer hue;
+    private Integer sat;
+    private Integer bri;
+    private Integer ct;
+    private Integer transitionTime;
+    private List<Float> xy;
+
+    @Override
+    public SaturationStep hue(int hue) {
+      this.hue = hue;
+      return this;
+    }
+
+    @Override
+    public BrightnessStep saturation(int saturation) {
+      this.sat = saturation;
+      return this;
+    }
+
+    @Override
+    public BuildStep brightness(int brightness) {
+      this.bri = brightness;
+      return this;
+    }
+
+    @Override
+    public BrightnessStep xy(List<Float> xy) {
+      if (xy == null || xy.size() != 2 || !isInRange(xy.get(0), 0, 1) || !isInRange(xy.get(1), 0, 1)) {
+        throw new IllegalArgumentException("The xy list must contain exactly 2 values, between 0 and 1.");
+      }
+      final List<Float> xyValues = new ArrayList<>();
+      xyValues.addAll(xy);
+      this.xy = Collections.unmodifiableList(xyValues);
+      return this;
+    }
+
+    private boolean isInRange(final Float value, final float min, final float max) {
+      return value != null && !(value < min) && !(value > max);
+    }
+
+    @Override
+    public BuildStep color(Color color) {
+      if (color == null) {
+        throw new IllegalArgumentException("Color must not be null");
+      }
+      final XAndYAndBrightness xAndYAndBrightness = rgbToXy(color);
+      this.xy = xAndYAndBrightness.getXY();
+      this.bri = xAndYAndBrightness.getBrightness();
+      return this;
+    }
+
+    @Override
+    public BuildStep color(String color) {
+      return color(hexToColor(color));
+    }
+
+    @Override
+    public BrightnessStep colorTemperatureInMireks(int colorTemperature) {
+      this.ct = colorTemperature;
+      return this;
+    }
+
+    @Override
+    public OnOffStep transitionTime(int centiseconds) {
+      this.transitionTime = centiseconds;
+      return this;
+    }
+
+    @Override
+    public State on(Boolean on) {
+      this.on = on;
+      return build();
+    }
+
+    private State build() {
+      return new State(this);
+    }
+
+    private static Color hexToColor(final String hexColor) {
+      return Optional.ofNullable(hexColor)
+          .map(hex -> Integer.parseInt(hex, 16))
+          .map(Color::new)
+          .orElse(null);
+    }
+
+    private static XAndYAndBrightness rgbToXy(final Color color) {
+      final float red = color.getRed() / 255f;
+      final float green = color.getGreen() / 255f;
+      final float blue = color.getBlue() / 255f;
+      final double r = gammaCorrection(red);
+      final double g = gammaCorrection(green);
+      final double b = gammaCorrection(blue);
+      final double rgbX = r * 0.664511f + g * 0.154324f + b * 0.162028f;
+      final double rgbY = r * 0.283881f + g * 0.668433f + b * 0.047685f;
+      final double rgbZ = r * 0.000088f + g * 0.072310f + b * 0.986039f;
+      final float x = (float) (rgbX / (rgbX + rgbY + rgbZ));
+      final float y = (float) (rgbY / (rgbX + rgbY + rgbZ));
+      return new XAndYAndBrightness(x, y, (int) (rgbY * 255f));
+    }
+
+    private static double gammaCorrection(float component) {
+      return (component > 0.04045f) ? Math.pow((component + 0.055f) / (1.0f + 0.055f), 2.4f) : (component / 12.92f);
+    }
+  }
+
 
   private static final class XAndYAndBrightness {
     final float x;
@@ -232,4 +232,5 @@ public final class State {
       }
     }
   }
+
 }

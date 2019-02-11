@@ -92,15 +92,15 @@ final class LightImpl implements Light {
       final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
       logger.fine(state.toString());
       if (state.getColorMode() == null) {
-        return new State(state.isOn(), state.getBrightness(), DIMMABLE_LIGHT_COLOR_TEMPERATURE);
+        return State.builder().colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
       }
       switch (state.getColorMode()) {
         case "xy":
-          return new State(state.isOn(), state.getXy(), state.getBrightness());
+          return State.builder().xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
         case "ct":
-          return new State(state.isOn(), state.getBrightness(), state.getCt());
+          return State.builder().colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
         case "hs":
-          return new State(state.isOn(), state.getHue(), state.getSaturation(), state.getBrightness());
+          return State.builder().hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
       }
       throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
     } catch (final IOException e) {
