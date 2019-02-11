@@ -19,7 +19,43 @@ public final class State {
   private final Integer sat;
   private final Integer bri;
   private final Integer ct;
+  private final Integer transitiontime;
   private final List<Float> xy;
+
+  /**
+   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param xy         The x and y coordinates of the C.I.E. chromaticity diagram
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   * @param transitiontime The time for transition in centiseconds (must be a positive integer)
+   */
+  public State(final boolean on, final List<Float> xy, final int brightness, final int transitiontime) {
+    final List<Float> xyValues = new ArrayList<>(2);
+    xyValues.addAll(xy);
+    this.on = on;
+    this.xy = Collections.unmodifiableList(xyValues);
+    this.bri = brightness;
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+    this.transitiontime = transitiontime;
+  }
+
+  /**
+   * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
+   * @param hue        Hue, from {@code 0} to {@code 65280}.
+   * @param saturation Saturation, from 0 to 254.
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   * @param transitiontime The time for transition in centiseconds (must be a positive integer)
+   */
+  public State(final boolean on, final int hue, final int saturation, final int brightness, final int transitiontime) {
+    this.on = on;
+    this.xy = null;
+    this.bri = brightness;
+    this.hue = hue;
+    this.sat = saturation;
+    this.ct = null;
+    this.transitiontime = transitiontime;
+  }
 
   /**
    * @param on         Set to {@code true} to turn on the light(s). Set to {@code false} to turn off the light(s).
@@ -35,6 +71,7 @@ public final class State {
     this.hue = null;
     this.sat = null;
     this.ct = colorTemperatureInMireks;
+    this.transitiontime = null;
   }
 
   /**
@@ -58,6 +95,7 @@ public final class State {
     this.hue = null;
     this.sat = null;
     this.ct = null;
+    this.transitiontime = null;
   }
 
   /**
@@ -74,6 +112,7 @@ public final class State {
     this.hue = null;
     this.sat = null;
     this.ct = null;
+    this.transitiontime = null;
   }
 
   /**
@@ -89,6 +128,7 @@ public final class State {
     this.hue = hue;
     this.sat = saturation;
     this.ct = null;
+    this.transitiontime = null;
   }
 
   private static Color hexToColor(final String hexColor) {
@@ -121,6 +161,8 @@ public final class State {
   public Integer getCt() {
     return ct;
   }
+
+  public Integer getTransitiontime() { return  transitiontime; }
 
   private static XAndYAndBrightness rgbToXy(final Color color) {
     final float red = color.getRed() / 255f;
