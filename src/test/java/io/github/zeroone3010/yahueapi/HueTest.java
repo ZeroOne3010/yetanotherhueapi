@@ -62,6 +62,7 @@ class HueTest {
       wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
       mockIndividualGetResponse(jsonNode, "lights", "100");
       mockIndividualGetResponse(jsonNode, "lights", "101");
+      mockIndividualGetResponse(jsonNode, "lights", "200");
       mockIndividualGetResponse(jsonNode, "lights", "300");
       mockIndividualGetResponse(jsonNode, "sensors", "1");
       mockIndividualGetResponse(jsonNode, "sensors", "4");
@@ -108,6 +109,15 @@ class HueTest {
     assertEquals(2, hue.getRoomByName("Living room").get().getLights().size());
     assertEquals(1, hue.getRoomByName("Bedroom").get().getLights().size());
     assertFalse(hue.getRoomByName("No such room").isPresent());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testGetLightReachability() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    assertTrue(hue.getRoomByName("Living room").get().getLightByName("LR 1").get().isReachable());
+    assertFalse(hue.getRoomByName("Bedroom").get().getLightByName("Pendant").get().isReachable());
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 

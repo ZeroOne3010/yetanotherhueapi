@@ -116,7 +116,7 @@
         "alert": "none",
         "colormode": "ct",
         "mode": "homeautomation",
-        "reachable": true
+        "reachable": false
       },
       "swupdate": {
         "state": "noupdates",

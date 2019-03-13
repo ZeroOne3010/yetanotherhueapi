@@ -53,10 +53,19 @@ final class LightImpl implements Light {
 
   @Override
   public boolean isOn() {
+    return getLightState().isOn();
+  }
+
+  @Override
+  public boolean isReachable() {
+    return getLightState().isReachable();
+  }
+
+  private LightState getLightState() {
     try {
       final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
       logger.fine(state.toString());
-      return state.isOn();
+      return state;
     } catch (final IOException e) {
       throw new HueApiException(e);
     }

@@ -24,6 +24,12 @@ public interface Light {
   boolean isOn();
 
   /**
+   * Queries the reachability of the light.
+   * @return True if the light is reachable, false if it is not.
+   */
+  boolean isReachable();
+
+  /**
    * Sets the brightness of the light. If the light is off, does not turn it on, nor does {@code 0} turn it off.
    *
    * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
