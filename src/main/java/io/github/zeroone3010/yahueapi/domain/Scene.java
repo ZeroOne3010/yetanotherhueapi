@@ -1,8 +1,8 @@
 package io.github.zeroone3010.yahueapi.domain;
 
 public class Scene {
-    @Override
-    public String toString() {
-        return JsonStringUtil.toJsonString(this);
-    }
+  @Override
+  public String toString() {
+    return JsonStringUtil.toJsonString(this);
+  }
 }

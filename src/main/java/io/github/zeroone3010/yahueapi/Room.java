@@ -6,18 +6,21 @@ import java.util.Optional;
 public interface Room {
   /**
    * Returns the name of the room, as set by the user.
+   *
    * @return Name of the room.
    */
   String getName();
 
   /**
    * Returns all the lights that have been assigned to this room.
+   *
    * @return A Collection of ILight objects.
    */
   Collection<Light> getLights();
 
   /**
    * Returns one light, if found by the given name.
+   *
    * @param lightName Name of a light in this room.
    * @return Optional.empty() if a light is not found by this name, an Optional<ILight> if it is.
    */
@@ -25,18 +28,21 @@ public interface Room {
 
   /**
    * Queries the state of the room.
+   *
    * @return True if any light is on in this room, false if not.
    */
   boolean isAnyOn();
 
   /**
    * Queries the state of the room.
+   *
    * @return True if all lights in this room are on, false if they are not.
    */
   boolean isAllOn();
 
   /**
    * Sets a state for the room.
+   *
    * @param state A state to be set for this room.
    */
   void setState(State state);

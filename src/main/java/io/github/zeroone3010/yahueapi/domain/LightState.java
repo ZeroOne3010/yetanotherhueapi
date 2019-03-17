@@ -5,119 +5,119 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class LightState {
-    @JsonProperty("on")
-    private boolean on;
-    @JsonProperty("bri")
-    private int brightness;
-    @JsonProperty("hue")
-    private int hue;
-    @JsonProperty("sat")
-    private int saturation;
-    @JsonProperty("effect")
-    private String effect;
-    @JsonProperty("xy")
-    private List<Float> xy;
-    @JsonProperty("ct")
-    private int ct;
-    @JsonProperty("alert")
-    private String alert;
-    @JsonProperty("colormode")
-    private String colorMode;
-    @JsonProperty("mode")
-    private String mode;
-    @JsonProperty("reachable")
-    private boolean reachable;
+  @JsonProperty("on")
+  private boolean on;
+  @JsonProperty("bri")
+  private int brightness;
+  @JsonProperty("hue")
+  private int hue;
+  @JsonProperty("sat")
+  private int saturation;
+  @JsonProperty("effect")
+  private String effect;
+  @JsonProperty("xy")
+  private List<Float> xy;
+  @JsonProperty("ct")
+  private int ct;
+  @JsonProperty("alert")
+  private String alert;
+  @JsonProperty("colormode")
+  private String colorMode;
+  @JsonProperty("mode")
+  private String mode;
+  @JsonProperty("reachable")
+  private boolean reachable;
 
-    public boolean isOn() {
-        return on;
-    }
+  public boolean isOn() {
+    return on;
+  }
 
-    public void setOn(boolean on) {
-        this.on = on;
-    }
+  public void setOn(boolean on) {
+    this.on = on;
+  }
 
-    public int getBrightness() {
-        return brightness;
-    }
+  public int getBrightness() {
+    return brightness;
+  }
 
-    public void setBrightness(int brightness) {
-        this.brightness = brightness;
-    }
+  public void setBrightness(int brightness) {
+    this.brightness = brightness;
+  }
 
-    public int getHue() {
-        return hue;
-    }
+  public int getHue() {
+    return hue;
+  }
 
-    public void setHue(int hue) {
-        this.hue = hue;
-    }
+  public void setHue(int hue) {
+    this.hue = hue;
+  }
 
-    public int getSaturation() {
-        return saturation;
-    }
+  public int getSaturation() {
+    return saturation;
+  }
 
-    public void setSaturation(int saturation) {
-        this.saturation = saturation;
-    }
+  public void setSaturation(int saturation) {
+    this.saturation = saturation;
+  }
 
-    public String getEffect() {
-        return effect;
-    }
+  public String getEffect() {
+    return effect;
+  }
 
-    public void setEffect(String effect) {
-        this.effect = effect;
-    }
+  public void setEffect(String effect) {
+    this.effect = effect;
+  }
 
-    public List<Float> getXy() {
-        return xy;
-    }
+  public List<Float> getXy() {
+    return xy;
+  }
 
-    public void setXy(List<Float> xy) {
-        this.xy = xy;
-    }
+  public void setXy(List<Float> xy) {
+    this.xy = xy;
+  }
 
-    public int getCt() {
-        return ct;
-    }
+  public int getCt() {
+    return ct;
+  }
 
-    public void setCt(int ct) {
-        this.ct = ct;
-    }
+  public void setCt(int ct) {
+    this.ct = ct;
+  }
 
-    public String getAlert() {
-        return alert;
-    }
+  public String getAlert() {
+    return alert;
+  }
 
-    public void setAlert(String alert) {
-        this.alert = alert;
-    }
+  public void setAlert(String alert) {
+    this.alert = alert;
+  }
 
-    public String getColorMode() {
-        return colorMode;
-    }
+  public String getColorMode() {
+    return colorMode;
+  }
 
-    public void setColorMode(String colorMode) {
-        this.colorMode = colorMode;
-    }
+  public void setColorMode(String colorMode) {
+    this.colorMode = colorMode;
+  }
 
-    public String getMode() {
-        return mode;
-    }
+  public String getMode() {
+    return mode;
+  }
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
+  public void setMode(String mode) {
+    this.mode = mode;
+  }
 
-    public boolean isReachable() {
-        return reachable;
-    }
+  public boolean isReachable() {
+    return reachable;
+  }
 
-    public void setReachable(boolean reachable) {
-        this.reachable = reachable;
-    }
+  public void setReachable(boolean reachable) {
+    this.reachable = reachable;
+  }
 
-    @Override
-    public String toString() {
-        return JsonStringUtil.toJsonString(this);
-    }
+  @Override
+  public String toString() {
+    return JsonStringUtil.toJsonString(this);
+  }
 }
