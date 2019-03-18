@@ -14,7 +14,7 @@ public interface Room {
   /**
    * Returns all the lights that have been assigned to this room.
    *
-   * @return A Collection of ILight objects.
+   * @return A Collection of Light objects.
    */
   Collection<Light> getLights();
 
@@ -22,7 +22,7 @@ public interface Room {
    * Returns one light, if found by the given name.
    *
    * @param lightName Name of a light in this room.
-   * @return Optional.empty() if a light is not found by this name, an Optional<ILight> if it is.
+   * @return Optional.empty() if a light is not found by this name, an Optional&lt;Light> if it is.
    */
   Optional<Light> getLightByName(String lightName);
 

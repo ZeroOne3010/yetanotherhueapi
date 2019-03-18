@@ -14,57 +14,80 @@ public final class StateBuilderSteps {
 
   public interface HueStep {
     /**
-     * Hue, from {@code 0} to {@code 65280}.
+     * Hue.
+     *
+     * @param hue A value from {@code 0} to {@code 65280}.
+     * @return The next step of this state builder
      */
     SaturationStep hue(int hue);
   }
 
   public interface SaturationStep {
     /**
-     * Saturation, from 0 (white) to 254 (most saturated).
+     * Saturation.
+     *
+     * @param saturation A value from 0 (white) to 254 (most saturated).
+     * @return The next step of this state builder
      */
     BrightnessStep saturation(int saturation);
   }
 
   public interface BrightnessStep {
     /**
-     * The brightness as a value from {@code 1} (minimum brightness) to {@code 254} (maximum brightness).
+     * Brightness.
+     *
+     * @param brightness A value from {@code 1} (minimum brightness) to {@code 254} (maximum brightness).
+     * @return The next step of this state builder
      */
     BuildStep brightness(int brightness);
   }
 
   public interface XyStep {
     /**
-     * The x and y coordinates of the C.I.E. chromaticity diagram. Exactly two values between 0 and 1 required.
+     * Color.
+     *
+     * @param xy The x and y coordinates of the C.I.E. chromaticity diagram. Exactly two values between 0 and 1 required.
+     * @return The next step of this state builder
      */
     BrightnessStep xy(List<Float> xy);
   }
 
   public interface ColorStep {
     /**
-     * The color as a {@link java.awt.Color} object.
+     * Color.
+     *
+     * @param color The color as a {@link java.awt.Color} object.
+     * @return The next step of this state builder
      */
     BuildStep color(Color color);
 
     /**
-     * The color as a hexadecimal string, for example "#ff0000" for red.
+     * Color.
+     *
+     * @param color The color as a hexadecimal string, for example "#ff0000" for red.
+     * @return The next step of this state builder
      */
     BuildStep color(String color);
   }
 
   public interface ColorTemperatureStep {
     /**
-     * The color temperature in mireks.
-     * Must be between {@code 153} (6500K) and {@code 500} (2000K)
+     * Color temperature.
+     *
+     * @param colorTemperature The color temperature in mireks. Must be between {@code 153} (6500K) and {@code 500} (2000K)
+     * @return The next step of this state builder
      */
     BrightnessStep colorTemperatureInMireks(int colorTemperature);
   }
 
   public interface TransitionTimeStep {
     /**
-     * Transition time in tenths of seconds, i.e. "4" equals "0.4 seconds".
+     * Transition time.
+     *
+     * @param tenths Transition time in tenths of seconds, i.e. "4" equals "0.4 seconds".
+     * @return The next step of this state builder
      */
-    OnOffStep transitionTime(int centiseconds);
+    OnOffStep transitionTime(int tenths);
   }
 
   public interface BuildStep extends OnOffStep, TransitionTimeStep {
@@ -76,7 +99,7 @@ public final class StateBuilderSteps {
 
     /**
      * Creates a new {@code State} that will turn on the light to which it is assigned.
-     * A shorthand method for {@code on(true)}.
+     * A shorthand method for {@code on(true)}. Avoid calling in vain if you know the light is on already.
      *
      * @return A new {@code State}.
      */

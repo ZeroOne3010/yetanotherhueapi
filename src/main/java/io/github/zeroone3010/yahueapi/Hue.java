@@ -102,6 +102,7 @@ public final class Hue {
   /**
    * Returns a specific room by its name.
    *
+   * @param roomName The name of a room
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
    */
   public Optional<Room> getRoomByName(final String roomName) {
@@ -203,8 +204,9 @@ public final class Hue {
   }
 
   /**
-   * Returns a specific sensor by its name.
+   * Returns a specific temperature sensor by its name.
    *
+   * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
    */
   public Optional<TemperatureSensor> getTemperatureSensorByName(final String sensorName) {
@@ -216,8 +218,9 @@ public final class Hue {
   }
 
   /**
-   * Returns a specific sensor by its name.
+   * Returns a specific motion sensor by its name.
    *
+   * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
    */
   public Optional<MotionSensor> getMotionSensorByName(final String sensorName) {
@@ -231,12 +234,13 @@ public final class Hue {
   /**
    * Returns a specific dimmer switch by its name.
    *
+   * @param switchName The name of a switch
    * @return A dimmer switch or {@code Optional.empty()} if a dimmer switch with the given name does not exist.
    */
-  public Optional<DimmerSwitch> getDimmerSwitchByName(final String sensorName) {
+  public Optional<DimmerSwitch> getDimmerSwitchByName(final String switchName) {
     doInitialDataLoadIfRequired();
     return getDimmerSwitches().stream()
-        .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
+        .filter(sensor -> Objects.equals(sensor.getName(), switchName))
         .map(DimmerSwitch.class::cast)
         .findFirst();
   }

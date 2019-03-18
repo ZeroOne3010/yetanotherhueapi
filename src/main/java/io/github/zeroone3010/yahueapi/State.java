@@ -158,8 +158,8 @@ public final class State {
     }
 
     @Override
-    public OnOffStep transitionTime(int centiseconds) {
-      this.transitionTime = centiseconds;
+    public OnOffStep transitionTime(int tenths) {
+      this.transitionTime = tenths;
       return this;
     }
 
