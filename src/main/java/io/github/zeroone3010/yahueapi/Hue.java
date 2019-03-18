@@ -246,17 +246,6 @@ public final class Hue {
   }
 
   /**
-   * For development/debugging purposes only. Will be removed.
-   *
-   * @return Lights.
-   */
-  @Deprecated
-  public Map<String, LightDto> getLights() {
-    doInitialDataLoadIfRequired();
-    return this.root.getLights();
-  }
-
-  /**
    * The method to be used if you do not have an API key for your application yet.
    * Returns a {@code HueBridgeConnectionBuilder} that initializes the process of
    * adding a new application to the Bridge.
