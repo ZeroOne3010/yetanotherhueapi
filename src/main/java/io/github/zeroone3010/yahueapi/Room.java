@@ -22,7 +22,7 @@ public interface Room {
    * Returns one light, if found by the given name.
    *
    * @param lightName Name of a light in this room.
-   * @return Optional.empty() if a light is not found by this name, an Optional&lt;Light> if it is.
+   * @return Optional.empty() if a light is not found by this name, an Optional&lt;Light&gt; if it is.
    */
   Optional<Light> getLightByName(String lightName);
 
