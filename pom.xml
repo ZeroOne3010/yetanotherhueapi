@@ -4,7 +4,7 @@
 
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>YetAnotherHueApi</name>
@@ -159,7 +159,7 @@
         <connection>scm:git:git://github.com/ZeroOne3010/yetanotherhueapi.git</connection>
         <developerConnection>scm:git:git@github.com:ZeroOne3010/yetanotherhueapi.git</developerConnection>
         <url>https://github.com/ZeroOne3010/yetanotherhueapi</url>
-        <tag>v1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>
