@@ -10,6 +10,16 @@
     <packaging>jar</packaging>
 
     <name>YetAnotherHueApi</name>
+    <description>A library for controlling Philips Hue lights.</description>
+    <url>https://github.com/ZeroOne3010/yetanotherhueapi</url>
+    <developers>
+        <developer>
+            <id>ZeroOne3010</id>
+            <name>Ville Saalo</name>
+            <email>ville.saalo+yahueapi@iki.fi</email>
+            <timezone>Europe/Helsinki</timezone>
+        </developer>
+    </developers>
 
     <build>
 
