@@ -48,18 +48,11 @@ room.getLightByName("Corner").get().turnOff();
 Add the following to your pom.xml file:
 
 ```xml
-    <repositories>
-        <repository>
-            <id>ZeroOne3010-snapshots</id>
-            <url>https://github.com/ZeroOne3010/mvn-repo/raw/master/snapshots</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
-            <groupId>com.github.zeroone3010</groupId>
+            <groupId>io.github.zeroone3010</groupId>
             <artifactId>yetanotherhueapi</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 ```
