@@ -1,5 +1,6 @@
 Yet Another Hue API
 ===================
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.zeroone3010/yetanotherhueapi.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.zeroone3010%22%20AND%20a:%22yetanotherhueapi%22)
 
 This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official 
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
@@ -45,16 +46,14 @@ room.getLightByName("Corner").get().turnOff();
 
 ### Including the library with Maven
 
-Add the following to your pom.xml file:
+Add the following dependency to your pom.xml file:
 
 ```xml
-    <dependencies>
-        <dependency>
-            <groupId>io.github.zeroone3010</groupId>
-            <artifactId>yetanotherhueapi</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
+<dependency>
+    <groupId>io.github.zeroone3010</groupId>
+    <artifactId>yetanotherhueapi</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 Scope and philosophy
