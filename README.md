@@ -9,7 +9,14 @@ This library has been confirmed to work with the Philips Hue Bridge API version 
 Usage
 -----
 
-If you already have an API key for your Bridge:
+First, import the classes from this library:
+
+[//]: # (imports)
+```java
+import io.github.zeroone3010.yahueapi.*;
+```
+
+Then, if you already have an API key for your Bridge:
 
 [//]: # (init)
 ```java
