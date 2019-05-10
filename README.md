@@ -49,6 +49,10 @@ room.setState(State.builder().color(java.awt.Color.PINK).on());
 
 // Turn off that single lamp in the corner:
 room.getLightByName("Corner").get().turnOff();
+
+// Turn one of the lights green. This also demonstrates the proper use of Optionals:
+final java.util.Optional<Light> light = room.getLightByName("Ceiling 1");
+light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
 ```
 
 ### Including the library with Maven
