@@ -81,17 +81,18 @@ public final class Hue {
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
-    this.rooms = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
-        .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
-        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
-        .collect(toMap(Room::getName, room -> room)));
-    this.zones = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
-        .filter(g -> g.getValue().getType().equals(ZONE_TYPE_GROUP))
-        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
-        .collect(toMap(Room::getName, room -> room)));
+    this.rooms = Collections.unmodifiableMap(findGroupsOfType(ROOM_TYPE_GROUP));
+    this.zones = Collections.unmodifiableMap(findGroupsOfType(ZONE_TYPE_GROUP));
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
+  }
+
+  private Map<String, Room> findGroupsOfType(final String groupType) {
+    return root.getGroups().entrySet().stream()
+        .filter(g -> g.getValue().getType().equals(groupType))
+        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
+        .collect(toMap(Room::getName, room -> room));
   }
 
   /**
