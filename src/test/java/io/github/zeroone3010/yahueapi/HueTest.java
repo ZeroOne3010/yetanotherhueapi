@@ -119,6 +119,25 @@ class HueTest {
   }
 
   @Test
+  void testGetZones() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    assertEquals(1, hue.getZones().size());
+    hue.getZones();
+    hue.getZones();
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testGetZoneByName() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    assertEquals(2, hue.getZoneByName("Path to toilet").get().getLights().size());
+    assertFalse(hue.getZoneByName("No such zone").isPresent());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
   void testGetLightReachability() {
     final Hue hue = createHueAndInitializeMockServer();
 

@@ -24,6 +24,10 @@ public class HueTestRun {
                 .ifPresent(light -> light.setState(state))
         );
 
+    System.out.println("Zones:");
+    hue.getZones().forEach(z -> System.out.println(String.format("Zone '%s' has these lights: %s",
+        z.getName(), z.getLights())));
+
     System.out.println("Motion sensors:");
     hue.getMotionSensors().forEach(s -> System.out.println(String.format("%s (%s): Presence %s",
         s.getName(), s.getId(), s.isPresence())));

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
-import io.github.zeroone3010.yahueapi.domain.LightDto;
 import io.github.zeroone3010.yahueapi.domain.Root;
 
 import java.io.IOException;
@@ -28,11 +27,13 @@ import static java.util.stream.Collectors.toSet;
 
 public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
+  private static final String ZONE_TYPE_GROUP = "Zone";
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final String uri;
   private Root root;
   private Map<String, Room> rooms;
+  private Map<String, Room> zones;
   private Map<String, Sensor> sensors;
 
   /**
@@ -84,6 +85,10 @@ public final class Hue {
         .filter(g -> g.getValue().getType().equals(ROOM_TYPE_GROUP))
         .map(group -> buildRoom(group.getKey(), group.getValue(), root))
         .collect(toMap(Room::getName, room -> room)));
+    this.zones = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
+        .filter(g -> g.getValue().getType().equals(ZONE_TYPE_GROUP))
+        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
+        .collect(toMap(Room::getName, room -> room)));
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
@@ -100,6 +105,16 @@ public final class Hue {
   }
 
   /**
+   * Returns all the zones configured into the Bridge.
+   *
+   * @return A Collection of rooms.
+   */
+  public Collection<Room> getZones() {
+    doInitialDataLoadIfRequired();
+    return Collections.unmodifiableCollection(this.zones.values());
+  }
+
+  /**
    * Returns a specific room by its name.
    *
    * @param roomName The name of a room
@@ -108,6 +123,17 @@ public final class Hue {
   public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.rooms.get(roomName));
+  }
+
+  /**
+   * Returns a specific zone by its name.
+   *
+   * @param zoneName The name of a zone
+   * @return A zone or {@code Optional.empty()} if a zone with the given name does not exist.
+   */
+  public Optional<Room> getZoneByName(final String zoneName) {
+    doInitialDataLoadIfRequired();
+    return Optional.ofNullable(this.zones.get(zoneName));
   }
 
   private Room buildRoom(final String groupId, final Group group, final Root root) {
