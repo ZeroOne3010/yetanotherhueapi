@@ -8,13 +8,13 @@ public class BridgeConfig {
   @JsonProperty("name")
   private String name;
   @JsonProperty("zigbeechannel")
-  private String zigbeeChannel;
+  private int zigbeeChannel;
   @JsonProperty("bridgeid")
   private String bridgeId;
   @JsonProperty("mac")
   private String mac;
   @JsonProperty("dhcp")
-  private String dhcp;
+  private boolean dhcp;
   @JsonProperty("ipaddress")
   private String ipAddress;
   @JsonProperty("netmask")
@@ -63,6 +63,122 @@ public class BridgeConfig {
   private String starterKitId;
   @JsonProperty("whitelist")
   private Map<String, WhiteListItem> whiteList;
+
+  public String getName() {
+    return name;
+  }
+
+  public int getZigbeeChannel() {
+    return zigbeeChannel;
+  }
+
+  public String getBridgeId() {
+    return bridgeId;
+  }
+
+  public String getMac() {
+    return mac;
+  }
+
+  public boolean isDhcp() {
+    return dhcp;
+  }
+
+  public String getIpAddress() {
+    return ipAddress;
+  }
+
+  public String getNetmask() {
+    return netmask;
+  }
+
+  public String getGateway() {
+    return gateway;
+  }
+
+  public String getProxyAddress() {
+    return proxyAddress;
+  }
+
+  public int getProxyPort() {
+    return proxyPort;
+  }
+
+  public String getUtc() {
+    return utc;
+  }
+
+  public String getLocalTime() {
+    return localTime;
+  }
+
+  public String getTimeZone() {
+    return timeZone;
+  }
+
+  public String getModelId() {
+    return modelId;
+  }
+
+  public String getDataStoreVersion() {
+    return dataStoreVersion;
+  }
+
+  public String getSoftwareVersion() {
+    return softwareVersion;
+  }
+
+  public String getApiVersion() {
+    return apiVersion;
+  }
+
+  public ConfigSoftwareUpdate getSoftwareUpdate() {
+    return softwareUpdate;
+  }
+
+  public ConfigSoftwareUpdate2 getSoftwareUpdate2() {
+    return softwareUpdate2;
+  }
+
+  public boolean isLinkButton() {
+    return linkButton;
+  }
+
+  public boolean isPortalServices() {
+    return portalServices;
+  }
+
+  public String getPortalConnection() {
+    return portalConnection;
+  }
+
+  public PortalState getPortalState() {
+    return portalState;
+  }
+
+  public InternetServices getInternetServices() {
+    return internetServices;
+  }
+
+  public boolean isFactoryNew() {
+    return factoryNew;
+  }
+
+  public String getReplacesBridgeId() {
+    return replacesBridgeId;
+  }
+
+  public ConfigBackup getBackup() {
+    return backup;
+  }
+
+  public String getStarterKitId() {
+    return starterKitId;
+  }
+
+  public Map<String, WhiteListItem> getWhiteList() {
+    return whiteList;
+  }
 
   @Override
   public String toString() {

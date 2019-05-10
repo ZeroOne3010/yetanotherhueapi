@@ -17,7 +17,7 @@ public class Root {
   private Map<String, Schedule> schedules;
   @JsonIgnore
   private Map<String, Scene> scenes;
-  @JsonIgnore
+  @JsonProperty("rules")
   private Map<String, Rule> rules;
   @JsonProperty("sensors")
   private Map<String, SensorDto> sensors;

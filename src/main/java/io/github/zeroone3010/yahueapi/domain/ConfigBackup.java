@@ -8,6 +8,14 @@ public class ConfigBackup {
   @JsonProperty("errorcode")
   private int errorCode;
 
+  public String getStatus() {
+    return status;
+  }
+
+  public int getErrorCode() {
+    return errorCode;
+  }
+
   @Override
   public String toString() {
     return JsonStringUtil.toJsonString(this);

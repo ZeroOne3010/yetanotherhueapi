@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
+import io.github.zeroone3010.yahueapi.domain.Root;
+import io.github.zeroone3010.yahueapi.domain.RuleAction;
+import io.github.zeroone3010.yahueapi.domain.RuleCondition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,8 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -264,6 +270,46 @@ class HueTest {
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
         .withRequestBody(new EqualToPattern("{\"bri\":42}", false)));
+  }
+
+  @Test
+  void testGetRawRules() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Root root = hue.getRaw();
+    assertEquals(2, root.getRules().size());
+    assertEquals("Dimmer Switch 4 on0", root.getRules().get("1").getName());
+    assertEquals("6655664454522131aaaeeaaeaeaeaea", root.getRules().get("1").getOwner());
+    assertEquals("2017-07-14T14:04:04", root.getRules().get("1").getCreated());
+    assertEquals("2018-07-27T13:00:13", root.getRules().get("1").getLastTriggered());
+    assertEquals(5, root.getRules().get("1").getTimesTriggered());
+    assertEquals("enabled", root.getRules().get("1").getStatus());
+    assertEquals(true, root.getRules().get("1").isRecycle());
+    final List<RuleCondition> conditions = root.getRules().get("1").getConditions();
+    assertEquals(3, conditions.size());
+    assertEquals("/sensors/4/state/buttonevent", conditions.get(0).getAddress());
+    assertEquals("eq", conditions.get(0).getOperator());
+    assertEquals("1000", conditions.get(0).getValue());
+    final List<RuleAction> actions = root.getRules().get("1").getActions();
+    assertEquals(1, actions.size());
+    assertEquals("/groups/1/action", actions.get(0).getAddress());
+    assertEquals("PUT", actions.get(0).getMethod());
+    assertEquals(Collections.singletonMap("on", true), actions.get(0).getBody());
+  }
+
+  @Test
+  void testGetRawConfig() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final BridgeConfig config = hue.getRaw().getConfig();
+    assertEquals(11, config.getZigbeeChannel());
+    assertEquals("00:17:11:22:33:aa", config.getMac());
+    assertEquals(true, config.isDhcp());
+    assertEquals("1.26.0", config.getApiVersion());
+    assertEquals("noupdates", config.getSoftwareUpdate2().getBridge().getState());
+    assertEquals(true, config.getPortalState().isSignedOn());
+    assertEquals(false, config.getPortalState().isIncoming());
+    assertEquals(true, config.getPortalState().isOutgoing());
+    assertEquals("disconnected", config.getPortalState().getCommunication());
+    assertEquals("2015-01-09T19:19:19", config.getWhiteList().get("6655664454522131aaaeeaaeaeaeaea").getCreateDate());
   }
 
   private String readFile(final String fileName) {
