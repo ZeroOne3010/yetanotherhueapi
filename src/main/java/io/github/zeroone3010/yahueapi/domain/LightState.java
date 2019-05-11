@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * A data transfer object to hold the properties received from the Hue Bridge. Do not try to use this class
+ * to change the state of a light, use {@link io.github.zeroone3010.yahueapi.State} instead.
+ */
 public class LightState {
   @JsonProperty("on")
   private boolean on;
@@ -32,6 +36,10 @@ public class LightState {
     return on;
   }
 
+  /**
+   * @param on
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setOn(boolean on) {
     this.on = on;
   }
@@ -40,6 +48,10 @@ public class LightState {
     return brightness;
   }
 
+  /**
+   * @param brightness
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setBrightness(int brightness) {
     this.brightness = brightness;
   }
@@ -48,6 +60,10 @@ public class LightState {
     return hue;
   }
 
+  /**
+   * @param hue
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setHue(int hue) {
     this.hue = hue;
   }
@@ -56,6 +72,10 @@ public class LightState {
     return saturation;
   }
 
+  /**
+   * @param saturation
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setSaturation(int saturation) {
     this.saturation = saturation;
   }
@@ -64,6 +84,10 @@ public class LightState {
     return effect;
   }
 
+  /**
+   * @param effect
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setEffect(String effect) {
     this.effect = effect;
   }
@@ -72,6 +96,10 @@ public class LightState {
     return xy;
   }
 
+  /**
+   * @param xy
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setXy(List<Float> xy) {
     this.xy = xy;
   }
@@ -80,6 +108,10 @@ public class LightState {
     return ct;
   }
 
+  /**
+   * @param ct
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setCt(int ct) {
     this.ct = ct;
   }
@@ -88,6 +120,10 @@ public class LightState {
     return alert;
   }
 
+  /**
+   * @param alert
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setAlert(String alert) {
     this.alert = alert;
   }
@@ -96,6 +132,10 @@ public class LightState {
     return colorMode;
   }
 
+  /**
+   * @param colorMode
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setColorMode(String colorMode) {
     this.colorMode = colorMode;
   }
@@ -104,6 +144,10 @@ public class LightState {
     return mode;
   }
 
+  /**
+   * @param mode
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setMode(String mode) {
     this.mode = mode;
   }
@@ -112,6 +156,10 @@ public class LightState {
     return reachable;
   }
 
+  /**
+   * @param reachable
+   * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
+   */
   public void setReachable(boolean reachable) {
     this.reachable = reachable;
   }
