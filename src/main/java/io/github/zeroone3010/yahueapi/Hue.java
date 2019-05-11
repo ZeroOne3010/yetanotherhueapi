@@ -42,6 +42,7 @@ public final class Hue {
    *
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
+   * @since 1.0.0
    */
   public Hue(final String bridgeIp, final String apiKey) {
     this(HueBridgeProtocol.HTTP, bridgeIp, apiKey);
@@ -56,6 +57,7 @@ public final class Hue {
    *                 when using the other constructor.
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
+   * @since 1.0.0
    */
   public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
     this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
@@ -74,6 +76,8 @@ public final class Hue {
   /**
    * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
    * it has been updated since the application was started.
+   *
+   * @since 1.0.0
    */
   public void refresh() {
     try {
@@ -99,6 +103,7 @@ public final class Hue {
    * Returns all the rooms configured into the Bridge.
    *
    * @return A Collection of rooms.
+   * @since 1.0.0
    */
   public Collection<Room> getRooms() {
     doInitialDataLoadIfRequired();
@@ -108,7 +113,8 @@ public final class Hue {
   /**
    * Returns all the zones configured into the Bridge.
    *
-   * @return A Collection of rooms.
+   * @return A Collection of zones as Room objects.
+   * @since 1.1.0
    */
   public Collection<Room> getZones() {
     doInitialDataLoadIfRequired();
@@ -120,6 +126,7 @@ public final class Hue {
    *
    * @param roomName The name of a room
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
+   * @since 1.0.0
    */
   public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
@@ -131,6 +138,7 @@ public final class Hue {
    *
    * @param zoneName The name of a zone
    * @return A zone or {@code Optional.empty()} if a zone with the given name does not exist.
+   * @since 1.1.0
    */
   public Optional<Room> getZoneByName(final String zoneName) {
     doInitialDataLoadIfRequired();
@@ -171,6 +179,7 @@ public final class Hue {
    * technical details of the Bridge setup.
    *
    * @return A Root element, as received from the Bridge REST API.
+   * @since 1.0.0
    */
   public Root getRaw() {
     doInitialDataLoadIfRequired();
@@ -181,6 +190,7 @@ public final class Hue {
    * Returns all the sensors configured into the Bridge.
    *
    * @return A Collection of sensors.
+   * @since 1.0.0
    */
   public Collection<Sensor> getUnknownSensors() {
     return getSensorsByType(SensorType.UNKNOWN, Sensor.class);
@@ -190,6 +200,7 @@ public final class Hue {
    * Returns all the temperature sensors configured into the Bridge.
    *
    * @return A Collection of temperature sensors.
+   * @since 1.0.0
    */
   public Collection<TemperatureSensor> getTemperatureSensors() {
     return getSensorsByType(SensorType.TEMPERATURE, TemperatureSensor.class);
@@ -199,6 +210,7 @@ public final class Hue {
    * Returns all the dimmer switches configured into the Bridge.
    *
    * @return A Collection of dimmer switches.
+   * @since 1.0.0
    */
   public Collection<DimmerSwitch> getDimmerSwitches() {
     return getSensorsByType(SensorType.DIMMER_SWITCH, DimmerSwitch.class);
@@ -208,6 +220,7 @@ public final class Hue {
    * Returns all the motion sensors configured into the Bridge.
    *
    * @return A Collection of motion sensors.
+   * @since 1.0.0
    */
   public Collection<MotionSensor> getMotionSensors() {
     return getSensorsByType(SensorType.MOTION, MotionSensor.class);
@@ -217,6 +230,7 @@ public final class Hue {
    * Returns all the daylight sensors configured into the Bridge.
    *
    * @return A Collection of daylight sensors.
+   * @since 1.0.0
    */
   public Collection<DaylightSensor> getDaylightSensors() {
     return getSensorsByType(SensorType.DAYLIGHT, DaylightSensor.class);
@@ -235,6 +249,7 @@ public final class Hue {
    *
    * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
+   * @since 1.0.0
    */
   public Optional<TemperatureSensor> getTemperatureSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
@@ -249,6 +264,7 @@ public final class Hue {
    *
    * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
+   * @since 1.0.0
    */
   public Optional<MotionSensor> getMotionSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
@@ -263,6 +279,7 @@ public final class Hue {
    *
    * @param switchName The name of a switch
    * @return A dimmer switch or {@code Optional.empty()} if a dimmer switch with the given name does not exist.
+   * @since 1.0.0
    */
   public Optional<DimmerSwitch> getDimmerSwitchByName(final String switchName) {
     doInitialDataLoadIfRequired();
@@ -279,6 +296,7 @@ public final class Hue {
    *
    * @param bridgeIp The IP address of the Bridge.
    * @return A connection builder that initializes the application for the Bridge.
+   * @since 1.0.0
    */
   public static HueBridgeConnectionBuilder hueBridgeConnectionBuilder(final String bridgeIp) {
     return new HueBridgeConnectionBuilder(bridgeIp);
@@ -298,6 +316,7 @@ public final class Hue {
      *
      * @param appName The name of your application.
      * @return A {@code CompletableFuture} with an API key for your application. You should store this key for future usage.
+     * @since 1.0.0
      */
     public CompletableFuture<String> initializeApiConnection(final String appName) {
       final Supplier<String> apiKeySupplier = () -> {
