@@ -80,15 +80,7 @@ Version numbering follows the [Semantic Versioning](https://semver.org/).
 Version history
 ---------------
 
-### v1.1.0
-
-* Added support for zones
-* Added getter methods for certain properties accessible with the `getRaw()` method
-* Deprecated certain setter methods accessible with the `getRaw()` method
-
-### v1.0.0
-
-* Initial release
+See [CHANGELOG.md](CHANGELOG.md).
 
 
 Notes
