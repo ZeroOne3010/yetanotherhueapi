@@ -176,7 +176,8 @@ public final class Hue {
 
   /**
    * Returns the raw root node information of the REST API. Not required for anything but querying the most
-   * technical details of the Bridge setup.
+   * technical details of the Bridge setup. Note that it is not possible to change the state of the Bridge or
+   * the lights by using any values returned by this method: the results are read-only.
    *
    * @return A Root element, as received from the Bridge REST API.
    * @since 1.0.0
