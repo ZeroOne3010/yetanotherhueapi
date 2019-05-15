@@ -40,6 +40,9 @@ fabric.properties
 # Compiled class file
 *.class
 
+# Maven default output directory
+target/
+
 # Log file
 *.log
 
