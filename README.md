@@ -77,6 +77,11 @@ essential functions well: in an intuitive and usable way for the programmer.
 The number of external dependencies should be kept to a minimum.
 Version numbering follows the [Semantic Versioning](https://semver.org/).
 
+Contributing
+------------
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Version history
 ---------------
 
