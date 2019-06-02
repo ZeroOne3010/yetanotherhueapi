@@ -29,6 +29,8 @@ public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
   private static final String ZONE_TYPE_GROUP = "Zone";
 
+  private LightFactory lightFactory = BridgeQueryingLightFactory.INSTANCE;
+
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final String uri;
   private Root root;
@@ -157,14 +159,7 @@ public final class Hue {
   }
 
   private Light buildLight(final String lightId, final Root root) {
-    try {
-      return new LightImpl(lightId,
-          root.getLights().get(lightId),
-          new URL(uri + "lights/" + lightId),
-          objectMapper);
-    } catch (final MalformedURLException e) {
-      throw new HueApiException(e);
-    }
+    return lightFactory.buildLight(lightId, root, uri, objectMapper);
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {
