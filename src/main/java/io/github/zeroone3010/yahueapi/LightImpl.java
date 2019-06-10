@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-final class LightImpl implements Light {
+class LightImpl implements Light {
   private static final Logger logger = Logger.getLogger("LightImpl");
   private static final String STATE_PATH = "/state";
   private static final String ACTION_PATH = "/state";
@@ -31,7 +31,7 @@ final class LightImpl implements Light {
     this.type = LightType.parseTypeString(light.getType());
   }
 
-  String getId() {
+  protected String getId() {
     return id;
   }
 
@@ -64,7 +64,7 @@ final class LightImpl implements Light {
     return getLightState().isReachable();
   }
 
-  private LightState getLightState() {
+  protected LightState getLightState() {
     try {
       final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
       logger.fine(state.toString());
@@ -100,12 +100,7 @@ final class LightImpl implements Light {
 
   @Override
   public State getState() {
-    try {
-      final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
-      return State.build(state);
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
+    return State.build(getLightState());
   }
 
   @Override

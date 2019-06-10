@@ -16,10 +16,11 @@ final class LightFactory {
   Light buildLight(final String lightId, final Root root, final String bridgeUri,
                    final ObjectMapper objectMapper) {
     try {
-      return new CacheWrapperForLight(hue, new LightImpl(lightId,
+      return new CacheWrapperForLight(hue,
+          lightId,
           root.getLights().get(lightId),
           new URL(bridgeUri + "lights/" + lightId),
-          objectMapper));
+          objectMapper);
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
