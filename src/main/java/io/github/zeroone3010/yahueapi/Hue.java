@@ -29,7 +29,7 @@ public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
   private static final String ZONE_TYPE_GROUP = "Zone";
 
-  private LightFactory lightFactory = BridgeQueryingLightFactory.INSTANCE;
+  private LightFactory lightFactory = new LightFactory(this);
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final String uri;
@@ -37,6 +37,7 @@ public final class Hue {
   private Map<String, Room> rooms;
   private Map<String, Room> zones;
   private Map<String, Sensor> sensors;
+  private boolean caching = false;
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
@@ -48,6 +49,41 @@ public final class Hue {
    */
   public Hue(final String bridgeIp, final String apiKey) {
     this(HueBridgeProtocol.HTTP, bridgeIp, apiKey);
+  }
+
+  /**
+   * <p>Controls whether cached states of objects, such as lights, should be used.
+   * Off ({@code false}) by default. If set on ({@code true}), querying light states will
+   * NOT actually relay the query to the Bridge. Instead, it uses the state that was valid
+   * when this method was called, or the state that was valid when subsequent calls to
+   * the {@link #refresh()} method were made.</p>
+   *
+   * <p>One should use caching when performing multiple queries in a quick succession,
+   * such as when querying the states of all the individual lights in a Hue setup.</p>
+   *
+   * <p>If caching is already on and you try to enable it again, this method does nothing.
+   * Similarly nothing happens if caching is already disabled and one tries to disable it again.</p>
+   *
+   * @param enabled Set to {@code true} to have the lights cache their results from the Bridge.
+   *                Remember to call {@link #refresh()} first when you need to retrieve the
+   *                absolutely current states.
+   * @since 1.2.0
+   */
+  public void setCaching(final boolean enabled) {
+    if (caching != enabled) {
+      caching = enabled;
+      refresh();
+    }
+  }
+
+  /**
+   * Tells whether this instance caches the states of objects, such as lights.
+   *
+   * @return {@code true} if cached results are returned, {@code false} if all queries are directed to the Bridge.
+   * @since 1.2.0
+   */
+  public boolean isCaching() {
+    return caching;
   }
 
   /**
@@ -78,6 +114,10 @@ public final class Hue {
   /**
    * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
    * it has been updated since the application was started.
+   *
+   * This method is particularly useful if caching is enabled
+   * with the {@link #setCaching(boolean)} method. Calls to {@code refresh()}
+   * will, in that case, refresh the states of the lights.
    *
    * @since 1.0.0
    */

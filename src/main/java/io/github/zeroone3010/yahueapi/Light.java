@@ -19,14 +19,16 @@ public interface Light {
   void turnOff();
 
   /**
-   * Queries the light state.
+   * Queries the light state -- or returns the cached state if caching
+   * has been enabled with {@link Hue#setCaching(boolean)}.
    *
    * @return True if the light is on, false if it is off.
    */
   boolean isOn();
 
   /**
-   * Queries the reachability of the light.
+   * Queries the reachability of the light -- or returns the cached state if caching
+   * has been enabled with {@link Hue#setCaching(boolean)}.
    *
    * @return True if the light is reachable, false if it is not.
    */
@@ -54,7 +56,8 @@ public interface Light {
   void setState(State state);
 
   /**
-   * Gets the state of the light.
+   * Gets the state of the light -- or returns the cached state if caching
+   * has been enabled with {@link Hue#setCaching(boolean)}.
    *
    * @return The current state of the light.
    */

@@ -32,6 +32,10 @@ final class LightImpl implements Light {
     this.type = LightType.parseTypeString(light.getType());
   }
 
+  String getId() {
+    return id;
+  }
+
   @Override
   public String getName() {
     return name;

@@ -206,6 +206,73 @@ class HueTest {
   }
 
   @Test
+  void testGetLightStateQueriesTheBridgeEveryTimeWhenCachingIsOffByDefault() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get();
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+  }
+
+  @Test
+  void testGetLightStateQueriesTheBridgeEveryTimeWhenCachingIsOffExplicitly() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(false);
+    final Light light = hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get();
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+  }
+
+  @Test
+  void testGetLightStateIsNotQueriedFromTheBridgeWhenCachingIsOn() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(true);
+    final Light light = hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get();
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    assertTrue(light.getState().getOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+  }
+
+  @Test
+  void testGetLightStateWhenTogglingCachingOnAndOff() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    hue.setCaching(true);
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    final Light light = hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get();
+    light.getState();
+    light.getState();
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+
+    hue.setCaching(false);
+    wireMockServer.verify(2, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    light.getState();
+    light.getState();
+    light.getState();
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+
+    hue.setCaching(true);
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    light.getState();
+    light.getState();
+    light.getState();
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "lights/300")));
+  }
+
+  @Test
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
     final Collection<Sensor> sensors = hue.getUnknownSensors();
