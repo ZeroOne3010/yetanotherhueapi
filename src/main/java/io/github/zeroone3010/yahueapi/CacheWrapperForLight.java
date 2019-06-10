@@ -5,7 +5,6 @@ import io.github.zeroone3010.yahueapi.domain.LightState;
 public class CacheWrapperForLight implements Light {
   private final Hue hue;
   private final LightImpl light;
-  private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 
   public CacheWrapperForLight(final Hue hue, final LightImpl light) {
     this.hue = hue;
@@ -62,18 +61,7 @@ public class CacheWrapperForLight implements Light {
   public State getState() {
     if (hue.isCaching()) {
       final LightState state = hue.getRaw().getLights().get(light.getId()).getState();
-      if (state.getColorMode() == null) {
-        return State.builder().colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
-      }
-      switch (state.getColorMode()) {
-        case "xy":
-          return State.builder().xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
-        case "ct":
-          return State.builder().colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
-        case "hs":
-          return State.builder().hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
-      }
-      throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
+      return State.build(state);
     }
     return light.getState();
   }

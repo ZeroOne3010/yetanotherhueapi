@@ -13,7 +13,6 @@ final class LightImpl implements Light {
   private static final Logger logger = Logger.getLogger("LightImpl");
   private static final String STATE_PATH = "/state";
   private static final String ACTION_PATH = "/state";
-  private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 
   private final String id;
   private final String name;
@@ -103,19 +102,7 @@ final class LightImpl implements Light {
   public State getState() {
     try {
       final LightState state = objectMapper.readValue(baseUrl, LightDto.class).getState();
-      logger.fine(state.toString());
-      if (state.getColorMode() == null) {
-        return State.builder().colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
-      }
-      switch (state.getColorMode()) {
-        case "xy":
-          return State.builder().xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
-        case "ct":
-          return State.builder().colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
-        case "hs":
-          return State.builder().hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
-      }
-      throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
+      return State.build(state);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }

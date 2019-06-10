@@ -14,6 +14,7 @@ import io.github.zeroone3010.yahueapi.StateBuilderSteps.OnOffStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.TransitionTimeStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.XyStep;
+import io.github.zeroone3010.yahueapi.domain.LightState;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -21,9 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @JsonInclude(Include.NON_NULL)
 public final class State {
+  private static final Logger logger = Logger.getLogger("State");
+
+  private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
+
   private final Boolean on;
   private final Integer hue;
   private final Integer sat;
@@ -72,6 +78,22 @@ public final class State {
 
   public static InitialStep builder() {
     return new Builder();
+  }
+
+  static State build(final LightState state) {
+    logger.fine(state.toString());
+    if (state.getColorMode() == null) {
+      return State.builder().colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
+    }
+    switch (state.getColorMode()) {
+      case "xy":
+        return State.builder().xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
+      case "ct":
+        return State.builder().colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
+      case "hs":
+        return State.builder().hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
+    }
+    throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
   }
 
   @Override
