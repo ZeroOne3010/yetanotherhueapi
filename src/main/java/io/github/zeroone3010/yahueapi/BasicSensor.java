@@ -47,13 +47,7 @@ class BasicSensor implements Sensor {
 
   @Override
   public ZonedDateTime getLastUpdated() {
-    try {
-      final Map<String, Object> state = objectMapper.readValue(baseUrl, SensorDto.class).getState();
-      logger.info(state.toString());
-      return ZonedDateTime.parse(String.valueOf(state.get("lastupdated") + UTC_SUFFIX));
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
+    return ZonedDateTime.parse(readStateValue("lastupdated", String.class) + UTC_SUFFIX);
   }
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
