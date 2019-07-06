@@ -1,18 +1,19 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.util.Map;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 final class TemperatureSensorImpl extends BasicSensor implements TemperatureSensor {
   private static final Logger logger = Logger.getLogger("MotionSensorImpl");
 
-  TemperatureSensorImpl(final String id, final SensorDto sensor, final URL url, final ObjectMapper objectMapper) {
-    super(id, sensor, url, objectMapper);
+  TemperatureSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
+    super(id, sensor, url, stateProvider);
   }
 
   @Override

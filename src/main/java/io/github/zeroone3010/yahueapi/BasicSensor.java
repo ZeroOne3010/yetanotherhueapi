@@ -1,12 +1,11 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.SensorDto;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 class BasicSensor implements Sensor {
@@ -17,16 +16,16 @@ class BasicSensor implements Sensor {
   protected final String name;
   protected final URL baseUrl;
   protected final SensorType type;
-  protected final ObjectMapper objectMapper;
+  private final Supplier<Map<String, Object>> stateProvider;
 
-  BasicSensor(final String id, final SensorDto sensor, final URL url, final ObjectMapper objectMapper) {
+  BasicSensor(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
     this.id = id;
     if (sensor == null) {
       throw new HueApiException("Sensor " + id + " cannot be found.");
     }
     this.name = sensor.getName();
     this.baseUrl = url;
-    this.objectMapper = objectMapper;
+    this.stateProvider = stateProvider;
     this.type = SensorType.parseTypeString(sensor.getType());
   }
 
@@ -51,13 +50,9 @@ class BasicSensor implements Sensor {
   }
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
-    try {
-      final Map<String, Object> state = objectMapper.readValue(baseUrl, SensorDto.class).getState();
+    final Map<String, Object> state = stateProvider.get();
       logger.fine(state.toString());
       return type.cast(state.get(stateValueKey));
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
   }
 
   @Override

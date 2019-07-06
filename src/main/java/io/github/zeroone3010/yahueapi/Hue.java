@@ -30,6 +30,7 @@ public final class Hue {
   private static final String ZONE_TYPE_GROUP = "Zone";
 
   private LightFactory lightFactory = new LightFactory(this);
+  private SensorFactory sensorFactory = new SensorFactory(this);
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final String uri;
@@ -203,7 +204,7 @@ public final class Hue {
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {
-    return SensorFactory.buildSensor(sensorId,
+    return sensorFactory.buildSensor(sensorId,
         root.getSensors().get(sensorId),
         uri,
         objectMapper);

@@ -1,14 +1,15 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.net.URL;
+import java.util.Map;
+import java.util.function.Supplier;
 
 final class MotionSensorImpl extends BasicSensor implements MotionSensor {
 
-  MotionSensorImpl(final String id, final SensorDto sensor, final URL url, final ObjectMapper objectMapper) {
-    super(id, sensor, url, objectMapper);
+  MotionSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
+    super(id, sensor, url, stateProvider);
   }
 
   @Override
