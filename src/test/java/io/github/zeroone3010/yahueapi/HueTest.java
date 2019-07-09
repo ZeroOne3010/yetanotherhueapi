@@ -345,6 +345,73 @@ class HueTest {
   }
 
   @Test
+  void testGetSensorStateQueriesTheBridgeEveryTimeWhenCachingIsOffByDefault() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final TemperatureSensor sensor = hue.getTemperatureSensorByName("Hue temperature sensor 1").get();
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+  }
+
+  @Test
+  void testGetSensorStateQueriesTheBridgeEveryTimeWhenCachingIsOffExplicitly() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(false);
+    final TemperatureSensor sensor = hue.getTemperatureSensorByName("Hue temperature sensor 1").get();
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+  }
+
+  @Test
+  void testGetSensorStateIsNotQueriedFromTheBridgeWhenCachingIsOn() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(true);
+    final TemperatureSensor sensor = hue.getTemperatureSensorByName("Hue temperature sensor 1").get();
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    assertEquals(new BigDecimal("29.53"), sensor.getDegreesCelsius());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+  }
+
+  @Test
+  void testGetSensorStateWhenTogglingCachingOnAndOff() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    hue.setCaching(true);
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    final TemperatureSensor sensor = hue.getTemperatureSensorByName("Hue temperature sensor 1").get();
+    sensor.getDegreesCelsius();
+    sensor.getDegreesCelsius();
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+
+    hue.setCaching(false);
+    wireMockServer.verify(2, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    sensor.getDegreesCelsius();
+    sensor.getDegreesCelsius();
+    sensor.getDegreesCelsius();
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+
+    hue.setCaching(true);
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    sensor.getDegreesCelsius();
+    sensor.getDegreesCelsius();
+    sensor.getDegreesCelsius();
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "sensors/15")));
+  }
+
+  @Test
   void testSetLightBrightness() {
     wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
         .willReturn(okJson("[{\"success\":{\"/lights/100/state/bri\":123}}]")));

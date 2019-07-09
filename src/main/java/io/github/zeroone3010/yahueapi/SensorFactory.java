@@ -26,7 +26,7 @@ final class SensorFactory {
     final URL url = buildSensorUrl(bridgeUri, id);
 
     final SensorType type = SensorType.parseTypeString(sensor.getType());
-    final Supplier<Map<String, Object>> stateProvider = createStateProvider(url);
+    final Supplier<Map<String, Object>> stateProvider = createStateProvider(url, id);
     switch (type) {
       case MOTION:
         return new MotionSensorImpl(id, sensor, url, stateProvider);
@@ -41,8 +41,11 @@ final class SensorFactory {
     }
   }
 
-  private Supplier<Map<String, Object>> createStateProvider(final URL url) {
+  private Supplier<Map<String, Object>> createStateProvider(final URL url, final String id) {
     return () -> {
+      if (hue.isCaching()) {
+        return hue.getRaw().getSensors().get(id).getState();
+      }
       try {
         return objectMapper.readValue(url, SensorDto.class).getState();
       } catch (IOException e) {
