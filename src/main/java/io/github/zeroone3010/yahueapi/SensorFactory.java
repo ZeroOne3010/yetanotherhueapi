@@ -11,13 +11,14 @@ import java.util.function.Supplier;
 
 final class SensorFactory {
   private final Hue hue;
+  private final ObjectMapper objectMapper;
 
-  SensorFactory(final Hue hue) {
+  SensorFactory(final Hue hue, final ObjectMapper objectMapper) {
     this.hue = hue;
+    this.objectMapper = objectMapper;
   }
 
-  Sensor buildSensor(final String id, final SensorDto sensor, final String bridgeUri,
-                            final ObjectMapper objectMapper) {
+  Sensor buildSensor(final String id, final SensorDto sensor, final String bridgeUri) {
     if (sensor == null) {
       throw new HueApiException("Sensor " + id + " cannot be found.");
     }
@@ -25,7 +26,7 @@ final class SensorFactory {
     final URL url = buildSensorUrl(bridgeUri, id);
 
     final SensorType type = SensorType.parseTypeString(sensor.getType());
-    final Supplier<Map<String, Object>> stateProvider = createStateProvider(objectMapper, url);
+    final Supplier<Map<String, Object>> stateProvider = createStateProvider(url);
     switch (type) {
       case MOTION:
         return new MotionSensorImpl(id, sensor, url, stateProvider);
@@ -40,7 +41,7 @@ final class SensorFactory {
     }
   }
 
-  private Supplier<Map<String, Object>> createStateProvider(final ObjectMapper objectMapper, final URL url) {
+  private Supplier<Map<String, Object>> createStateProvider(final URL url) {
     return () -> {
       try {
         return objectMapper.readValue(url, SensorDto.class).getState();

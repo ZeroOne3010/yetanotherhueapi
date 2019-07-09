@@ -29,10 +29,11 @@ public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
   private static final String ZONE_TYPE_GROUP = "Zone";
 
-  private LightFactory lightFactory = new LightFactory(this);
-  private SensorFactory sensorFactory = new SensorFactory(this);
-
   private final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final LightFactory lightFactory = new LightFactory(this, objectMapper);
+  private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
+
   private final String uri;
   private Root root;
   private Map<String, Room> rooms;
@@ -200,14 +201,11 @@ public final class Hue {
   }
 
   private Light buildLight(final String lightId, final Root root) {
-    return lightFactory.buildLight(lightId, root, uri, objectMapper);
+    return lightFactory.buildLight(lightId, root, uri);
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {
-    return sensorFactory.buildSensor(sensorId,
-        root.getSensors().get(sensorId),
-        uri,
-        objectMapper);
+    return sensorFactory.buildSensor(sensorId, root.getSensors().get(sensorId), uri);
   }
 
   /**
