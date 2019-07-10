@@ -49,4 +49,12 @@ public interface Room {
    * @param state A state to be set for this room or zone.
    */
   void setState(State state);
+
+  /**
+   * Sets the brightness of the room. If the lights in the room are off, does not turn them on, nor does {@code 0} turn them off.
+   *
+   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   * @since 1.2.0
+   */
+  void setBrightness(int brightness);
 }

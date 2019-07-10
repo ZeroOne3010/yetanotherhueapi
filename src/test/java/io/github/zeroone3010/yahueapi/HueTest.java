@@ -426,6 +426,19 @@ class HueTest {
   }
 
   @Test
+  void testSetRoomBrightness() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1/action")
+        .willReturn(okJson("[{\"success\":{\"/gruops/1/action/bri\":42}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.getRoomByName("Living room").get().setBrightness(42);
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
+        .withRequestBody(new EqualToPattern("{\"bri\":42}", false)));
+  }
+
+  @Test
   void testGetRawRules() {
     final Hue hue = createHueAndInitializeMockServer();
     final Root root = hue.getRaw();

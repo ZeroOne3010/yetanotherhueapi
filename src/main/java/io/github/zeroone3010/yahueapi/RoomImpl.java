@@ -69,6 +69,13 @@ final class RoomImpl implements Room {
     logger.fine(result);
   }
 
+  @Override
+  public void setBrightness(final int brightness) {
+    final String body = String.format("{\"bri\":%d}", brightness);
+    final String result = HttpUtil.put(baseUrl, ACTION_PATH, body);
+    logger.fine(result);
+  }
+
   private GroupState getGroupState() {
     try {
       final GroupState state = objectMapper.readValue(baseUrl, Group.class).getState();
