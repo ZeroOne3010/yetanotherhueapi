@@ -213,7 +213,12 @@ public final class Hue {
    * technical details of the Bridge setup. Note that it is not possible to change the state of the Bridge or
    * the lights by using any values returned by this method: the results are read-only.
    *
-   * @return A Root element, as received from the Bridge REST API.
+   * The results of this method are also always cached, so a call to this method never triggers a query to the Bridge
+   * (unless no other queries have been made to the Bridge since this instance of {@code Hue} was constructed).
+   * To refresh the cache call the {@link #refresh()} method.
+   *
+   * @return A Root element, as received from the Bridge REST API. Always returns a cached version of the data.
+   *
    * @since 1.0.0
    */
   public Root getRaw() {
