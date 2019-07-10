@@ -1,31 +1,31 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.GroupState;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 final class RoomImpl implements Room {
   private static final Logger logger = Logger.getLogger("RoomImpl");
 
-  private static final String ACTION_PATH = "/action";
-
-  private final ObjectMapper objectMapper;
-  private final URL baseUrl;
   private final Set<Light> lights;
   private final String name;
+  private final Supplier<GroupState> stateProvider;
+  private final Function<State, String> stateSetter;
 
-  RoomImpl(final ObjectMapper objectMapper, final URL baseUrl, final Group group, final Set<Light> lights) {
-    this.objectMapper = objectMapper;
-    this.baseUrl = baseUrl;
+  RoomImpl(final Group group,
+           final Set<Light> lights,
+           final Supplier<GroupState> stateProvider,
+           final Function<State, String> stateSetter) {
+    this.stateProvider = stateProvider;
+    this.stateSetter = stateSetter;
     this.lights = lights;
     this.name = group.getName();
   }
@@ -59,31 +59,17 @@ final class RoomImpl implements Room {
 
   @Override
   public void setState(final State state) {
-    final String body;
-    try {
-      body = objectMapper.writeValueAsString(state);
-    } catch (final JsonProcessingException e) {
-      throw new HueApiException(e);
-    }
-    final String result = HttpUtil.put(baseUrl, ACTION_PATH, body);
+    final String result = stateSetter.apply(state);
     logger.fine(result);
   }
 
   @Override
   public void setBrightness(final int brightness) {
-    final String body = String.format("{\"bri\":%d}", brightness);
-    final String result = HttpUtil.put(baseUrl, ACTION_PATH, body);
-    logger.fine(result);
+    setState(((BrightnessStep) State.builder()).brightness(brightness).keepCurrentState());
   }
 
   private GroupState getGroupState() {
-    try {
-      final GroupState state = objectMapper.readValue(baseUrl, Group.class).getState();
-      logger.fine(state.toString());
-      return state;
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
+    return stateProvider.get();
   }
 
   @Override

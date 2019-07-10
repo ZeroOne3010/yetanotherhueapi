@@ -74,6 +74,8 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
       mockIndividualGetResponse(jsonNode, "sensors", "16");
+      mockIndividualGetResponse(jsonNode, "groups", "1");
+      mockIndividualGetResponse(jsonNode, "groups", "2");
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -436,6 +438,73 @@ class HueTest {
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
         .withRequestBody(new EqualToPattern("{\"bri\":42}", false)));
+  }
+
+  @Test
+  void testGetRoomStateQueriesTheBridgeEveryTimeWhenCachingIsOffByDefault() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Room room = hue.getRoomByName("Living room").get();
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1")));
+  }
+
+  @Test
+  void testGetRoomStateQueriesTheBridgeEveryTimeWhenCachingIsOffExplicitly() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(false);
+    final Room room = hue.getRoomByName("Living room").get();
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(5, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1")));
+  }
+
+  @Test
+  void testGetRoomStateIsNotQueriedFromTheBridgeWhenCachingIsOn() {
+    final Hue hue = createHueAndInitializeMockServer();
+    hue.setCaching(true);
+    final Room room = hue.getRoomByName("Living room").get();
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    assertFalse(room.isAllOn());
+    assertFalse(room.isAnyOn());
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1")));
+  }
+
+  @Test
+  void testGetRoomStateWhenTogglingCachingOnAndOff() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    hue.setCaching(true);
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    final Room room = hue.getRoomByName("Bedroom").get();
+    assertTrue(room.isAnyOn());
+    assertTrue(room.isAllOn());
+    wireMockServer.verify(0, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/2")));
+
+    hue.setCaching(false);
+    wireMockServer.verify(2, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    assertTrue(room.isAnyOn());
+    assertTrue(room.isAllOn());
+    assertTrue(room.isAnyOn());
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/2")));
+
+    hue.setCaching(true);
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    assertTrue(room.isAllOn());
+    assertTrue(room.isAnyOn());
+    assertTrue(room.isAllOn());
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(API_BASE_PATH + "groups/2")));
   }
 
   @Test

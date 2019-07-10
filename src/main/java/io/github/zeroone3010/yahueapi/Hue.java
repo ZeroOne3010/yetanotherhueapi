@@ -16,14 +16,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 public final class Hue {
   private static final String ROOM_TYPE_GROUP = "Room";
@@ -31,8 +29,8 @@ public final class Hue {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  private final LightFactory lightFactory = new LightFactory(this, objectMapper);
   private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
+  private final RoomFactory roomFactory;
 
   private final String uri;
   private Root root;
@@ -105,6 +103,7 @@ public final class Hue {
       TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     }
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    roomFactory = new RoomFactory(this, objectMapper, uri);
   }
 
   private void doInitialDataLoadIfRequired() {
@@ -190,18 +189,7 @@ public final class Hue {
   }
 
   private Room buildRoom(final String groupId, final Group group, final Root root) {
-    final Set<Light> lights = group.getLights().stream()
-        .map(lightId -> buildLight(lightId, root))
-        .collect(toSet());
-    try {
-      return new RoomImpl(objectMapper, new URL(uri + "groups/" + groupId), group, lights);
-    } catch (final MalformedURLException e) {
-      throw new HueApiException(e);
-    }
-  }
-
-  private Light buildLight(final String lightId, final Root root) {
-    return lightFactory.buildLight(lightId, root, uri);
+    return roomFactory.buildRoom(groupId, group, root);
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {
