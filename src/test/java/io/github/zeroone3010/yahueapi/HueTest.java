@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import io.github.zeroone3010.yahueapi.domain.Root;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
@@ -416,7 +418,8 @@ class HueTest {
   @Test
   void testSetLightBrightness() {
     wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
-        .willReturn(okJson("[{\"success\":{\"/lights/100/state/bri\":123}}]")));
+        .withRequestBody(equalToJson("{\"bri\":42}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/bri\":42}}]")));
 
     final Hue hue = createHueAndInitializeMockServer();
     final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
@@ -424,7 +427,52 @@ class HueTest {
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
-        .withRequestBody(new EqualToPattern("{\"bri\":42}", false)));
+        .withRequestBody(new EqualToJsonPattern("{\"bri\":42}", false, false)));
+  }
+
+  @Test
+  void testTurnLightOff() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .withRequestBody(equalToJson("{\"on\":false}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/on\":false}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.turnOff();
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToJsonPattern("{\"on\":false}", false, false)));
+  }
+
+  @Test
+  void testTurnLightOn() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .withRequestBody(equalToJson("{\"on\":true}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/on\":true}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.turnOn();
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToJsonPattern("{\"on\":true}", false, false)));
+  }
+
+  @Test
+  void testSetLightState() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .withRequestBody(equalToJson("{\"hue\":1, \"sat\":2, \"bri\":3}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/on\":true}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.setState(State.builder().hue(1).saturation(2).brightness(3).keepCurrentState());
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToJsonPattern("{\"hue\":1, \"sat\":2, \"bri\":3}", false, false)));
   }
 
   @Test
