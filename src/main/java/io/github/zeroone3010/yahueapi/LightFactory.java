@@ -29,16 +29,14 @@ final class LightFactory {
       return new LightImpl(
           lightId,
           root.getLights().get(lightId),
-          url,
-          createStateProvider(hue, url, lightId),
+          createStateProvider(url, lightId),
           stateSetter(url));
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
   }
 
-  private Supplier<LightState> createStateProvider(final Hue hue,
-                                                   final URL url,
+  private Supplier<LightState> createStateProvider(final URL url,
                                                    final String id) {
     return () -> {
       if (hue.isCaching()) {
