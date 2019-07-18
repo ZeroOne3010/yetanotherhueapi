@@ -87,6 +87,10 @@ Version history
 
 See [CHANGELOG.md](CHANGELOG.md).
 
+This project elsewhere
+----------------------
+* [Black Duck Open Hub](https://www.openhub.net/p/yetanotherhueapi)
+* [Code Climate](https://codeclimate.com/github/ZeroOne3010/yetanotherhueapi)
 
 Notes
 -----
