@@ -4,7 +4,7 @@ Yet Another Hue API
 
 This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official 
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
-This library has been confirmed to work with the Philips Hue Bridge API version 1.31.0.
+This library has been confirmed to work with the Philips Hue Bridge API version 1.32.0.
 
 Usage
 -----
@@ -47,6 +47,9 @@ final Room room = hue.getRoomByName("Basement").get();
 // Turn the lights on, make them pink:
 room.setState(State.builder().color(java.awt.Color.PINK).on());
 
+// Make the entire room dimly lit:
+room.setBrightness(10);
+
 // Turn off that single lamp in the corner:
 room.getLightByName("Corner").get().turnOff();
 
@@ -55,7 +58,20 @@ final java.util.Optional<Light> light = room.getLightByName("Ceiling 1");
 light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
 ```
 
-### Including the library with Maven
+### Caching
+
+By default this library always queries the Bridge every time you query the state of a light, a room, or a sensor.
+When querying the states of several items in quick succession, it is better to use caching. You can turn it on
+by calling the `setCaching(true)` method of the `Hue` object. Subsequent `getState()` calls well *not* trigger a
+query to the Bridge. Instead they will return the state that was current when caching was toggled on, or the last time
+that the `refresh()` method of the `Hue` object was called. Toggling caching off by calling `setCaching(false)`
+will direct subsequent state queries to the Bridge again. Caching is off by default. When toggling caching on/off
+there is no need to get the `Light`, `Room` or `Sensor` from the `Hue` object again: you can keep using the same
+object reference all the time. Objects that return a cached state will accept and execute state changes (calls to 
+the `setState` method) just fine, but they will *not* update their cached state with those calls.
+
+Including the library with Maven
+--------------------------------
 
 Add the following dependency to your pom.xml file:
 
@@ -63,7 +79,7 @@ Add the following dependency to your pom.xml file:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
