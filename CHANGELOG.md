@@ -11,9 +11,10 @@ Unreleased
 
 ### Added
 
-* `setCaching(boolean)` method. This caches the Bridge state and stops querying the Bridge
+* `setCaching(boolean)` method. This caches the Bridge state (i.e. light, sensor and room states) and stops querying the Bridge
   unless explicitly told to do that by using the `refresh()` method, or until caching is
   disabled again.
+* `setBrightness(int)` method for `Room` objects.
 
 v1.1.0 (2019-05-12)
 -------------------
