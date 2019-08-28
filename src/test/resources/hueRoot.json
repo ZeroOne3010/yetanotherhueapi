@@ -59,7 +59,11 @@
       "config": {
         "archetype": "spotbulb",
         "function": "mixed",
-        "direction": "downwards"
+        "direction": "downwards",
+        "startup": {
+          "mode": "safety",
+          "configured": true
+        }
       },
       "uniqueid": "00:17:aa:ee:aa:ee:11:22-34",
       "swversion": "5.105.0.21536"
@@ -101,7 +105,11 @@
       "config": {
         "archetype": "spotbulb",
         "function": "functional",
-        "direction": "downwards"
+        "direction": "downwards",
+        "startup": {
+          "mode": "powerfail",
+          "configured": true
+        }
       },
       "uniqueid": "00:17:88:bb:bb:bb:cc:cc-11",
       "swversion": "1.29.0_r21169",
@@ -145,7 +153,11 @@
       "config": {
         "archetype": "pendantround",
         "function": "functional",
-        "direction": "downwards"
+        "direction": "downwards",
+        "startup": {
+          "mode": "lastonstate",
+          "configured": true
+        }
       },
       "uniqueid": "00:17:88:44:44:33:55:11-00",
       "swversion": "1.30.4_r23032",
@@ -206,7 +218,11 @@
       "config": {
         "archetype": "huelightstrip",
         "function": "mixed",
-        "direction": "omnidirectional"
+        "direction": "omnidirectional",
+        "startup": {
+          "mode": "safety",
+          "configured": true
+        }
       },
       "uniqueid": "00:17:88:77:ee:77:ee:77-e1",
       "swversion": "5.105.1.21778"
@@ -320,7 +336,7 @@
     "modelid": "BSB002",
     "datastoreversion": "71",
     "swversion": "1806051111",
-    "apiversion": "1.26.0",
+    "apiversion": "1.33.0",
     "swupdate": {
       "updatestate": 0,
       "checkforupdate": false,

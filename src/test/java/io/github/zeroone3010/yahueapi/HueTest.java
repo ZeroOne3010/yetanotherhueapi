@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
+import io.github.zeroone3010.yahueapi.domain.LightConfig;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.RuleAction;
 import io.github.zeroone3010.yahueapi.domain.RuleCondition;
@@ -36,6 +37,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static io.github.zeroone3010.yahueapi.domain.StartupMode.BRIGHT_LIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -586,13 +588,24 @@ class HueTest {
     assertEquals(11, config.getZigbeeChannel());
     assertEquals("00:17:11:22:33:aa", config.getMac());
     assertEquals(true, config.isDhcp());
-    assertEquals("1.26.0", config.getApiVersion());
+    assertEquals("1.33.0", config.getApiVersion());
     assertEquals("noupdates", config.getSoftwareUpdate2().getBridge().getState());
     assertEquals(true, config.getPortalState().isSignedOn());
     assertEquals(false, config.getPortalState().isIncoming());
     assertEquals(true, config.getPortalState().isOutgoing());
     assertEquals("disconnected", config.getPortalState().getCommunication());
     assertEquals("2015-01-09T19:19:19", config.getWhiteList().get("6655664454522131aaaeeaaeaeaeaea").getCreateDate());
+  }
+
+  @Test
+  void testGetRawLightConfig() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final LightConfig config = hue.getRaw().getLights().get("100").getConfig();
+    assertEquals("spotbulb", config.getArchetype());
+    assertEquals("mixed", config.getFunction());
+    assertEquals("downwards", config.getDirection());
+    assertEquals(BRIGHT_LIGHT, config.getStartup().getMode());
+    assertEquals(true, config.getStartup().isConfigured());
   }
 
   private String readFile(final String fileName) {
