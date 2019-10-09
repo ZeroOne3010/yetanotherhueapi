@@ -21,7 +21,7 @@ public class Root {
   private Map<String, Rule> rules;
   @JsonProperty("sensors")
   private Map<String, SensorDto> sensors;
-  @JsonIgnore
+  @JsonProperty("resourcelinks")
   private Map<String, ResourceLink> resourcelinks;
 
   public Map<String, LightDto> getLights() {

@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import io.github.zeroone3010.yahueapi.domain.LightConfig;
+import io.github.zeroone3010.yahueapi.domain.ResourceLink;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.RuleAction;
 import io.github.zeroone3010.yahueapi.domain.RuleCondition;
@@ -24,9 +25,11 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -606,6 +609,24 @@ class HueTest {
     assertEquals("downwards", config.getDirection());
     assertEquals(BRIGHT_LIGHT, config.getStartup().getMode());
     assertEquals(true, config.getStartup().isConfigured());
+  }
+
+  @Test
+  void testGetRawResourcelinks() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Map<String, ResourceLink> resourcelinks = hue.getRaw().getResourcelinks();
+    ResourceLink resourceLink = resourcelinks.get("27890");
+    assertEquals("MotionSensor 16", resourceLink.getName());
+    assertEquals("MotionSensor 16 behavior", resourceLink.getDescription());
+    assertEquals("Link", resourceLink.getType());
+    assertEquals(10020, resourceLink.getClassid());
+    assertEquals("6655664454522131aaaeeaaeaeaeaea", resourceLink.getOwner());
+    assertEquals(false, resourceLink.isRecycle());
+    assertEquals(Arrays.asList("/sensors/16",
+        "/sensors/17",
+        "/sensors/18",
+        "/groups/3",
+        "/scenes/sjJk3kjKBJkf3kh"), resourceLink.getLinks());
   }
 
   private String readFile(final String fileName) {
