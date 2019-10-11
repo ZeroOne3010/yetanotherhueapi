@@ -12,6 +12,7 @@ import io.github.zeroone3010.yahueapi.domain.ResourceLink;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.RuleAction;
 import io.github.zeroone3010.yahueapi.domain.RuleCondition;
+import io.github.zeroone3010.yahueapi.domain.Scene;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -627,6 +629,26 @@ class HueTest {
         "/sensors/18",
         "/groups/3",
         "/scenes/sjJk3kjKBJkf3kh"), resourceLink.getLinks());
+  }
+
+  @Test
+  void testGetRawScenes() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Map<String, Scene> scenes = hue.getRaw().getScenes();
+
+    assertEquals(1, scenes.size());
+    final Scene scene = scenes.get("sjJk3kjKBJkf3kh");
+    assertEquals("Tropical twilight", scene.getName());
+    assertEquals(Arrays.asList("100", "101"), scene.getLights());
+    assertEquals(true, scene.isRecycle());
+    assertEquals(true, scene.isLocked());
+    assertEquals(new HashMap() {{
+      put("version", 1);
+      put("data", "MKoLK_r01_d21");
+    }}, scene.getAppdata());
+    assertEquals("", scene.getPicture());
+    assertEquals("2018-01-19T01:23:45", scene.getLastUpdated());
+    assertEquals(2, scene.getVersion());
   }
 
   private String readFile(final String fileName) {

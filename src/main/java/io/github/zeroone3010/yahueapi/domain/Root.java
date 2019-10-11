@@ -15,7 +15,7 @@ public class Root {
   private BridgeConfig config;
   @JsonIgnore
   private Map<String, Schedule> schedules;
-  @JsonIgnore
+  @JsonProperty("scenes")
   private Map<String, Scene> scenes;
   @JsonProperty("rules")
   private Map<String, Rule> rules;

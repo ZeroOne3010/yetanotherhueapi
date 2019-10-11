@@ -420,8 +420,8 @@
         "101"
       ],
       "owner": "6655664454522131aaaeeaaeaeaeaea",
-      "recycle": false,
-      "locked": false,
+      "recycle": true,
+      "locked": true,
       "appdata": {
         "version": 1,
         "data": "MKoLK_r01_d21"
