@@ -8,7 +8,7 @@ public final class StateBuilderSteps {
     // prevent instantiation
   }
 
-  public interface InitialStep extends HueStep, XyStep, ColorStep, ColorTemperatureStep {
+  public interface InitialStep extends SceneStep, HueStep, XyStep, ColorStep, ColorTemperatureStep {
 
   }
 
@@ -88,6 +88,16 @@ public final class StateBuilderSteps {
      * @return The next step of this state builder
      */
     OnOffStep transitionTime(int tenths);
+  }
+
+  public interface SceneStep {
+    /**
+     * Scene.
+     *
+     * @param scene An identifier of a scene to be activated.
+     * @return The next step of this state builder
+     */
+    OnOffStep scene(String scene);
   }
 
   public interface BuildStep extends OnOffStep, TransitionTimeStep {

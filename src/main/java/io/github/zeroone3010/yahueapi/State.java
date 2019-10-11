@@ -37,6 +37,7 @@ public final class State {
   private final Integer ct;
   private final Integer transitiontime;
   private final List<Float> xy;
+  private final String scene;
 
   private State(final Builder builder) {
     this.on = builder.on;
@@ -46,6 +47,7 @@ public final class State {
     this.sat = builder.sat;
     this.ct = builder.ct;
     this.transitiontime = builder.transitionTime;
+    this.scene = builder.scene;
   }
 
   public Boolean getOn() {
@@ -74,6 +76,10 @@ public final class State {
 
   public Integer getTransitiontime() {
     return transitiontime;
+  }
+
+  public String getScene() {
+    return scene;
   }
 
   public static InitialStep builder() {
@@ -123,6 +129,7 @@ public final class State {
     private Integer ct;
     private Integer transitionTime;
     private List<Float> xy;
+    private String scene;
 
     @Override
     public SaturationStep hue(int hue) {
@@ -189,6 +196,12 @@ public final class State {
     public State on(Boolean on) {
       this.on = on;
       return build();
+    }
+
+    @Override
+    public BuildStep scene(String scene) {
+      this.scene = scene;
+      return this;
     }
 
     private State build() {
