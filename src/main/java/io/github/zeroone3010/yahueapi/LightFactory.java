@@ -23,7 +23,7 @@ final class LightFactory {
     this.objectMapper = objectMapper;
   }
 
-  Light buildLight(final String lightId, final Root root, final String bridgeUri) {
+  LightImpl buildLight(final String lightId, final Root root, final String bridgeUri) {
     try {
       final URL url = new URL(bridgeUri + "lights/" + lightId);
       return new LightImpl(

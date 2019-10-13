@@ -31,9 +31,11 @@ public final class Hue {
 
   private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
   private final RoomFactory roomFactory;
+  private final LightFactory lightFactory;
 
   private final String uri;
   private Root root;
+  private Map<String, Light> lights;
   private Map<String, Room> rooms;
   private Map<String, Room> zones;
   private Map<String, Sensor> sensors;
@@ -104,6 +106,7 @@ public final class Hue {
     }
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     roomFactory = new RoomFactory(this, objectMapper, uri);
+    lightFactory = new LightFactory(this, objectMapper);
   }
 
   private void doInitialDataLoadIfRequired() {
@@ -128,6 +131,9 @@ public final class Hue {
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
+    this.lights = Collections.unmodifiableMap(root.getLights().entrySet().stream()
+        .map(light -> buildLight(light.getKey(), root))
+        .collect(toMap(LightImpl::getId, light -> light)));
     this.rooms = Collections.unmodifiableMap(findGroupsOfType(ROOM_TYPE_GROUP));
     this.zones = Collections.unmodifiableMap(findGroupsOfType(ZONE_TYPE_GROUP));
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
@@ -138,8 +144,13 @@ public final class Hue {
   private Map<String, Room> findGroupsOfType(final String groupType) {
     return root.getGroups().entrySet().stream()
         .filter(g -> g.getValue().getType().equals(groupType))
-        .map(group -> buildRoom(group.getKey(), group.getValue(), root))
+        .map(group -> buildRoom(group.getKey(), group.getValue()))
         .collect(toMap(Room::getName, room -> room));
+  }
+
+  Light getLightById(final String id) {
+    doInitialDataLoadIfRequired();
+    return lights.get(id);
   }
 
   /**
@@ -188,12 +199,16 @@ public final class Hue {
     return Optional.ofNullable(this.zones.get(zoneName));
   }
 
-  private Room buildRoom(final String groupId, final Group group, final Root root) {
-    return roomFactory.buildRoom(groupId, group, root);
+  private Room buildRoom(final String groupId, final Group group) {
+    return roomFactory.buildRoom(groupId, group);
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {
     return sensorFactory.buildSensor(sensorId, root.getSensors().get(sensorId), uri);
+  }
+
+  private LightImpl buildLight(final String lightId, final Root root) {
+    return lightFactory.buildLight(lightId, root, uri);
   }
 
   /**

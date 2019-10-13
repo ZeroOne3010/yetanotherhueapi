@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.GroupState;
-import io.github.zeroone3010.yahueapi.domain.Root;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,18 +20,16 @@ final class RoomFactory {
   private final Hue hue;
   private final ObjectMapper objectMapper;
   private final String bridgeUri;
-  private final LightFactory lightFactory;
 
   RoomFactory(final Hue hue, final ObjectMapper objectMapper, final String bridgeUri) {
     this.hue = hue;
     this.objectMapper = objectMapper;
     this.bridgeUri = bridgeUri;
-    this.lightFactory = new LightFactory(hue, objectMapper);
   }
 
-  Room buildRoom(final String groupId, final Group group, final Root root) {
+  Room buildRoom(final String groupId, final Group group) {
     final Set<Light> lights = group.getLights().stream()
-        .map(lightId -> buildLight(lightId, root))
+        .map(hue::getLightById)
         .collect(toSet());
     try {
       final URL url = new URL(bridgeUri + "groups/" + groupId);
@@ -44,10 +41,6 @@ final class RoomFactory {
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
-  }
-
-  private Light buildLight(final String lightId, final Root root) {
-    return lightFactory.buildLight(lightId, root, bridgeUri);
   }
 
   private Supplier<GroupState> createStateProvider(final URL url,
