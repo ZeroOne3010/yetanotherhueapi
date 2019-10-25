@@ -25,9 +25,9 @@ public interface Sensor {
   SensorType getType();
 
   /**
-   * Returns the last time the sensor status has been updated.
+   * Returns the last time the sensor status has been updated, or null if it has not been updated.
    *
-   * @return The time when the sensor status was last updated.
+   * @return The time when the sensor status was last updated, or null.
    */
   ZonedDateTime getLastUpdated();
 }

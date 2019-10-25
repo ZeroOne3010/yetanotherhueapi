@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 class BasicSensor implements Sensor {
   private static final Logger logger = Logger.getLogger("SensorImpl");
   private static final String UTC_SUFFIX = "+00:00[UTC]";
+  private static final String NO_LAST_UPDATED_DATA = "none";
 
   protected final String id;
   protected final String name;
@@ -46,7 +47,11 @@ class BasicSensor implements Sensor {
 
   @Override
   public ZonedDateTime getLastUpdated() {
-    return ZonedDateTime.parse(readStateValue("lastupdated", String.class) + UTC_SUFFIX);
+    final String lastUpdated = readStateValue("lastupdated", String.class);
+    if (NO_LAST_UPDATED_DATA.equals(lastUpdated)) {
+      return null;
+    }
+    return ZonedDateTime.parse(lastUpdated + UTC_SUFFIX);
   }
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
