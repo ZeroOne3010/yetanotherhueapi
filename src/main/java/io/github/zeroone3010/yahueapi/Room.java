@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * A room or a zone that has been configured into the Hue Bridge.
+ * A room, a zone, or another type of group that has been configured into the Hue Bridge.
  */
 public interface Room {
   /**
@@ -15,7 +15,7 @@ public interface Room {
   String getName();
 
   /**
-   * Returns all the lights that have been assigned to this room or zone.
+   * Returns all the lights that have been assigned to this group.
    *
    * @return A Collection of Light objects.
    */
@@ -24,37 +24,46 @@ public interface Room {
   /**
    * Returns one light, if found by the given name.
    *
-   * @param lightName Name of a light in this room or zone.
+   * @param lightName Name of a light in this group.
    * @return Optional.empty() if a light is not found by this name, an Optional&lt;Light&gt; if it is.
    */
   Optional<Light> getLightByName(String lightName);
 
   /**
-   * Queries the state of the room or zone.
+   * Queries the state of the group of lights.
    *
-   * @return True if any light is on in this room or zone, false if not.
+   * @return True if any light is on in this group, false if not.
    */
   boolean isAnyOn();
 
   /**
-   * Queries the state of the room or zone.
+   * Queries the state of the group.
    *
-   * @return True if all lights in this room or zone are on, false if they are not.
+   * @return True if all lights in this group are on, false if they are not.
    */
   boolean isAllOn();
 
   /**
-   * Sets a state for the room or zone.
+   * Sets a state for the group.
    *
-   * @param state A state to be set for this room or zone.
+   * @param state A state to be set for this group.
    */
   void setState(State state);
 
   /**
-   * Sets the brightness of the room. If the lights in the room are off, does not turn them on, nor does {@code 0} turn them off.
+   * Sets the brightness of the group. If the lights in the group are off, does not turn them on,
+   * nor does {@code 0} turn them off.
    *
    * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
    * @since 1.2.0
    */
   void setBrightness(int brightness);
+
+  /**
+   * Returns the type of this group of lights, whether it is a room, a zone, or something else.
+   *
+   * @return The type of this group of lights.
+   * @since 1.3.0
+   */
+  GroupType getType();
 }

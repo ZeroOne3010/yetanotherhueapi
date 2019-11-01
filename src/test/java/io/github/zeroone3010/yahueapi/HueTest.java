@@ -651,6 +651,16 @@ class HueTest {
     assertEquals(2, scene.getVersion());
   }
 
+  @Test
+  void testGetRoomsAndZones() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    assertEquals(4, hue.getGroupsOfType(GroupType.ROOM, GroupType.ZONE).size());
+    hue.getRooms();
+    hue.getZones();
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
   private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());

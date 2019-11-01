@@ -19,6 +19,7 @@ final class RoomImpl implements Room {
   private final String name;
   private final Supplier<GroupState> stateProvider;
   private final Function<State, String> stateSetter;
+  private final GroupType groupType;
 
   RoomImpl(final Group group,
            final Set<Light> lights,
@@ -28,6 +29,7 @@ final class RoomImpl implements Room {
     this.stateSetter = stateSetter;
     this.lights = lights;
     this.name = group.getName();
+    this.groupType = GroupType.parseTypeString(group.getType());
   }
 
   @Override
@@ -68,14 +70,20 @@ final class RoomImpl implements Room {
     setState(((BrightnessStep) State.builder()).brightness(brightness).keepCurrentState());
   }
 
+  @Override
+  public GroupType getType() {
+    return groupType;
+  }
+
   private GroupState getGroupState() {
     return stateProvider.get();
   }
 
   @Override
   public String toString() {
-    return "Room{" +
+    return "Group{" +
         "name='" + name + '\'' +
+        "type='" + groupType + '\'' +
         '}';
   }
 }

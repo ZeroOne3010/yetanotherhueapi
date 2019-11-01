@@ -14,6 +14,7 @@ Unreleased
 * Resourcelinks, accessible with the `getRaw()` method
 * Scenes, accessible with the `getRaw()` method
 * Possibility to activate a scene for a room
+* Other types of light groups besides just lights and zones are now supported too
 
 v1.2.0 (2019-07-19)
 ----------

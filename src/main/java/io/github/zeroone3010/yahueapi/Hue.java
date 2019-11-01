@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -22,11 +23,9 @@ import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 public final class Hue {
-  private static final String ROOM_TYPE_GROUP = "Room";
-  private static final String ZONE_TYPE_GROUP = "Zone";
-
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
@@ -36,8 +35,7 @@ public final class Hue {
   private final String uri;
   private Root root;
   private Map<String, Light> lights;
-  private Map<String, Room> rooms;
-  private Map<String, Room> zones;
+  private Map<String, Room> groups;
   private Map<String, Sensor> sensors;
   private boolean caching = false;
 
@@ -134,18 +132,28 @@ public final class Hue {
     this.lights = Collections.unmodifiableMap(root.getLights().entrySet().stream()
         .map(light -> buildLight(light.getKey(), root))
         .collect(toMap(LightImpl::getId, light -> light)));
-    this.rooms = Collections.unmodifiableMap(findGroupsOfType(ROOM_TYPE_GROUP));
-    this.zones = Collections.unmodifiableMap(findGroupsOfType(ZONE_TYPE_GROUP));
+    this.groups = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
+        .map(group -> buildRoom(group.getKey(), group.getValue()))
+        .collect(toMap(Room::getName, room -> room)));
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
   }
 
-  private Map<String, Room> findGroupsOfType(final String groupType) {
-    return root.getGroups().entrySet().stream()
-        .filter(g -> g.getValue().getType().equals(groupType))
-        .map(group -> buildRoom(group.getKey(), group.getValue()))
-        .collect(toMap(Room::getName, room -> room));
+  /**
+   * Returns all groups of lights that match any of the specified group types.
+   *
+   * @param groupTypes Type or types of groups to get.
+   * @return A Collection of groups matching the requested types.
+   * @since 1.3.0
+   */
+  public Collection<Room> getGroupsOfType(final GroupType... groupTypes) {
+    doInitialDataLoadIfRequired();
+    return Collections.unmodifiableCollection(groups.values().stream()
+        .filter(room -> Arrays.stream(groupTypes)
+            .filter(Objects::nonNull)
+            .anyMatch(type -> type.equals(room.getType())))
+        .collect(toSet()));
   }
 
   Light getLightById(final String id) {
@@ -155,24 +163,24 @@ public final class Hue {
 
   /**
    * Returns all the rooms configured into the Bridge.
+   * Acts as a shorthand version of calling {@link #getGroupsOfType(GroupType...)} with value {@code GroupType.ROOM}.
    *
    * @return A Collection of rooms.
    * @since 1.0.0
    */
   public Collection<Room> getRooms() {
-    doInitialDataLoadIfRequired();
-    return Collections.unmodifiableCollection(this.rooms.values());
+    return getGroupsOfType(GroupType.ROOM);
   }
 
   /**
    * Returns all the zones configured into the Bridge.
+   * Acts as a shorthand version of calling {@link #getGroupsOfType(GroupType...)} with value {@code GroupType.ZONE}.
    *
    * @return A Collection of zones as Room objects.
    * @since 1.1.0
    */
   public Collection<Room> getZones() {
-    doInitialDataLoadIfRequired();
-    return Collections.unmodifiableCollection(this.zones.values());
+    return getGroupsOfType(GroupType.ZONE);
   }
 
   /**
@@ -184,7 +192,7 @@ public final class Hue {
    */
   public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
-    return Optional.ofNullable(this.rooms.get(roomName));
+    return Optional.ofNullable(this.groups.get(roomName)).filter(g -> g.getType() == GroupType.ROOM);
   }
 
   /**
@@ -196,7 +204,7 @@ public final class Hue {
    */
   public Optional<Room> getZoneByName(final String zoneName) {
     doInitialDataLoadIfRequired();
-    return Optional.ofNullable(this.zones.get(zoneName));
+    return Optional.ofNullable(this.groups.get(zoneName)).filter(g -> g.getType() == GroupType.ZONE);
   }
 
   private Room buildRoom(final String groupId, final Group group) {
