@@ -27,6 +27,7 @@ class ReadmeDotMdTest {
   private static final String CODE_REQUIRES = "requires-";
   private static final String CODE_THROWS = "throws-";
   private static final String CODE_IMPORTS = "imports";
+  private static final String HEADER_IMPORT = "import ";
   private static final String CODE_BLOCK_STARTS = "```java";
   private static final String CODE_BLOCK_ENDS = "```";
 
@@ -61,7 +62,12 @@ class ReadmeDotMdTest {
     final List<String> importStatements = new ArrayList<>();
     for (final String line : lines) {
       if (line.startsWith(COMMENT_LINE_START)) {
-        codeHeader = line.replace(COMMENT_LINE_START, "").replace(COMMENT_LINE_END, "");
+        final String header = line.replace(COMMENT_LINE_START, "").replace(COMMENT_LINE_END, "");
+        if (header.startsWith(HEADER_IMPORT)) {
+          importStatements.add(header);
+        } else {
+          codeHeader = header;
+        }
       } else if (line.equals(CODE_BLOCK_STARTS)) {
         if (CODE_IMPORTS.equals(codeHeader)) {
           blockType = BlockType.IMPORTS;

@@ -30,10 +30,11 @@ final Hue hue = new Hue(bridgeIp, apiKey);
 If you don't have an API key for your bridge:
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
+[//]: # (import java.util.concurrent.CompletableFuture;)
 ```java
 final String bridgeIp = "192.168.1.99"; // Fill in the IP address of your Bridge
 final String appName = "MyFirstHueApp"; // Fill in the name of your application
-final java.util.concurrent.CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
+final CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
 // Push the button on your Hue Bridge to resolve the apiKey future:
 final String key = apiKey.get();
 System.out.println("Store this API key for future use: " + key);
@@ -45,9 +46,10 @@ final Hue hue = new Hue(bridgeIp, key);
 If you do not know the IP address of the Bridge, in a future version of this library 
 you will be able to use an automatic Bridge discovery method, like this (subject to change):
 
+[//]: # (import java.util.List;)
 ```java
 final HueBridgeDiscoverer discoverer = new NUPnPDiscoverer();
-final java.util.List<HueBridge> bridges = discoverer.discoverBridges();
+final List<HueBridge> bridges = discoverer.discoverBridges();
 if( !bridges.isEmpty() ) {
   final String bridgeIp = bridges.get(0).getIp();
   System.out.println("Bridge found at " + bridgeIp);
@@ -58,6 +60,7 @@ if( !bridges.isEmpty() ) {
 ### Using the rooms and the lights
 
 [//]: # (requires-init)
+[//]: # (import java.util.Optional;)
 ```java
 // Get a room -- returns Optional.empty() if the room does not exist, but 
 // let's assume we know for a fact it exists and can do the .get() right away:
@@ -73,7 +76,7 @@ room.setBrightness(10);
 room.getLightByName("Corner").get().turnOff();
 
 // Turn one of the lights green. This also demonstrates the proper use of Optionals:
-final java.util.Optional<Light> light = room.getLightByName("Ceiling 1");
+final Optional<Light> light = room.getLightByName("Ceiling 1");
 light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
 ```
 
