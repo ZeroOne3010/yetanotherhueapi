@@ -15,6 +15,7 @@ Unreleased
 * Scenes, accessible with the `getRaw()` method
 * Possibility to activate a scene for a room
 * Other types of light groups besides just lights and zones are now supported too
+* N-UPnP Bridge Discovery Protocol: queries the Philips Hue portal for Hue Bridges in this LAN
 
 v1.2.0 (2019-07-19)
 ----------

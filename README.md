@@ -16,7 +16,9 @@ First, import the classes from this library:
 import io.github.zeroone3010.yahueapi.*;
 ```
 
-Then, if you already have an API key for your Bridge:
+### Initializing the API with a connection to the Bridge
+
+If you already have an API key for your Bridge:
 
 [//]: # (init)
 ```java
@@ -33,10 +35,27 @@ final String bridgeIp = "192.168.1.99"; // Fill in the IP address of your Bridge
 final String appName = "MyFirstHueApp"; // Fill in the name of your application
 final java.util.concurrent.CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
 // Push the button on your Hue Bridge to resolve the apiKey future:
-final Hue hue = new Hue(bridgeIp, apiKey.get());
+final String key = apiKey.get();
+System.out.println("Store this API key for future use: " + key);
+final Hue hue = new Hue(bridgeIp, key);
 ```
 
-Using the rooms and the lights:
+#### Bridge discovery (upcoming!)
+
+If you do not know the IP address of the Bridge, in a future version of this library 
+you will be able to use an automatic Bridge discovery method, like this (subject to change):
+
+```java
+final HueBridgeDiscoverer discoverer = new NUPnPDiscoverer();
+final java.util.List<HueBridge> bridges = discoverer.discoverBridges();
+if( !bridges.isEmpty() ) {
+  final String bridgeIp = bridges.get(0).getIp();
+  System.out.println("Bridge found at " + bridgeIp);
+  // Then follow the code snippets above
+}
+```
+
+### Using the rooms and the lights
 
 [//]: # (requires-init)
 ```java
