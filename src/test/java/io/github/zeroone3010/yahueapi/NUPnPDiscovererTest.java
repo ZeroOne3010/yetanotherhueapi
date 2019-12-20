@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.github.zeroone3010.yahueapi.NUPnPDiscoverer.UPnPDeserializer;
+import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer.UPnPDeserializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

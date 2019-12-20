@@ -1,4 +1,4 @@
-package io.github.zeroone3010.yahueapi;
+package io.github.zeroone3010.yahueapi.discovery;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.github.zeroone3010.yahueapi.HueBridge;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -53,8 +54,8 @@ public class NUPnPDiscoverer implements HueBridgeDiscoverer {
   /**
    * <p>Deserializes a JSON object that has an <code>internalipaddress</code> field.</p>
    */
-  static class UPnPDeserializer extends StdDeserializer<HueBridge> {
-    UPnPDeserializer() {
+  public static class UPnPDeserializer extends StdDeserializer<HueBridge> {
+    public UPnPDeserializer() {
       super(HueBridge.class);
     }
 
