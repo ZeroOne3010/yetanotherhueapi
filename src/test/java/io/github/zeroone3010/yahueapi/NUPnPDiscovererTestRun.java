@@ -1,5 +1,7 @@
 package io.github.zeroone3010.yahueapi;
 
+import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer;
+
 import java.util.Collection;
 
 class NUPnPDiscovererTestRun {

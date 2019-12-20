@@ -1,4 +1,6 @@
-package io.github.zeroone3010.yahueapi;
+package io.github.zeroone3010.yahueapi.discovery;
+
+import io.github.zeroone3010.yahueapi.HueBridge;
 
 import java.util.List;
 
