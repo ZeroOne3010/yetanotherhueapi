@@ -10,14 +10,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
+public abstract class UPnPDiscoverer implements HueBridgeDiscovererAsync {
+  private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
-  private static final long SSDP_REQUEST_TIMER = 10;
+  private static final long SSDP_REQUEST_TIMER_INTERVAL_SECONDS = 10;
   private static InetAddress multicastAddress;
-  private static final int port = 1900;
+  private static final int PORT = 1900;
   private MulticastSocket socket;
   private ScheduledExecutorService ssdpRequestSender;
   private ScheduledFuture requestSendTask;
@@ -25,7 +27,7 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
   private final Set<String> ips = new HashSet<>();
   private DiscoverState state = DiscoverState.IDLE;
 
-  public UpnpDiscoverer() throws IOException {
+  public UPnPDiscoverer() throws IOException {
     multicastAddress = InetAddress.getByName("239.255.255.250");
     requestPacket = createRequestPacket();
   }
@@ -38,11 +40,11 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
       state = DiscoverState.SEARCHING;
     }
     while (state == DiscoverState.SEARCHING) {
-      byte[] buffer = new byte[8192];
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+      final byte[] buffer = new byte[8192];
+      final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         socket.receive(packet);
-      } catch (IOException e) {
+      } catch (final IOException e) {
         if (state == DiscoverState.STOPPED) {
           return;
         } else {
@@ -51,7 +53,6 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
       }
       packetHandler(packet);
     }
-
   }
 
   private void startSocket() {
@@ -70,14 +71,14 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
     if (state == DiscoverState.SEARCHING) {
       ssdpRequestSender = Executors.newSingleThreadScheduledExecutor();
       requestSendTask = ssdpRequestSender.scheduleAtFixedRate(() -> {
-        System.out.println("sending discover message");
+        logger.info("Sending discover message");
         try {
           socket.send(requestPacket);
         } catch (IOException e) {
           state = DiscoverState.CRASHED;
           e.printStackTrace();
         }
-      }, 0, SSDP_REQUEST_TIMER, TimeUnit.SECONDS);
+      }, 0, SSDP_REQUEST_TIMER_INTERVAL_SECONDS, TimeUnit.SECONDS);
     }
   }
 
@@ -86,18 +87,18 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
     if (requestSendTask != null) {
       ssdpRequestSender.shutdown();
     }
-    if ( socket != null && !socket.isClosed()) {
+    if (socket != null && !socket.isClosed()) {
       socket.close();
     }
   }
 
   private void packetHandler(DatagramPacket packet) {
-    String data = new String(packet.getData());
+    final String data = new String(packet.getData());
     if (data.contains("IpBridge")) {
-      int startIndex = data.indexOf("http://");
-      int endIndex = data.indexOf("/description.xml");
+      final int startIndex = data.indexOf("http://");
+      final int endIndex = data.indexOf("/description.xml");
       if (startIndex != -1 && endIndex != -1) {
-        String ip = data.substring(startIndex + 7, endIndex);
+        final String ip = data.substring(startIndex + 7, endIndex);
         if (ips.add(ip)) {
           onBridgeDiscovered(ip);
         }
@@ -110,13 +111,13 @@ public abstract class UpnpDiscoverer implements HueBridgeDiscovererAsync{
   }
 
   private DatagramPacket createRequestPacket() {
-    StringBuilder sb = new StringBuilder("M-SEARCH * HTTP/1.1\r\n");
-    sb.append("HOST: " + multicastAddress.getHostAddress() + ":" + port + "\r\n");
+    final StringBuilder sb = new StringBuilder("M-SEARCH * HTTP/1.1\r\n");
+    sb.append("HOST: " + multicastAddress.getHostAddress() + ":" + PORT + "\r\n");
     sb.append("MAN: ssdp:discover\r\n");
     sb.append("MX: 3\r\n");
     sb.append("USER-AGENT: Resourcepool SSDP Client\r\n");
     sb.append("ST: ssdp:all\r\n");
-    byte[] content = sb.toString().getBytes(UTF_8);
-    return new DatagramPacket(content, content.length, multicastAddress, port);
+    final byte[] content = sb.toString().getBytes(UTF_8);
+    return new DatagramPacket(content, content.length, multicastAddress, PORT);
   }
 }

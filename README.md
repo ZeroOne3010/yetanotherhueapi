@@ -14,6 +14,7 @@ First, import the classes from this library:
 [//]: # (imports)
 ```java
 import io.github.zeroone3010.yahueapi.*;
+import io.github.zeroone3010.yahueapi.discovery.*;
 ```
 
 ### Initializing the API with a connection to the Bridge
