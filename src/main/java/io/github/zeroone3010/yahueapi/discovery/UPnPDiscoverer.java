@@ -1,5 +1,7 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
+import io.github.zeroone3010.yahueapi.HueBridge;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class UPnPDiscoverer implements HueBridgeDiscovererAsync {
+public final class UPnPDiscoverer implements Runnable {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
   private static final long SSDP_REQUEST_TIMER_INTERVAL_SECONDS = 1;
@@ -27,8 +29,10 @@ public abstract class UPnPDiscoverer implements HueBridgeDiscovererAsync {
   private final DatagramPacket requestPacket;
   private final Set<String> ips = new HashSet<>();
   private DiscoverState state = DiscoverState.IDLE;
+  private final HueBridgeDiscovererAsync discoverer;
 
-  public UPnPDiscoverer() {
+  public UPnPDiscoverer(final HueBridgeDiscovererAsync discoverer) {
+    this.discoverer = discoverer;
     try {
       multicastAddress = InetAddress.getByName("239.255.255.250");
     } catch (final UnknownHostException e) {
@@ -111,7 +115,7 @@ public abstract class UPnPDiscoverer implements HueBridgeDiscovererAsync {
           ip = ip.substring(0, portIndex);
         }
         if (ips.add(ip)) {
-          onBridgeDiscovered(ip);
+          discoverer.discover(new HueBridge(ip));
         }
       }
     }

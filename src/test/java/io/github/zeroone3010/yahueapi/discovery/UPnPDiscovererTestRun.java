@@ -9,12 +9,7 @@ class UPnPDiscovererTestRun {
    * @param args Not used.
    */
   public static void main(final String... args) throws InterruptedException {
-    final UPnPDiscoverer discoverer = new UPnPDiscoverer() {
-      @Override
-      public void onBridgeDiscovered(final String ip) {
-        System.out.println("Found a bridge: " + ip);
-      }
-    };
+    final UPnPDiscoverer discoverer = new UPnPDiscoverer(bridge -> System.out.println("Found a bridge: " + bridge));
     final Thread discovererThread = new Thread(discoverer);
     System.out.println("Starting discoverer");
     discovererThread.start();
