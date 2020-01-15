@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Discovers Hue Bridges using the N-UPnP protocol, i.e. by polling the Philips Hue portal
@@ -30,24 +31,26 @@ public class NUPnPDiscoverer implements HueBridgeDiscoverer {
   }
 
   @Override
-  public List<HueBridge> discoverBridges() {
+  public CompletableFuture<List<HueBridge>> discoverBridges() {
     final URL url;
     try {
       url = new URL(HUE_DISCOVERY_PORTAL);
     } catch (final MalformedURLException e) {
       throw new IllegalStateException(e);
     }
-    try {
-      final ObjectMapper objectMapper = new ObjectMapper();
-      final SimpleModule module = new SimpleModule();
-      module.addDeserializer(HueBridge.class, new UPnPDeserializer());
-      objectMapper.registerModule(module);
-      return objectMapper.<ArrayList<HueBridge>>readValue(url,
-          new TypeReference<ArrayList<HueBridge>>() {
-          });
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
-    }
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final SimpleModule module = new SimpleModule();
+    module.addDeserializer(HueBridge.class, new UPnPDeserializer());
+    objectMapper.registerModule(module);
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        return objectMapper.<ArrayList<HueBridge>>readValue(url,
+            new TypeReference<ArrayList<HueBridge>>() {
+            });
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
 

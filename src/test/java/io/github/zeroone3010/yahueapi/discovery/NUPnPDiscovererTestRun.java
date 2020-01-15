@@ -1,9 +1,10 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
 import io.github.zeroone3010.yahueapi.HueBridge;
-import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 class NUPnPDiscovererTestRun {
   /**
@@ -11,11 +12,11 @@ class NUPnPDiscovererTestRun {
    *
    * @param args Not used.
    */
-  public static void main(final String... args) {
+  public static void main(final String... args) throws ExecutionException, InterruptedException {
     final NUPnPDiscoverer discoverer = new NUPnPDiscoverer();
-    final Collection<HueBridge> bridges = discoverer.discoverBridges();
+    final CompletableFuture<List<HueBridge>> bridges = discoverer.discoverBridges();
     System.out.println("Result: ");
-    bridges.forEach(System.out::println);
+    bridges.get().forEach(System.out::println);
     System.out.println("Done.");
   }
 }

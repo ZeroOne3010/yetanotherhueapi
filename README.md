@@ -47,10 +47,12 @@ final Hue hue = new Hue(bridgeIp, key);
 If you do not know the IP address of the Bridge, in a future version of this library 
 you will be able to use an automatic Bridge discovery method, like this (subject to change):
 
+[//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 [//]: # (import java.util.List;)
 ```java
 final HueBridgeDiscoverer discoverer = new NUPnPDiscoverer();
-final List<HueBridge> bridges = discoverer.discoverBridges();
+final CompletableFuture<List<HueBridge>> bridgesFuture = discoverer.discoverBridges();
+final List<HueBridge> bridges = bridgesFuture.get(); 
 if( !bridges.isEmpty() ) {
   final String bridgeIp = bridges.get(0).getIp();
   System.out.println("Bridge found at " + bridgeIp);
