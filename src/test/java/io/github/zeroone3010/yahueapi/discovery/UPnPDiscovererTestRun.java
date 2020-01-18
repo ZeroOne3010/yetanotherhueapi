@@ -1,6 +1,10 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
-import java.util.concurrent.TimeUnit;
+import io.github.zeroone3010.yahueapi.HueBridge;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 class UPnPDiscovererTestRun {
   /**
@@ -8,16 +12,12 @@ class UPnPDiscovererTestRun {
    *
    * @param args Not used.
    */
-  public static void main(final String... args) throws InterruptedException {
+  public static void main(final String... args) throws InterruptedException, ExecutionException {
     final UPnPDiscoverer discoverer = new UPnPDiscoverer(bridge -> System.out.println("Found a bridge: " + bridge));
-    final Thread discovererThread = new Thread(discoverer);
     System.out.println("Starting discoverer");
-    discovererThread.start();
+    CompletableFuture<List<HueBridge>> bridges = discoverer.discoverBridges();
     System.out.println("Discoverer started");
-    TimeUnit.SECONDS.sleep(5L);
-    System.out.println("Stopping discoverer");
-    discoverer.stop();
-    System.out.println("Result: " + discoverer.getIps());
+    System.out.println("Result: " + bridges.get());
     System.out.println("Done.");
   }
 }

@@ -7,8 +7,11 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -17,17 +20,19 @@ import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public final class UPnPDiscoverer implements Runnable {
+public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
-  private static final long SSDP_REQUEST_TIMER_INTERVAL_SECONDS = 1;
-  private static InetAddress multicastAddress;
+  private static final int DISCOVERY_MESSAGE_COUNT = 5;
   private static final int PORT = 1900;
+  private static final long MILLISECONDS_BETWEEN_DISCOVERY_MESSAGES = 950L;
+
+  private final InetAddress multicastAddress;
   private MulticastSocket socket;
-  private ScheduledExecutorService ssdpRequestSender;
+  private ScheduledExecutorService scheduledExecutorService;
   private ScheduledFuture requestSendTask;
   private final DatagramPacket requestPacket;
-  private final Set<String> ips = new HashSet<>();
+  private final Collection<HueBridge> bridges = new HashSet<>();
   private DiscoverState state = DiscoverState.IDLE;
   private final HueBridgeDiscovererAsync discoverer;
 
@@ -43,26 +48,36 @@ public final class UPnPDiscoverer implements Runnable {
   }
 
   @Override
-  public final void run() {
-    startSocket();
-    scheduleMessages();
-    if (state == DiscoverState.IDLE) {
-      state = DiscoverState.SEARCHING;
-    }
-    while (state == DiscoverState.SEARCHING) {
-      final byte[] buffer = new byte[8192];
-      final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-      try {
-        socket.receive(packet);
-      } catch (final IOException e) {
-        if (state == DiscoverState.STOPPED) {
-          return;
-        } else {
-          e.printStackTrace();
+  public CompletableFuture<List<HueBridge>> discoverBridges() {
+    return CompletableFuture.supplyAsync(() -> {
+          try {
+            startSocket();
+            scheduleMessages();
+            if (state == DiscoverState.IDLE) {
+              state = DiscoverState.SEARCHING;
+            }
+            while (state == DiscoverState.SEARCHING) {
+              final byte[] buffer = new byte[8192];
+              final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+              try {
+                socket.receive(packet);
+              } catch (final IOException e) {
+                // socket.receive(DatagramPacket) will throw a SocketException once the socket is closed,
+                // but then the state is also set to STOPPED, so this is a valid exit point for this method.
+                if (state == DiscoverState.STOPPED) {
+                  return new ArrayList<>(bridges);
+                } else {
+                  e.printStackTrace();
+                }
+              }
+              packetHandler(packet);
+            }
+          } finally {
+            stop();
+          }
+          return new ArrayList<>(bridges);
         }
-      }
-      packetHandler(packet);
-    }
+    );
   }
 
   private void startSocket() {
@@ -80,25 +95,30 @@ public final class UPnPDiscoverer implements Runnable {
 
   private void scheduleMessages() {
     if (state == DiscoverState.SEARCHING) {
-      ssdpRequestSender = Executors.newSingleThreadScheduledExecutor();
-      requestSendTask = ssdpRequestSender.scheduleAtFixedRate(() -> {
+      scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+      requestSendTask = scheduledExecutorService.schedule(() -> {
         try {
-          logger.info("Sending discover message");
-          socket.send(requestPacket);
-        } catch (final IOException e) {
+          for (int i = 0; i < DISCOVERY_MESSAGE_COUNT; i++) {
+            logger.info("Sending discover message");
+            socket.send(requestPacket);
+            TimeUnit.MILLISECONDS.sleep(MILLISECONDS_BETWEEN_DISCOVERY_MESSAGES);
+          }
+        } catch (final IOException | InterruptedException e) {
           state = DiscoverState.CRASHED;
           e.printStackTrace();
+        } finally {
+          stop();
         }
-      }, 0, SSDP_REQUEST_TIMER_INTERVAL_SECONDS, TimeUnit.SECONDS);
+      }, 0, TimeUnit.SECONDS);
     }
   }
 
-  public final void stop() {
+  private void stop() {
     state = DiscoverState.STOPPED;
     if (requestSendTask != null) {
-      ssdpRequestSender.shutdown();
+      scheduledExecutorService.shutdown();
     }
-    if (socket != null && !socket.isClosed()) {
+    if (socket != null) {
       socket.close();
     }
   }
@@ -114,20 +134,17 @@ public final class UPnPDiscoverer implements Runnable {
         if (portIndex > -1) {
           ip = ip.substring(0, portIndex);
         }
-        if (ips.add(ip)) {
-          discoverer.discover(new HueBridge(ip));
+        final HueBridge bridge = new HueBridge(ip);
+        if (bridges.add(bridge)) {
+          discoverer.discover(bridge);
         }
       }
     }
   }
 
-  public final Set<String> getIps() {
-    return new HashSet<>(this.ips);
-  }
-
   private DatagramPacket createRequestPacket() {
     final StringBuilder sb = new StringBuilder("M-SEARCH * HTTP/1.1\r\n")
-        .append("HOST: " + multicastAddress.getHostAddress() + ":" + PORT + "\r\n")
+        .append("HOST: ").append(multicastAddress.getHostAddress()).append(':').append(PORT).append("\r\n")
         .append("MAN: ssdp:discover\r\n")
         .append("MX: 3\r\n")
         .append("USER-AGENT: Yet Another Hue API\r\n")
