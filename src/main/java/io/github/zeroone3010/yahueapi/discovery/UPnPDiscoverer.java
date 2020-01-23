@@ -16,10 +16,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * Discovers Hue Bridges using the UPnP protocol, i.e. by sending out Simple Service Discovery Protocol (SSDP)
+ * packets and waiting for any Bridges to respond.
+ */
 public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
@@ -34,9 +39,9 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private final DatagramPacket requestPacket;
   private final Collection<HueBridge> bridges = new HashSet<>();
   private DiscoverState state = DiscoverState.IDLE;
-  private final HueBridgeDiscovererAsync discoverer;
+  private final Consumer<HueBridge> discoverer;
 
-  public UPnPDiscoverer(final HueBridgeDiscovererAsync discoverer) {
+  public UPnPDiscoverer(final Consumer<HueBridge> discoverer) {
     this.discoverer = discoverer;
     try {
       multicastAddress = InetAddress.getByName("239.255.255.250");
@@ -136,7 +141,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
         }
         final HueBridge bridge = new HueBridge(ip);
         if (bridges.add(bridge)) {
-          discoverer.discover(bridge);
+          discoverer.accept(bridge);
         }
       }
     }
