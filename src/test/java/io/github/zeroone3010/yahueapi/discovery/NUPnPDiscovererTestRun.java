@@ -1,22 +1,20 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
-import io.github.zeroone3010.yahueapi.HueBridge;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 class NUPnPDiscovererTestRun {
+  private static final Logger logger = Logger.getLogger("NUPnPDiscovererTestRun");
+
   /**
    * Runs the NUPnPDiscoverer and prints the discovered bridges.
    *
    * @param args Not used.
    */
   public static void main(final String... args) throws ExecutionException, InterruptedException {
-    final NUPnPDiscoverer discoverer = new NUPnPDiscoverer();
-    final CompletableFuture<List<HueBridge>> bridges = discoverer.discoverBridges();
-    System.out.println("Result: ");
-    bridges.get().forEach(System.out::println);
+    final NUPnPDiscoverer discoverer = new NUPnPDiscoverer(bridge -> logger.info("Bridge found: " + bridge));
+    System.out.println("Starting NUPnP discoverer");
+    discoverer.discoverBridges().get();
     System.out.println("Done.");
   }
 }

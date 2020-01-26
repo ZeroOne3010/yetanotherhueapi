@@ -15,23 +15,30 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 /**
  * Discovers Hue Bridges using the N-UPnP protocol, i.e. by polling the Philips Hue portal
  * that stores the external and internal IP addresses of the Bridge.
  */
-public class NUPnPDiscoverer implements HueBridgeDiscoverer {
+final class NUPnPDiscoverer implements HueBridgeDiscoverer {
+  private static final Logger logger = Logger.getLogger("NUPnPDiscoverer");
 
   private static final String HUE_DISCOVERY_PORTAL = "https://discovery.meethue.com/";
   private static final String TIMEOUT_MILLISECONDS = "8000";
+  private final Consumer<HueBridge> discoverer;
 
-  public NUPnPDiscoverer() {
+  NUPnPDiscoverer(final Consumer<HueBridge> discoverer) {
+    this.discoverer = discoverer;
+
+    // TODO: adjust default timeout, make it configurable
     System.setProperty("sun.net.client.defaultConnectTimeout", TIMEOUT_MILLISECONDS);
     System.setProperty("sun.net.client.defaultReadTimeout", TIMEOUT_MILLISECONDS);
   }
 
   @Override
-  public CompletableFuture<List<HueBridge>> discoverBridges() {
+  public CompletableFuture<Void> discoverBridges() {
     final URL url;
     try {
       url = new URL(HUE_DISCOVERY_PORTAL);
@@ -44,12 +51,16 @@ public class NUPnPDiscoverer implements HueBridgeDiscoverer {
     objectMapper.registerModule(module);
     return CompletableFuture.supplyAsync(() -> {
       try {
-        return objectMapper.<ArrayList<HueBridge>>readValue(url,
+        logger.fine("Discovering Bridges using the Philips Hue Portal.");
+        final List<HueBridge> foundBridges = objectMapper.<ArrayList<HueBridge>>readValue(url,
             new TypeReference<ArrayList<HueBridge>>() {
             });
+        logger.info(String.format("%d Bridges found using the portal.", foundBridges.size()));
+        foundBridges.forEach(discoverer);
       } catch (final IOException e) {
         throw new RuntimeException(e);
       }
+      return null;
     });
   }
 
@@ -57,8 +68,8 @@ public class NUPnPDiscoverer implements HueBridgeDiscoverer {
   /**
    * <p>Deserializes a JSON object that has an <code>internalipaddress</code> field.</p>
    */
-  public static class UPnPDeserializer extends StdDeserializer<HueBridge> {
-    public UPnPDeserializer() {
+  static class UPnPDeserializer extends StdDeserializer<HueBridge> {
+    UPnPDeserializer() {
       super(HueBridge.class);
     }
 

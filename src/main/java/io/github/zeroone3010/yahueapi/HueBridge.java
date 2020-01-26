@@ -41,12 +41,11 @@ public class HueBridge {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final HueBridge hueBridge = (HueBridge) o;
-    return Objects.equals(getName(), hueBridge.getName()) &&
-        Objects.equals(getIp(), hueBridge.getIp());
+    return Objects.equals(getIp(), hueBridge.getIp());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(), getIp());
+    return Objects.hash(getIp());
   }
 }

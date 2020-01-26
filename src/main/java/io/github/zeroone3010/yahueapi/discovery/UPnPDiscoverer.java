@@ -7,10 +7,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Discovers Hue Bridges using the UPnP protocol, i.e. by sending out Simple Service Discovery Protocol (SSDP)
  * packets and waiting for any Bridges to respond.
  */
-public final class UPnPDiscoverer implements HueBridgeDiscoverer {
+final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
@@ -37,11 +33,10 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private ScheduledExecutorService scheduledExecutorService;
   private ScheduledFuture requestSendTask;
   private final DatagramPacket requestPacket;
-  private final Collection<HueBridge> bridges = new HashSet<>();
   private DiscoverState state = DiscoverState.IDLE;
   private final Consumer<HueBridge> discoverer;
 
-  public UPnPDiscoverer(final Consumer<HueBridge> discoverer) {
+  UPnPDiscoverer(final Consumer<HueBridge> discoverer) {
     this.discoverer = discoverer;
     try {
       multicastAddress = InetAddress.getByName("239.255.255.250");
@@ -53,7 +48,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   }
 
   @Override
-  public CompletableFuture<List<HueBridge>> discoverBridges() {
+  public CompletableFuture<Void> discoverBridges() {
     return CompletableFuture.supplyAsync(() -> {
           try {
             startSocket();
@@ -61,16 +56,17 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
             if (state == DiscoverState.IDLE) {
               state = DiscoverState.SEARCHING;
             }
+            logger.info("UPnP discoverer started");
             while (state == DiscoverState.SEARCHING) {
               final byte[] buffer = new byte[8192];
               final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
               try {
                 socket.receive(packet);
               } catch (final IOException e) {
-                // socket.receive(DatagramPacket) will throw a SocketException once the socket is closed,
-                // but then the state is also set to STOPPED, so this is a valid exit point for this method.
                 if (state == DiscoverState.STOPPED) {
-                  return new ArrayList<>(bridges);
+                  // socket.receive(DatagramPacket) will throw a SocketException once the socket is closed,
+                  // but then the state is also set to STOPPED, so this is a valid exit point for this method.
+                  return null;
                 } else {
                   e.printStackTrace();
                 }
@@ -80,7 +76,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
           } finally {
             stop();
           }
-          return new ArrayList<>(bridges);
+          return null;
         }
     );
   }
@@ -104,7 +100,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
       requestSendTask = scheduledExecutorService.schedule(() -> {
         try {
           for (int i = 0; i < DISCOVERY_MESSAGE_COUNT; i++) {
-            logger.info("Sending discover message");
+            logger.fine("Sending a discovery message");
             socket.send(requestPacket);
             TimeUnit.MILLISECONDS.sleep(MILLISECONDS_BETWEEN_DISCOVERY_MESSAGES);
           }
@@ -119,6 +115,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
   }
 
   private void stop() {
+    logger.info("UPnP discoverer stopped");
     state = DiscoverState.STOPPED;
     if (requestSendTask != null) {
       scheduledExecutorService.shutdown();
@@ -139,10 +136,7 @@ public final class UPnPDiscoverer implements HueBridgeDiscoverer {
         if (portIndex > -1) {
           ip = ip.substring(0, portIndex);
         }
-        final HueBridge bridge = new HueBridge(ip);
-        if (bridges.add(bridge)) {
-          discoverer.accept(bridge);
-        }
+        discoverer.accept(new HueBridge(ip));
       }
     }
   }
