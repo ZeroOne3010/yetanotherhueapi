@@ -26,15 +26,33 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("NUPnPDiscoverer");
 
   private static final String HUE_DISCOVERY_PORTAL = "https://discovery.meethue.com/";
-  private static final String TIMEOUT_MILLISECONDS = "8000";
+  private static final String DEFAULT_TIMEOUT_MILLISECONDS = "4000";
+  private static final String CONNECT_TIMEOUT_VARIABLE = "sun.net.client.defaultConnectTimeout";
+  private static final String READ_TIMEOUT_VARIABLE = "sun.net.client.defaultReadTimeout";
+
   private final Consumer<HueBridge> discoverer;
 
   NUPnPDiscoverer(final Consumer<HueBridge> discoverer) {
     this.discoverer = discoverer;
 
-    // TODO: adjust default timeout, make it configurable
-    System.setProperty("sun.net.client.defaultConnectTimeout", TIMEOUT_MILLISECONDS);
-    System.setProperty("sun.net.client.defaultReadTimeout", TIMEOUT_MILLISECONDS);
+    if (toInt(System.getProperty(CONNECT_TIMEOUT_VARIABLE)) < 1) {
+      System.setProperty(CONNECT_TIMEOUT_VARIABLE, DEFAULT_TIMEOUT_MILLISECONDS);
+    }
+    if (toInt(System.getProperty(READ_TIMEOUT_VARIABLE)) < 1) {
+      System.setProperty(READ_TIMEOUT_VARIABLE, DEFAULT_TIMEOUT_MILLISECONDS);
+    }
+  }
+
+  private static int toInt(final String string) {
+    if (string == null) {
+      return -1;
+    }
+    try {
+      return Integer.valueOf(string);
+    } catch (final NumberFormatException e) {
+      logger.warning(String.format("'%s' is not a valid timeout value", string));
+      return -1;
+    }
   }
 
   @Override
