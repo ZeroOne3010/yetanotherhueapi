@@ -49,9 +49,10 @@ you will be able to use an automatic Bridge discovery method, like this (subject
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 [//]: # (import java.util.List;)
+[//]: # (import java.util.concurrent.Future;)
 ```java
-final HueBridgeDiscoverer discoverer = new NUPnPDiscoverer();
-final CompletableFuture<List<HueBridge>> bridgesFuture = discoverer.discoverBridges();
+Future<List<HueBridge>> bridgesFuture = new HueBridgeDiscoveryService()
+        .discoverBridges(bridge -> System.out.println("Bridge found: " + bridge));
 final List<HueBridge> bridges = bridgesFuture.get(); 
 if( !bridges.isEmpty() ) {
   final String bridgeIp = bridges.get(0).getIp();
