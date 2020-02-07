@@ -144,7 +144,7 @@ final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private DatagramPacket createRequestPacket() {
     final StringBuilder sb = new StringBuilder("M-SEARCH * HTTP/1.1\r\n")
         .append("HOST: ").append(multicastAddress.getHostAddress()).append(':').append(PORT).append("\r\n")
-        .append("MAN: ssdp:discover\r\n")
+        .append("MAN: \"ssdp:discover\"\r\n")
         .append("MX: 3\r\n")
         .append("USER-AGENT: Yet Another Hue API\r\n")
         .append("ST: ssdp:all\r\n");
