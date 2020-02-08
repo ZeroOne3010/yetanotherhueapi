@@ -13,9 +13,10 @@ class HueBridgeTest {
   }
 
   @Test
-  void testNameAndIp() {
-    final HueBridge hueBridge = new HueBridge("West Wing", "100.100.200.300");
+  void testIpAndNameAndMac() {
+    final HueBridge hueBridge = new HueBridge("100.100.200.300", "West Wing", "11:22:33:44:55:66");
     assertEquals("West Wing", hueBridge.getName());
     assertEquals("100.100.200.300", hueBridge.getIp());
+    assertEquals("11:22:33:44:55:66", hueBridge.getMac());
   }
 }

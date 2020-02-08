@@ -1,7 +1,12 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
+import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,11 +16,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
 public final class HueBridgeDiscoveryService {
+  private static final Logger logger = Logger.getLogger("HueBridgeDiscoveryService");
+
   public enum DiscoveryMethod {
     /**
      * With the N-UPnP method the Philips Hue portal is polled over the internet
@@ -73,14 +81,26 @@ public final class HueBridgeDiscoveryService {
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
 
+    final ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     final Collection<HueBridge> bridges = new HashSet<>();
-    final Consumer<HueBridge> commonConsumer = (bridge) -> {
+    final Collection<String> ips = new HashSet<>();
+    final Consumer<HueBridge> commonConsumer = (discoveredBridge) -> {
+      final String ip = discoveredBridge.getIp();
       boolean added;
-      synchronized (bridges) {
-        added = bridges.add(bridge);
+      synchronized (ips) {
+        added = ips.add(ip);
       }
       if (added) {
-        bridgeDiscoverer.accept(bridge);
+        final BridgeConfig config = fetchBridgeConfiguration(objectMapper, ip);
+        if (config != null) {
+          final HueBridge confirmedBridge = new HueBridge(config.getName(), ip, config.getMac());
+          synchronized (bridges) {
+            bridges.add(confirmedBridge);
+          }
+          bridgeDiscoverer.accept(confirmedBridge);
+        }
       }
     };
     final List<DiscoveryMethod> methods = parseMethods(discoveryMethods);
@@ -91,6 +111,15 @@ public final class HueBridgeDiscoveryService {
         .toArray(CompletableFuture[]::new);
 
     return CompletableFuture.allOf(futures).thenApply(allDone -> new ArrayList<>(bridges));
+  }
+
+  private BridgeConfig fetchBridgeConfiguration(final ObjectMapper objectMapper, final String ip) {
+    try {
+      return objectMapper.readValue(new URL("http://" + ip + "/api/config"), BridgeConfig.class);
+    } catch (final IOException e) {
+      logger.severe("Unable to connect to a found Bridge at " + ip + ": " + e);
+      return null;
+    }
   }
 
   private List<DiscoveryMethod> parseMethods(final DiscoveryMethod[] discoveryMethods) {

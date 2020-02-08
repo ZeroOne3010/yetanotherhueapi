@@ -9,23 +9,43 @@ import java.util.Objects;
 public class HueBridge {
   private final String name;
   private final String ip;
+  private final String mac;
 
   public HueBridge(final String ip) {
-    this.name = ip;
-    this.ip = ip;
+    this(ip, ip, null);
   }
 
-  public HueBridge(final String name, final String ip) {
+  public HueBridge(final String ip, final String name, final String mac) {
+    this.ip = ip;
     this.name = name;
-    this.ip = ip;
+    this.mac = mac;
   }
 
+  /**
+   * Returns the human-readable name of the Bridge.
+   *
+   * @return The name of the Bridge.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the IP address of the Bridge.
+   *
+   * @return The IP address of the Bridge.
+   */
   public String getIp() {
     return ip;
+  }
+
+  /**
+   * Returns the MAC address of the Bridge.
+   *
+   * @return The MAC address of the Bridge.
+   */
+  public String getMac() {
+    return mac;
   }
 
   @Override
@@ -33,6 +53,7 @@ public class HueBridge {
     return "HueBridge{" +
         "name='" + name + '\'' +
         ", ip='" + ip + '\'' +
+        ", mac='" + mac + '\'' +
         '}';
   }
 
