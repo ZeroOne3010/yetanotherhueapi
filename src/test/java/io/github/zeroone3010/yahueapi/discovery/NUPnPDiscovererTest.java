@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.zeroone3010.yahueapi.HueBridge;
-import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer.UPnPDeserializer;
+import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer.NUPnPDeserializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ class NUPnPDiscovererTest {
   private List<HueBridge> readValue(final String inputJson) throws JsonProcessingException {
     final ObjectMapper objectMapper = new ObjectMapper();
     final SimpleModule module = new SimpleModule();
-    module.addDeserializer(HueBridge.class, new UPnPDeserializer());
+    module.addDeserializer(HueBridge.class, new NUPnPDeserializer());
     objectMapper.registerModule(module);
     return objectMapper.readValue(inputJson, new TypeReference<ArrayList<HueBridge>>() {});
   }

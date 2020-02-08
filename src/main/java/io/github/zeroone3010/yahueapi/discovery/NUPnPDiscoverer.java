@@ -65,7 +65,7 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
     }
     final ObjectMapper objectMapper = new ObjectMapper();
     final SimpleModule module = new SimpleModule();
-    module.addDeserializer(HueBridge.class, new UPnPDeserializer());
+    module.addDeserializer(HueBridge.class, new NUPnPDeserializer());
     objectMapper.registerModule(module);
     return CompletableFuture.supplyAsync(() -> {
       try {
@@ -86,8 +86,8 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
   /**
    * <p>Deserializes a JSON object that has an <code>internalipaddress</code> field.</p>
    */
-  static class UPnPDeserializer extends StdDeserializer<HueBridge> {
-    UPnPDeserializer() {
+  static class NUPnPDeserializer extends StdDeserializer<HueBridge> {
+    NUPnPDeserializer() {
       super(HueBridge.class);
     }
 
