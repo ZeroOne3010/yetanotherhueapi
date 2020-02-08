@@ -317,6 +317,62 @@
         "alert": "none",
         "colormode": "ct"
       }
+    },
+    "10": {
+      "name": "Custom group for $lights",
+      "lights": [
+        "100",
+        "101"
+      ],
+      "sensors": [],
+      "type": "LightGroup",
+      "state": {
+        "all_on": false,
+        "any_on": false
+      },
+      "recycle": true,
+      "action": {
+        "on": false,
+        "bri": 254,
+        "hue": 8168,
+        "sat": 164,
+        "effect": "none",
+        "xy": [
+          0.4738,
+          0.4133
+        ],
+        "ct": 395,
+        "alert": "select",
+        "colormode": "ct"
+      }
+    },
+    "11": {
+      "name": "Custom group for $lights",
+      "lights": [
+        "200",
+        "300"
+      ],
+      "sensors": [],
+      "type": "LightGroup",
+      "state": {
+        "all_on": true,
+        "any_on": true
+      },
+      "recycle": true,
+      "action": {
+        "on": false,
+        "bri": 254,
+        "hue": 8168,
+        "sat": 164,
+        "effect": "none",
+        "xy": [
+          0.4738,
+          0.4133
+        ],
+        "ct": 395,
+        "alert": "select",
+        "colormode": "ct"
+      }
     }
   },
   "config": {

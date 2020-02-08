@@ -661,6 +661,16 @@ class HueTest {
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 
+  @Test
+  void testGetGroupsByDuplicateNames() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    final Collection<Room> lightGroups = hue.getGroupsOfType(GroupType.LIGHT_GROUP);
+    assertEquals(2, lightGroups.size());
+    assertTrue(lightGroups.stream().allMatch(group -> group.getName().equals("Custom group for $lights")));
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
   private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());

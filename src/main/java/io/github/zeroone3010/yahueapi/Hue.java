@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -132,9 +133,18 @@ public final class Hue {
     this.lights = Collections.unmodifiableMap(root.getLights().entrySet().stream()
         .map(light -> buildLight(light.getKey(), root))
         .collect(toMap(LightImpl::getId, light -> light)));
-    this.groups = Collections.unmodifiableMap(root.getGroups().entrySet().stream()
+
+    final Collection<Room> tempGroups = root.getGroups().entrySet().stream()
         .map(group -> buildRoom(group.getKey(), group.getValue()))
-        .collect(toMap(Room::getName, room -> room)));
+        .collect(toSet());
+    final Map<String, Long> groupNameCounts = tempGroups.stream()
+        .collect(Collectors.groupingBy(Room::getName, Collectors.counting()));
+    this.groups = Collections.unmodifiableMap(
+        tempGroups.stream().collect(toMap(room -> groupNameCounts.get(room.getName()) > 1
+                ? ((RoomImpl) room).getId() + ": " + room.getName()
+                : room.getName(),
+            room -> room)));
+
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));

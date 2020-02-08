@@ -15,21 +15,28 @@ import java.util.logging.Logger;
 final class RoomImpl implements Room {
   private static final Logger logger = Logger.getLogger("RoomImpl");
 
+  private final String id;
   private final Set<Light> lights;
   private final String name;
   private final Supplier<GroupState> stateProvider;
   private final Function<State, String> stateSetter;
   private final GroupType groupType;
 
-  RoomImpl(final Group group,
+  RoomImpl(final String id,
+           final Group group,
            final Set<Light> lights,
            final Supplier<GroupState> stateProvider,
            final Function<State, String> stateSetter) {
+    this.id = id;
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
     this.lights = lights;
     this.name = group.getName();
     this.groupType = GroupType.parseTypeString(group.getType());
+  }
+
+  public String getId() {
+    return id;
   }
 
   @Override

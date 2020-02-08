@@ -34,6 +34,7 @@ final class RoomFactory {
     try {
       final URL url = new URL(bridgeUri + "groups/" + groupId);
       return new RoomImpl(
+          groupId,
           group,
           lights,
           createStateProvider(url, groupId),
