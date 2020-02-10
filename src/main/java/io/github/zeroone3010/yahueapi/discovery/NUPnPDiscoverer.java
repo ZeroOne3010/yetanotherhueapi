@@ -31,8 +31,14 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
   private static final String READ_TIMEOUT_VARIABLE = "sun.net.client.defaultReadTimeout";
 
   private final Consumer<HueBridge> discoverer;
+  private final String discoveryPortalUrl;
 
   NUPnPDiscoverer(final Consumer<HueBridge> discoverer) {
+    this(HUE_DISCOVERY_PORTAL, discoverer);
+  }
+
+  NUPnPDiscoverer(final String discoveryPortalUrl, final Consumer<HueBridge> discoverer) {
+    this.discoveryPortalUrl = discoveryPortalUrl;
     this.discoverer = discoverer;
 
     if (toInt(System.getProperty(CONNECT_TIMEOUT_VARIABLE)) < 1) {
@@ -59,7 +65,7 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
   public CompletableFuture<Void> discoverBridges() {
     final URL url;
     try {
-      url = new URL(HUE_DISCOVERY_PORTAL);
+      url = new URL(discoveryPortalUrl);
     } catch (final MalformedURLException e) {
       throw new IllegalStateException(e);
     }
