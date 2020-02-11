@@ -25,7 +25,7 @@ final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
-  private static final int PORT = 1900;
+  private static final int PORT = 19001;
   private static final long MILLISECONDS_BETWEEN_DISCOVERY_MESSAGES = 950L;
 
   private final InetAddress multicastAddress;
@@ -37,9 +37,13 @@ final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private final Consumer<HueBridge> discoverer;
 
   UPnPDiscoverer(final Consumer<HueBridge> discoverer) {
+    this("239.255.255.250", discoverer);
+  }
+
+  UPnPDiscoverer(final String multicastAddressm, final Consumer<HueBridge> discoverer) {
     this.discoverer = discoverer;
     try {
-      multicastAddress = InetAddress.getByName("239.255.255.250");
+      multicastAddress = InetAddress.getByName(multicastAddressm);
     } catch (final UnknownHostException e) {
       e.printStackTrace();
       throw new RuntimeException(e);
