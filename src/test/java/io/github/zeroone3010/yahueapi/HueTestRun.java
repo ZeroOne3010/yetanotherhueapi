@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class HueTestRun {
   /**
    * Copies state from a light in one room to another light in another (or the same) room.
-   * If not enough parameters given, just displays data about the zones, rules and sensors of the given Bridge.
+   * If not enough parameters given, just displays data about the zones, rules, sensors and scenes of the given Bridge.
    *
    * @param args IP address of the Bridge, API key, fromRoom, fromLight, toRoom, toLight
    */
@@ -54,5 +54,8 @@ public class HueTestRun {
 
     System.out.println("\nRules:");
     hue.getRaw().getRules().forEach((id, rule) -> System.out.println(String.format("\tRule %s: %s", id, rule)));
+
+    System.out.println("\nScenes:");
+    hue.getRaw().getScenes().forEach((id, scene) -> System.out.println(String.format("\tScene %s: %s", id, scene)));
   }
 }
