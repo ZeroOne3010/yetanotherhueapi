@@ -80,6 +80,7 @@ public interface Room {
    *
    * @param sceneName Name of the scene, e.g. "Tropical twilight" or "Concentrate".
    * @return Optional.empty() if a scene is not found by this name, an Optional&lt;Scene&gt; if it is.
+   * @since 1.3.0
    */
   Optional<Scene> getSceneByName(String sceneName);
 }
