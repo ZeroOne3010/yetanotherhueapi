@@ -19,6 +19,35 @@ import io.github.zeroone3010.yahueapi.discovery.*;
 
 ### Initializing the API with a connection to the Bridge
 
+#### Bridge discovery
+
+If you do not know the IP address of the Bridge, you can use the automatic Bridge discovery functionality.
+The `discoverBridges` method of the `HueBridgeDiscoveryService` class accepts a `Consumer` 
+that is called whenever a new Bridge is found. You may either hook into that or you can supply a no-op consumer
+and just use the `Future<List<HueBridge>>` that is returned. Please do note, however, that it may take
+approximately five seconds for the discovery process to complete. The `HueBridge` objects hold an IP address
+that may be then used to initiate a connection with the Bridge.
+
+Without any parameters besides the consumer the `discoverBridges` method uses all available discovery 
+methods simultaneously, namely N-UPnP and UPnP. If you wish to change that, the method accepts a varargs
+list of discovery method enum values. 
+
+[//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
+[//]: # (import java.util.List;)
+[//]: # (import java.util.concurrent.Future;)
+```java
+Future<List<HueBridge>> bridgesFuture = new HueBridgeDiscoveryService()
+        .discoverBridges(bridge -> System.out.println("Bridge found: " + bridge));
+final List<HueBridge> bridges = bridgesFuture.get(); 
+if( !bridges.isEmpty() ) {
+  final String bridgeIp = bridges.get(0).getIp();
+  System.out.println("Bridge found at " + bridgeIp);
+  // Then follow the code snippets below under the "Once you have a Bridge IP address" header 
+}
+```
+
+#### Once you have a Bridge IP address
+
 If you already have an API key for your Bridge:
 
 [//]: # (init)
@@ -40,25 +69,6 @@ final CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp
 final String key = apiKey.get();
 System.out.println("Store this API key for future use: " + key);
 final Hue hue = new Hue(bridgeIp, key);
-```
-
-#### Bridge discovery (upcoming!)
-
-If you do not know the IP address of the Bridge, in a future version of this library 
-you will be able to use an automatic Bridge discovery method, like this (subject to change):
-
-[//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
-[//]: # (import java.util.List;)
-[//]: # (import java.util.concurrent.Future;)
-```java
-Future<List<HueBridge>> bridgesFuture = new HueBridgeDiscoveryService()
-        .discoverBridges(bridge -> System.out.println("Bridge found: " + bridge));
-final List<HueBridge> bridges = bridgesFuture.get(); 
-if( !bridges.isEmpty() ) {
-  final String bridgeIp = bridges.get(0).getIp();
-  System.out.println("Bridge found at " + bridgeIp);
-  // Then follow the code snippets above
-}
 ```
 
 ### Using the rooms, lights, and scenes
@@ -83,7 +93,7 @@ room.getLightByName("Corner").get().turnOff();
 final Optional<Light> light = room.getLightByName("Ceiling 1");
 light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
 
-// Activate a scene (upcoming!):
+// Activate a scene:
 room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
 ```
 
@@ -108,7 +118,7 @@ Add the following dependency to your pom.xml file:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
