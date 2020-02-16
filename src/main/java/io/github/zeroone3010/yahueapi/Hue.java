@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.Root;
+import io.github.zeroone3010.yahueapi.domain.Scene;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -135,7 +136,7 @@ public final class Hue {
         .collect(toMap(LightImpl::getId, light -> light)));
 
     final Collection<Room> tempGroups = root.getGroups().entrySet().stream()
-        .map(group -> buildRoom(group.getKey(), group.getValue()))
+        .map(group -> buildRoom(group.getKey(), group.getValue(), findScenesOfGroup(group.getKey(), root.getScenes())))
         .collect(toSet());
     final Map<String, Long> groupNameCounts = tempGroups.stream()
         .collect(Collectors.groupingBy(Room::getName, Collectors.counting()));
@@ -148,6 +149,12 @@ public final class Hue {
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
+  }
+
+  private Map<String, Scene> findScenesOfGroup(final String groupId, final Map<String, Scene> scenes) {
+    return Optional.ofNullable(scenes).orElse(Collections.emptyMap()).entrySet().stream()
+        .filter(e -> Objects.equals(groupId, e.getValue().getGroup()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
   /**
@@ -217,8 +224,8 @@ public final class Hue {
     return Optional.ofNullable(this.groups.get(zoneName)).filter(g -> g.getType() == GroupType.ZONE);
   }
 
-  private Room buildRoom(final String groupId, final Group group) {
-    return roomFactory.buildRoom(groupId, group);
+  private Room buildRoom(final String groupId, final Group group, final Map<String, Scene> scenes) {
+    return roomFactory.buildRoom(groupId, group, scenes);
   }
 
   private Sensor buildSensor(final String sensorId, final Root root) {

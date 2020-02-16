@@ -15,7 +15,7 @@ public class HueTestRun {
 
     final Hue hue = new Hue(HueBridgeProtocol.UNVERIFIED_HTTPS, ip, apiKey);
 
-    if (args.length > 2) {
+    if (args.length > 4) {
       final String fromRoom = args[2];
       final String fromLight = args[3];
       final String toRoom = args[4];
@@ -28,6 +28,13 @@ public class HueTestRun {
                   .flatMap(r -> r.getLightByName(toLight))
                   .ifPresent(light -> light.setState(state))
           );
+      return;
+    } else if (args.length > 2) {
+      final String room = args[2];
+      final String scene = args[3];
+      hue.getRoomByName(room)
+          .flatMap(r -> r.getSceneByName(scene))
+          .ifPresent(Scene::activate);
       return;
     }
 

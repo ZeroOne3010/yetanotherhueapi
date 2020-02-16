@@ -8,6 +8,7 @@ import io.github.zeroone3010.yahueapi.domain.GroupState;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -27,21 +28,32 @@ final class RoomFactory {
     this.bridgeUri = bridgeUri;
   }
 
-  Room buildRoom(final String groupId, final Group group) {
+  Room buildRoom(final String groupId,
+                 final Group group,
+                 final Map<String, io.github.zeroone3010.yahueapi.domain.Scene> scenes) {
     final Set<Light> lights = group.getLights().stream()
         .map(hue::getLightById)
         .collect(toSet());
     try {
       final URL url = new URL(bridgeUri + "groups/" + groupId);
+      final Function<State, String> stateSetter = stateSetter(url);
       return new RoomImpl(
           groupId,
           group,
           lights,
+          buildScenes(scenes, stateSetter),
           createStateProvider(url, groupId),
-          stateSetter(url));
+          stateSetter);
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
+  }
+
+  private Set<Scene> buildScenes(final Map<String, io.github.zeroone3010.yahueapi.domain.Scene> scenes,
+                                 final Function<State, String> stateSetter) {
+    return scenes.entrySet().stream()
+        .map(e -> new SceneImpl(e.getKey(), e.getValue().getName(), stateSetter))
+        .collect(toSet());
   }
 
   private Supplier<GroupState> createStateProvider(final URL url,

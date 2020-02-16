@@ -636,7 +636,7 @@ class HueTest {
     final Hue hue = createHueAndInitializeMockServer();
     final Map<String, Scene> scenes = hue.getRaw().getScenes();
 
-    assertEquals(1, scenes.size());
+    assertEquals(3, scenes.size());
     final Scene scene = scenes.get("sjJk3kjKBJkf3kh");
     assertEquals("Tropical twilight", scene.getName());
     assertEquals(Arrays.asList("100", "101"), scene.getLights());
@@ -668,6 +668,37 @@ class HueTest {
     final Collection<Room> lightGroups = hue.getGroupsOfType(GroupType.LIGHT_GROUP);
     assertEquals(2, lightGroups.size());
     assertTrue(lightGroups.stream().allMatch(group -> group.getName().equals("Custom group for $lights")));
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testScenesOfRoom() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1/action")
+        .willReturn(okJson("[{\"success\":{\"/groups/1/action/scene\":\"asdasd\"}}]")));
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/2/action")
+        .willReturn(okJson("[{\"success\":{\"/groups/2/action/scene\":\"qweqwe\"}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+
+    final Room livingRoom = hue.getRoomByName("Living room").get();
+    assertEquals(2, livingRoom.getScenes().size());
+    livingRoom.getSceneByName("Tropical twilight").get().activate();
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
+        .withRequestBody(new EqualToJsonPattern("{\"scene\":\"sjJk3kjKBJkf3kh\"}", false, false)));
+    livingRoom.getSceneByName("Concentrate").get().activate();
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
+        .withRequestBody(new EqualToJsonPattern("{\"scene\":\"qwertyUIOP12345\"}", false, false)));
+
+    final Room bedroom = hue.getRoomByName("Bedroom").get();
+    assertEquals(1, bedroom.getScenes().size());
+    assertFalse(bedroom.getSceneByName("Concentrate").isPresent());
+    bedroom.getSceneByName("Tropical twilight").get().activate();
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/2/action"))
+        .withRequestBody(new EqualToJsonPattern("{\"scene\":\"omgbbqASDFmmnnn\"}", false, false)));
+
+    final Room hallway = hue.getRoomByName("Hallway 1").get();
+    assertEquals(0, hallway.getScenes().size());
+
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 

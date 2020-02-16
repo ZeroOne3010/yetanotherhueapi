@@ -66,4 +66,20 @@ public interface Room {
    * @since 1.3.0
    */
   GroupType getType();
+
+  /**
+   * Returns the scenes that belong to this group.
+   *
+   * @return The scenes of this group.
+   * @since 1.3.0
+   */
+  Collection<Scene> getScenes();
+
+  /**
+   * Returns one scene, if found by the given name.
+   *
+   * @param sceneName Name of the scene, e.g. "Tropical twilight" or "Concentrate".
+   * @return Optional.empty() if a scene is not found by this name, an Optional&lt;Scene&gt; if it is.
+   */
+  Optional<Scene> getSceneByName(String sceneName);
 }

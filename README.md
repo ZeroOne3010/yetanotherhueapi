@@ -61,7 +61,7 @@ if( !bridges.isEmpty() ) {
 }
 ```
 
-### Using the rooms and the lights
+### Using the rooms, lights, and scenes
 
 [//]: # (requires-init)
 [//]: # (import java.util.Optional;)
@@ -82,6 +82,9 @@ room.getLightByName("Corner").get().turnOff();
 // Turn one of the lights green. This also demonstrates the proper use of Optionals:
 final Optional<Light> light = room.getLightByName("Ceiling 1");
 light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
+
+// Activate a scene (upcoming!):
+room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
 ```
 
 ### Caching

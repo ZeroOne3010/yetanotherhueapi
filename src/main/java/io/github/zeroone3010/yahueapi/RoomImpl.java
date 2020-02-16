@@ -17,6 +17,7 @@ final class RoomImpl implements Room {
 
   private final String id;
   private final Set<Light> lights;
+  private final Set<Scene> scenes;
   private final String name;
   private final Supplier<GroupState> stateProvider;
   private final Function<State, String> stateSetter;
@@ -25,12 +26,14 @@ final class RoomImpl implements Room {
   RoomImpl(final String id,
            final Group group,
            final Set<Light> lights,
+           final Set<Scene> scenes,
            final Supplier<GroupState> stateProvider,
            final Function<State, String> stateSetter) {
     this.id = id;
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
     this.lights = lights;
+    this.scenes = scenes;
     this.name = group.getName();
     this.groupType = GroupType.parseTypeString(group.getType());
   }
@@ -80,6 +83,18 @@ final class RoomImpl implements Room {
   @Override
   public GroupType getType() {
     return groupType;
+  }
+
+  @Override
+  public Collection<Scene> getScenes() {
+    return scenes;
+  }
+
+  @Override
+  public Optional<Scene> getSceneByName(final String sceneName) {
+    return scenes.stream()
+        .filter(scene -> Objects.equals(scene.getName(), sceneName))
+        .findFirst();
   }
 
   private GroupState getGroupState() {

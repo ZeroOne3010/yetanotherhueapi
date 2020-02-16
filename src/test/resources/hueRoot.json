@@ -471,6 +471,8 @@
   "scenes": {
     "sjJk3kjKBJkf3kh": {
       "name": "Tropical twilight",
+      "type": "GroupScene",
+      "group": "1",
       "lights": [
         "100",
         "101"
@@ -481,6 +483,43 @@
       "appdata": {
         "version": 1,
         "data": "MKoLK_r01_d21"
+      },
+      "picture": "",
+      "lastupdated": "2018-01-19T01:23:45",
+      "version": 2
+    },
+    "qwertyUIOP12345": {
+      "name": "Concentrate",
+      "type": "GroupScene",
+      "group": "1",
+      "lights": [
+        "100",
+        "101"
+      ],
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "recycle": true,
+      "locked": true,
+      "appdata": {
+        "version": 1,
+        "data": "HIjKL_r02_d32"
+      },
+      "picture": "",
+      "lastupdated": "2018-01-19T01:23:45",
+      "version": 2
+    },
+    "omgbbqASDFmmnnn": {
+      "name": "Tropical twilight",
+      "type": "GroupScene",
+      "group": "2",
+      "lights": [
+        "200"
+      ],
+      "owner": "6655664454522131aaaeeaaeaeaeaea",
+      "recycle": true,
+      "locked": true,
+      "appdata": {
+        "version": 1,
+        "data": "PQoRG_r01_d21"
       },
       "picture": "",
       "lastupdated": "2018-01-19T01:23:45",
