@@ -95,7 +95,7 @@ public final class HueBridgeDiscoveryService {
       if (added) {
         final BridgeConfig config = fetchBridgeConfiguration(objectMapper, ip);
         if (config != null) {
-          final HueBridge confirmedBridge = new HueBridge(config.getName(), ip, config.getMac());
+          final HueBridge confirmedBridge = new HueBridge(ip, config.getName(), config.getMac());
           synchronized (bridges) {
             bridges.add(confirmedBridge);
           }
