@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UPnPDiscovererTest {
 
+  private static final int TEST_PORT = 19001;
+
   @Test
   void testDiscovery() throws Exception {
     final TestServer testServer = new TestServer();
@@ -25,7 +27,7 @@ class UPnPDiscovererTest {
     final List<HueBridge> foundBridges = new ArrayList<>();
 
     final UPnPDiscoverer discoverer = new UPnPDiscoverer(
-        "localhost", foundBridges::add);
+        "localhost", foundBridges::add, TEST_PORT);
     discoverer.discoverBridges().get();
 
     assertEquals(1, foundBridges.size());
@@ -40,7 +42,7 @@ class UPnPDiscovererTest {
     private byte[] buf = new byte[256];
 
     public TestServer() throws SocketException, UnknownHostException {
-      socket = new DatagramSocket(19001, InetAddress.getByName("localhost"));
+      socket = new DatagramSocket(TEST_PORT, InetAddress.getByName("localhost"));
     }
 
     public void run() {
@@ -62,7 +64,7 @@ class UPnPDiscovererTest {
         if (received.startsWith("M-SEARCH * HTTP/1.1\r\n") && received.contains("USER-AGENT: Yet Another Hue API")) {
           try {
             final String response = "HTTP/1.1 200 OK\r\n" +
-                "HOST: localhost:1900\r\n" +
+                "HOST: localhost:" + TEST_PORT + "\r\n" +
                 "EXT:\r\n" +
                 "CACHE-CONTROL: max-age=100\r\n" +
                 "LOCATION: http://12.34.56.7:80/description.xml\r\n" +
