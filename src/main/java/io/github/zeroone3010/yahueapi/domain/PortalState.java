@@ -1,22 +1,22 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class PortalState {
-  @JsonProperty("signedon")
+  @SerializedName("signedon")
   private boolean signedOn;
-  @JsonProperty("incoming")
+  @SerializedName("incoming")
   private boolean incoming;
-  @JsonProperty("outgoing")
+  @SerializedName("outgoing")
   private boolean outgoing;
-  @JsonProperty("communication")
+  @SerializedName("communication")
   private String communication;
 
   public boolean isSignedOn() {
     return signedOn;
   }
 
-  public void setSignedOn(boolean signedOn) {
+  public void setSignedOn(final boolean signedOn) {
     this.signedOn = signedOn;
   }
 
@@ -24,7 +24,7 @@ public class PortalState {
     return incoming;
   }
 
-  public void setIncoming(boolean incoming) {
+  public void setIncoming(final boolean incoming) {
     this.incoming = incoming;
   }
 
@@ -32,7 +32,7 @@ public class PortalState {
     return outgoing;
   }
 
-  public void setOutgoing(boolean outgoing) {
+  public void setOutgoing(final boolean outgoing) {
     this.outgoing = outgoing;
   }
 
@@ -40,7 +40,7 @@ public class PortalState {
     return communication;
   }
 
-  public void setCommunication(String communication) {
+  public void setCommunication(final String communication) {
     this.communication = communication;
   }
 

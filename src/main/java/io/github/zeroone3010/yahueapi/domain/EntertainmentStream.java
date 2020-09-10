@@ -1,15 +1,15 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class EntertainmentStream {
-  @JsonProperty("proxymode")
+  @SerializedName("proxymode")
   private String proxyMode;
-  @JsonProperty("proxynode")
+  @SerializedName("proxynode")
   private String proxyNode;
-  @JsonProperty("active")
+  @SerializedName("active")
   private boolean active;
-  @JsonProperty("owner")
+  @SerializedName("owner")
   private String owner;
 
   public String getProxyMode() {

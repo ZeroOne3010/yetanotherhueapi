@@ -1,18 +1,18 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class GroupState {
-  @JsonProperty("all_on")
+  @SerializedName("all_on")
   private boolean allOn;
-  @JsonProperty("any_on")
+  @SerializedName("any_on")
   private boolean anyOn;
 
   public boolean isAllOn() {
     return allOn;
   }
 
-  public void setAllOn(boolean allOn) {
+  public void setAllOn(final boolean allOn) {
     this.allOn = allOn;
   }
 
@@ -20,7 +20,7 @@ public class GroupState {
     return anyOn;
   }
 
-  public void setAnyOn(boolean anyOn) {
+  public void setAnyOn(final boolean anyOn) {
     this.anyOn = anyOn;
   }
 

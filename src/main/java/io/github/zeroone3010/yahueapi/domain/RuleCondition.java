@@ -1,13 +1,13 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class RuleCondition {
-  @JsonProperty("address")
+  @SerializedName("address")
   private String address;
-  @JsonProperty("operator")
+  @SerializedName("operator")
   private String operator;
-  @JsonProperty("value")
+  @SerializedName("value")
   private String value;
 
   public String getAddress() {

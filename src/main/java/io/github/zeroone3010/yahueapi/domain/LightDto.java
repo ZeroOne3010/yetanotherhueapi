@@ -1,6 +1,6 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.github.zeroone3010.yahueapi.State;
 
 import java.util.Map;
@@ -17,7 +17,7 @@ public class LightDto {
   private String swversion;
   private String swconfigid;
   private String productid;
-  @JsonProperty("productname")
+  @SerializedName("productname")
   private String productName;
   private LightConfig config;
 
@@ -32,7 +32,7 @@ public class LightDto {
    * Acquire these {@code Light} objects with the {@link io.github.zeroone3010.yahueapi.Room#getLights()} and
    * {@link io.github.zeroone3010.yahueapi.Room#getLightByName(String)} methods.
    */
-  public void setState(LightState state) {
+  public void setState(final LightState state) {
     this.state = state;
   }
 
@@ -44,7 +44,7 @@ public class LightDto {
    * @param swupdate
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setSwupdate(ComponentSoftwareUpdate swupdate) {
+  public void setSwupdate(final ComponentSoftwareUpdate swupdate) {
     this.swupdate = swupdate;
   }
 
@@ -56,7 +56,7 @@ public class LightDto {
    * @param type
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setType(String type) {
+  public void setType(final String type) {
     this.type = type;
   }
 
@@ -68,7 +68,7 @@ public class LightDto {
    * @param name
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
@@ -80,7 +80,7 @@ public class LightDto {
    * @param modelid
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setModelid(String modelid) {
+  public void setModelid(final String modelid) {
     this.modelid = modelid;
   }
 
@@ -92,7 +92,7 @@ public class LightDto {
    * @param manufacturername
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setManufacturername(String manufacturername) {
+  public void setManufacturername(final String manufacturername) {
     this.manufacturername = manufacturername;
   }
 
@@ -104,7 +104,7 @@ public class LightDto {
    * @param capabilities
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setCapabilities(Map<String, Object> capabilities) {
+  public void setCapabilities(final Map<String, Object> capabilities) {
     this.capabilities = capabilities;
   }
 
@@ -116,7 +116,7 @@ public class LightDto {
    * @param uniqueid
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setUniqueid(String uniqueid) {
+  public void setUniqueid(final String uniqueid) {
     this.uniqueid = uniqueid;
   }
 
@@ -128,7 +128,7 @@ public class LightDto {
    * @param swversion
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setSwversion(String swversion) {
+  public void setSwversion(final String swversion) {
     this.swversion = swversion;
   }
 
@@ -140,7 +140,7 @@ public class LightDto {
    * @param swconfigid
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setSwconfigid(String swconfigid) {
+  public void setSwconfigid(final String swconfigid) {
     this.swconfigid = swconfigid;
   }
 
@@ -152,7 +152,7 @@ public class LightDto {
    * @param productid
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setProductid(String productid) {
+  public void setProductid(final String productid) {
     this.productid = productid;
   }
 
@@ -164,7 +164,7 @@ public class LightDto {
    * @param productName
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setProductName(String productName) {
+  public void setProductName(final String productName) {
     this.productName = productName;
   }
 
@@ -176,7 +176,7 @@ public class LightDto {
    * @param config
    * @deprecated The properties of the light cannot be changed with this method.
    */
-  public void setConfig(LightConfig config) {
+  public void setConfig(final LightConfig config) {
     this.config = config;
   }
 

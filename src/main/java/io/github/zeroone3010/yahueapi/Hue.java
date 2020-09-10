@@ -1,8 +1,8 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.Root;
@@ -11,24 +11,16 @@ import io.github.zeroone3010.yahueapi.domain.Scene;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 public final class Hue {
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final Gson objectMapper = new Gson();
 
   private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
   private final RoomFactory roomFactory;
@@ -104,7 +96,6 @@ public final class Hue {
     if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
       TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     }
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     roomFactory = new RoomFactory(this, objectMapper, uri);
     lightFactory = new LightFactory(this, objectMapper);
   }
@@ -118,7 +109,7 @@ public final class Hue {
   /**
    * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
    * it has been updated since the application was started.
-   *
+   * <p>
    * This method is particularly useful if caching is enabled
    * with the {@link #setCaching(boolean)} method. Calls to {@code refresh()}
    * will, in that case, refresh the states of the lights.
@@ -127,7 +118,7 @@ public final class Hue {
    */
   public void refresh() {
     try {
-      root = objectMapper.readValue(new URL(uri), Root.class);
+      root = objectMapper.fromJson(HttpUtil.getString(new URL(uri)), Root.class);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
@@ -240,13 +231,12 @@ public final class Hue {
    * Returns the raw root node information of the REST API. Not required for anything but querying the most
    * technical details of the Bridge setup. Note that it is not possible to change the state of the Bridge or
    * the lights by using any values returned by this method: the results are read-only.
-   *
+   * <p>
    * The results of this method are also always cached, so a call to this method never triggers a query to the Bridge
    * (unless no other queries have been made to the Bridge since this instance of {@code Hue} was constructed).
    * To refresh the cache call the {@link #refresh()} method.
    *
    * @return A Root element, as received from the Bridge REST API. Always returns a cached version of the data.
-   *
    * @since 1.0.0
    */
   public Root getRaw() {
@@ -372,7 +362,7 @@ public final class Hue {
 
   public static class HueBridgeConnectionBuilder {
     private static final int MAX_TRIES = 30;
-    private String bridgeIp;
+    private final String bridgeIp;
 
     private HueBridgeConnectionBuilder(final String bridgeIp) {
       this.bridgeIp = bridgeIp;
@@ -403,9 +393,9 @@ public final class Hue {
 
             final String result = HttpUtil.post(baseUrl, "", body);
             System.out.println(result);
-            final ApiInitializationStatus status = new ObjectMapper().<ArrayList<ApiInitializationStatus>>readValue(result,
-                new TypeReference<ArrayList<ApiInitializationStatus>>() {
-                }).get(0);
+            final ApiInitializationStatus status = new Gson().<ArrayList<ApiInitializationStatus>>fromJson(result,
+                new TypeToken<ArrayList<ApiInitializationStatus>>() {
+                }.getType()).get(0);
 
             if (status.getSuccess() != null) {
               return status.getSuccess().getUsername();

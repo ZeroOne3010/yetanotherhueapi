@@ -1,22 +1,22 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import io.github.zeroone3010.yahueapi.HueBridge;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Discovers Hue Bridges using the N-UPnP protocol, i.e. by polling the Philips Hue portal
@@ -63,45 +63,26 @@ final class NUPnPDiscoverer implements HueBridgeDiscoverer {
 
   @Override
   public CompletableFuture<Void> discoverBridges() {
-    final URL url;
-    try {
-      url = new URL(discoveryPortalUrl);
+    final String content;
+    try (final BufferedReader reader = new BufferedReader(
+        new InputStreamReader(new URL(discoveryPortalUrl).openStream(), StandardCharsets.UTF_8))) {
+      content = reader.lines().collect(Collectors.joining("\n"));
     } catch (final MalformedURLException e) {
       throw new IllegalStateException(e);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
     }
-    final ObjectMapper objectMapper = new ObjectMapper();
-    final SimpleModule module = new SimpleModule();
-    module.addDeserializer(HueBridge.class, new NUPnPDeserializer());
-    objectMapper.registerModule(module);
+    final Gson objectMapper = new GsonBuilder()
+        .serializeNulls()
+        .create();
     return CompletableFuture.supplyAsync(() -> {
-      try {
-        logger.fine("Discovering Bridges using the Philips Hue Portal.");
-        final List<HueBridge> foundBridges = objectMapper.<ArrayList<HueBridge>>readValue(url,
-            new TypeReference<ArrayList<HueBridge>>() {
-            });
-        logger.info(String.format("%d Bridges found using the portal.", foundBridges.size()));
-        foundBridges.forEach(discoverer);
-      } catch (final IOException e) {
-        throw new RuntimeException(e);
-      }
+      logger.fine("Discovering Bridges using the Philips Hue Portal.");
+      final List<HueBridge> foundBridges = objectMapper.<ArrayList<HueBridge>>fromJson(content,
+          new TypeToken<ArrayList<HueBridge>>() {
+          }.getType());
+      logger.info(String.format("%d Bridges found using the portal.", foundBridges.size()));
+      foundBridges.forEach(discoverer);
       return null;
     });
-  }
-
-
-  /**
-   * <p>Deserializes a JSON object that has an <code>internalipaddress</code> field.</p>
-   */
-  static class NUPnPDeserializer extends StdDeserializer<HueBridge> {
-    NUPnPDeserializer() {
-      super(HueBridge.class);
-    }
-
-    @Override
-    public HueBridge deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
-      final JsonNode node = parser.getCodec().readTree(parser);
-      final String ip = node.get("internalipaddress").textValue();
-      return new HueBridge(ip);
-    }
   }
 }

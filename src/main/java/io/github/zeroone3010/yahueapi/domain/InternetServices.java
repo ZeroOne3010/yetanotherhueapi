@@ -1,15 +1,15 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class InternetServices {
-  @JsonProperty("internet")
+  @SerializedName("internet")
   private String internet;
-  @JsonProperty("remoteaccess")
+  @SerializedName("remoteaccess")
   private String remoteAccess;
-  @JsonProperty("time")
+  @SerializedName("time")
   private String time;
-  @JsonProperty("swupdate")
+  @SerializedName("swupdate")
   private String swupdate;
 
   public String getInternet() {

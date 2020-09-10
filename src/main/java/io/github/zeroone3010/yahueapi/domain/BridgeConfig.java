@@ -1,67 +1,68 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
 public class BridgeConfig {
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("zigbeechannel")
+  @SerializedName("zigbeechannel")
   private int zigbeeChannel;
-  @JsonProperty("bridgeid")
+  @SerializedName("bridgeid")
   private String bridgeId;
-  @JsonProperty("mac")
+  @SerializedName("mac")
   private String mac;
-  @JsonProperty("dhcp")
+  @SerializedName("dhcp")
   private boolean dhcp;
-  @JsonProperty("ipaddress")
+  @SerializedName("ipaddress")
   private String ipAddress;
-  @JsonProperty("netmask")
+  @SerializedName("netmask")
   private String netmask;
-  @JsonProperty("gateway")
+  @SerializedName("gateway")
   private String gateway;
-  @JsonProperty("proxyaddress")
+  @SerializedName("proxyaddress")
   private String proxyAddress;
-  @JsonProperty("proxyport")
+  @SerializedName("proxyport")
   private int proxyPort;
-  @JsonProperty("UTC")
+  @SerializedName("UTC")
   private String utc;
-  @JsonProperty("localtime")
+  @SerializedName("localtime")
   private String localTime;
-  @JsonProperty("timezone")
+  @SerializedName("timezone")
   private String timeZone;
-  @JsonProperty("modelid")
+  @SerializedName("modelid")
   private String modelId;
-  @JsonProperty("datastoreversion")
+  @SerializedName("datastoreversion")
   private String dataStoreVersion;
-  @JsonProperty("swversion")
+  @SerializedName("swversion")
   private String softwareVersion;
-  @JsonProperty("apiversion")
+  @SerializedName("apiversion")
   private String apiVersion;
-  @JsonProperty("swupdate")
+  @SerializedName("swupdate")
   private ConfigSoftwareUpdate softwareUpdate;
-  @JsonProperty("swupdate2")
+  @SerializedName("swupdate2")
   private ConfigSoftwareUpdate2 softwareUpdate2;
-  @JsonProperty("linkbutton")
+  @SerializedName("linkbutton")
   private boolean linkButton;
-  @JsonProperty("portalservices")
+  @SerializedName("portalservices")
   private boolean portalServices;
-  @JsonProperty("portalconnection")
+  @SerializedName("portalconnection")
   private String portalConnection;
-  @JsonProperty("portalstate")
+  @SerializedName("portalstate")
   private PortalState portalState;
-  @JsonProperty("internetservices")
+  @SerializedName("internetservices")
   private InternetServices internetServices;
-  @JsonProperty("factorynew")
+  @SerializedName("factorynew")
   private boolean factoryNew;
-  @JsonProperty("replacesbridgeid")
+  @SerializedName("replacesbridgeid")
   private String replacesBridgeId;
-  @JsonProperty("backup")
+  @SerializedName("backup")
   private ConfigBackup backup;
-  @JsonProperty("starterkitid")
+  @SerializedName("starterkitid")
   private String starterKitId;
-  @JsonProperty("whitelist")
+  @SerializedName("whitelist")
   private Map<String, WhiteListItem> whiteList;
 
   public String getName() {

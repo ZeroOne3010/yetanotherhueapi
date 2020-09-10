@@ -1,34 +1,33 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
 public class Root {
 
-  @JsonProperty("lights")
+  @SerializedName("lights")
   private Map<String, LightDto> lights;
-  @JsonProperty("groups")
+  @SerializedName("groups")
   private Map<String, Group> groups;
-  @JsonProperty("config")
+  @SerializedName("config")
   private BridgeConfig config;
-  @JsonIgnore
-  private Map<String, Schedule> schedules;
-  @JsonProperty("scenes")
+  private transient Map<String, Schedule> schedules;
+  @SerializedName("scenes")
   private Map<String, Scene> scenes;
-  @JsonProperty("rules")
+  @SerializedName("rules")
   private Map<String, Rule> rules;
-  @JsonProperty("sensors")
+  @SerializedName("sensors")
   private Map<String, SensorDto> sensors;
-  @JsonProperty("resourcelinks")
+  @SerializedName("resourcelinks")
   private Map<String, ResourceLink> resourcelinks;
 
   public Map<String, LightDto> getLights() {
     return lights;
   }
 
-  public void setLights(Map<String, LightDto> lights) {
+  public void setLights(final Map<String, LightDto> lights) {
     this.lights = lights;
   }
 
@@ -36,7 +35,7 @@ public class Root {
     return groups;
   }
 
-  public void setGroups(Map<String, Group> groups) {
+  public void setGroups(final Map<String, Group> groups) {
     this.groups = groups;
   }
 
@@ -44,7 +43,7 @@ public class Root {
     return config;
   }
 
-  public void setConfig(BridgeConfig config) {
+  public void setConfig(final BridgeConfig config) {
     this.config = config;
   }
 
@@ -52,7 +51,7 @@ public class Root {
     return schedules;
   }
 
-  public void setSchedules(Map<String, Schedule> schedules) {
+  public void setSchedules(final Map<String, Schedule> schedules) {
     this.schedules = schedules;
   }
 
@@ -60,7 +59,7 @@ public class Root {
     return scenes;
   }
 
-  public void setScenes(Map<String, Scene> scenes) {
+  public void setScenes(final Map<String, Scene> scenes) {
     this.scenes = scenes;
   }
 
@@ -68,7 +67,7 @@ public class Root {
     return rules;
   }
 
-  public void setRules(Map<String, Rule> rules) {
+  public void setRules(final Map<String, Rule> rules) {
     this.rules = rules;
   }
 
@@ -76,7 +75,7 @@ public class Root {
     return sensors;
   }
 
-  public void setSensors(Map<String, SensorDto> sensors) {
+  public void setSensors(final Map<String, SensorDto> sensors) {
     this.sensors = sensors;
   }
 
@@ -84,7 +83,7 @@ public class Root {
     return resourcelinks;
   }
 
-  public void setResourcelinks(Map<String, ResourceLink> resourcelinks) {
+  public void setResourcelinks(final Map<String, ResourceLink> resourcelinks) {
     this.resourcelinks = resourcelinks;
   }
 

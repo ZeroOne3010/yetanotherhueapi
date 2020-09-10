@@ -1,15 +1,15 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
 public class RuleAction {
-  @JsonProperty("address")
+  @SerializedName("address")
   private String address;
-  @JsonProperty("method")
+  @SerializedName("method")
   private String method;
-  @JsonProperty("body")
+  @SerializedName("body")
   private Map<String, Object> body;
 
   public String getAddress() {

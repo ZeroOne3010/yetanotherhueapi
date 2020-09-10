@@ -27,10 +27,10 @@ final class TemperatureSensorImpl extends BasicSensor implements TemperatureSens
 
   @Override
   public BigDecimal getDegreesCelsius() {
-    return convertCenticelsiusToCelsius(readStateValue("temperature", Integer.class));
+    return convertCenticelsiusToCelsius(readStateValue("temperature", Double.class));
   }
 
-  private static BigDecimal convertCenticelsiusToCelsius(final int centicelsius) {
+  private static BigDecimal convertCenticelsiusToCelsius(final double centicelsius) {
     return BigDecimal.valueOf(centicelsius).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
   }
 }

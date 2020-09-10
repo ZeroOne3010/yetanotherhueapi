@@ -1,22 +1,21 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import io.github.zeroone3010.yahueapi.HueBridge;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -81,14 +80,13 @@ public final class HueBridgeDiscoveryService {
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
 
-    final ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    final Gson objectMapper = new Gson();
 
     final Collection<HueBridge> bridges = new HashSet<>();
     final Collection<String> ips = new HashSet<>();
     final Consumer<HueBridge> commonConsumer = (discoveredBridge) -> {
       final String ip = discoveredBridge.getIp();
-      boolean added;
+      final boolean added;
       synchronized (ips) {
         added = ips.add(ip);
       }
@@ -113,9 +111,10 @@ public final class HueBridgeDiscoveryService {
     return CompletableFuture.allOf(futures).thenApply(allDone -> new ArrayList<>(bridges));
   }
 
-  private BridgeConfig fetchBridgeConfiguration(final ObjectMapper objectMapper, final String ip) {
-    try {
-      return objectMapper.readValue(new URL("http://" + ip + "/api/config"), BridgeConfig.class);
+  private BridgeConfig fetchBridgeConfiguration(final Gson objectMapper, final String ip) {
+    try (final BufferedReader reader = new BufferedReader(
+        new InputStreamReader(new URL("http://" + ip + "/api/config").openStream(), StandardCharsets.UTF_8))) {
+      return objectMapper.fromJson(reader.lines().collect(Collectors.joining("\n")), BridgeConfig.class);
     } catch (final IOException e) {
       logger.severe("Unable to connect to a found Bridge at " + ip + ": " + e);
       return null;

@@ -1,21 +1,18 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.reflect.TypeToken;
 import io.github.zeroone3010.yahueapi.HueBridge;
-import io.github.zeroone3010.yahueapi.discovery.NUPnPDiscoverer.NUPnPDeserializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -66,11 +63,9 @@ class NUPnPDiscovererTest {
     assertEquals(asList(new HueBridge("12.22.32.42"), new HueBridge("5.4.3.210")), result);
   }
 
-  private List<HueBridge> readValue(final String inputJson) throws JsonProcessingException {
-    final ObjectMapper objectMapper = new ObjectMapper();
-    final SimpleModule module = new SimpleModule();
-    module.addDeserializer(HueBridge.class, new NUPnPDeserializer());
-    objectMapper.registerModule(module);
-    return objectMapper.readValue(inputJson, new TypeReference<ArrayList<HueBridge>>() {});
+  private List<HueBridge> readValue(final String inputJson) throws JsonIOException {
+    final Gson objectMapper = new Gson();
+    return objectMapper.<List<HueBridge>>fromJson(inputJson, new TypeToken<ArrayList<HueBridge>>() {
+    }.getType());
   }
 }

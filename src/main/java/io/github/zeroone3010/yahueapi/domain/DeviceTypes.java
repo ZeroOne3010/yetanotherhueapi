@@ -1,15 +1,15 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class DeviceTypes {
-  @JsonProperty("bridge")
+  @SerializedName("bridge")
   private boolean bridge;
-  @JsonProperty("lights")
+  @SerializedName("lights")
   private List<Object> lights;
-  @JsonProperty("sensors")
+  @SerializedName("sensors")
   private List<Object> sensors;
 
   @Override

@@ -1,12 +1,9 @@
 package io.github.zeroone3010.yahueapi;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 final class HttpUtil {
@@ -40,6 +37,13 @@ final class HttpUtil {
       }
     } catch (final IOException e) {
       throw new HueApiException(e);
+    }
+  }
+
+  public static String getString(final URL url) throws IOException {
+    try (final BufferedReader reader = new BufferedReader(
+        new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+      return reader.lines().collect(Collectors.joining("\n"));
     }
   }
 }

@@ -1,19 +1,20 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.google.gson.annotations.SerializedName;
 
 public class ConfigSoftwareUpdate {
-  @JsonProperty("updatestate")
+  @SerializedName("updatestate")
   private int updateState;
-  @JsonProperty("checkforupdate")
+  @SerializedName("checkforupdate")
   private boolean checkForUpdate;
-  @JsonProperty("devicetypes")
+  @SerializedName("devicetypes")
   private DeviceTypes deviceTypes;
-  @JsonProperty("url")
+  @SerializedName("url")
   private String url;
-  @JsonProperty("text")
+  @SerializedName("text")
   private String text;
-  @JsonProperty("notify")
+  @SerializedName("notify")
   private boolean notify;
 
   public int getUpdateState() {

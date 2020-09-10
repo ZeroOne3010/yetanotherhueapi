@@ -1,7 +1,8 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.GroupState;
 
@@ -19,10 +20,10 @@ final class RoomFactory {
   private static final String ACTION_PATH = "/action";
 
   private final Hue hue;
-  private final ObjectMapper objectMapper;
+  private final Gson objectMapper;
   private final String bridgeUri;
 
-  RoomFactory(final Hue hue, final ObjectMapper objectMapper, final String bridgeUri) {
+  RoomFactory(final Hue hue, final Gson objectMapper, final String bridgeUri) {
     this.hue = hue;
     this.objectMapper = objectMapper;
     this.bridgeUri = bridgeUri;
@@ -63,7 +64,7 @@ final class RoomFactory {
         return hue.getRaw().getGroups().get(id).getState();
       }
       try {
-        return objectMapper.readValue(url, Group.class).getState();
+        return objectMapper.fromJson(HttpUtil.getString(url), Group.class).getState();
       } catch (final IOException e) {
         throw new HueApiException(e);
       }
@@ -74,8 +75,8 @@ final class RoomFactory {
     return state -> {
       final String body;
       try {
-        body = objectMapper.writeValueAsString(state);
-      } catch (final JsonProcessingException e) {
+        body = objectMapper.toJson(state);
+      } catch (final JsonIOException e) {
         throw new HueApiException(e);
       }
       return HttpUtil.put(url, ACTION_PATH, body);

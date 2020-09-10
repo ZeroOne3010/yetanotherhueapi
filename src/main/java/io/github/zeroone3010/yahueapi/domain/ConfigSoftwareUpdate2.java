@@ -1,17 +1,17 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class ConfigSoftwareUpdate2 {
-  @JsonProperty("checkforupdate")
+  @SerializedName("checkforupdate")
   private boolean checkForUpdate;
-  @JsonProperty("lastchange")
+  @SerializedName("lastchange")
   private String lastChange;
-  @JsonProperty("bridge")
+  @SerializedName("bridge")
   private ConfigSoftwareUpdate2Bridge bridge;
-  @JsonProperty("state")
+  @SerializedName("state")
   private String state;
-  @JsonProperty("autoinstall")
+  @SerializedName("autoinstall")
   private ConfigSoftwareUpdate2AutoInstall autoInstall;
 
   public boolean isCheckForUpdate() {

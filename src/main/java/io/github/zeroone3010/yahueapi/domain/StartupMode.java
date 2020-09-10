@@ -1,26 +1,16 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gson.annotations.SerializedName;
 
 public enum StartupMode {
-  BRIGHT_LIGHT("safety"),
-  KEEP_STATE("powerfail"),
-  LAST_ON_STATE("lastonstate"),
-  CUSTOM("custom"),
-  UNKNOWN("unknown");
-
-  private final String apiValue;
-
-  StartupMode(final String apiValue) {
-    this.apiValue = apiValue;
-  }
-
-  public String getApiValue() {
-    return apiValue;
-  }
-
-  @JsonValue
-  public String jsonValue() {
-    return getApiValue();
-  }
+  @SerializedName("safety")
+  BRIGHT_LIGHT,
+  @SerializedName("powerfail")
+  KEEP_STATE,
+  @SerializedName("lastonstate")
+  LAST_ON_STATE,
+  @SerializedName("custom")
+  CUSTOM,
+  @SerializedName("unknown")
+  UNKNOWN;
 }

@@ -1,6 +1,6 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -9,27 +9,27 @@ import java.util.List;
  * to change the state of a light, use {@link io.github.zeroone3010.yahueapi.State} instead.
  */
 public class LightState {
-  @JsonProperty("on")
+  @SerializedName("on")
   private boolean on;
-  @JsonProperty("bri")
+  @SerializedName("bri")
   private int brightness;
-  @JsonProperty("hue")
+  @SerializedName("hue")
   private int hue;
-  @JsonProperty("sat")
+  @SerializedName("sat")
   private int saturation;
-  @JsonProperty("effect")
+  @SerializedName("effect")
   private String effect;
-  @JsonProperty("xy")
+  @SerializedName("xy")
   private List<Float> xy;
-  @JsonProperty("ct")
+  @SerializedName("ct")
   private int ct;
-  @JsonProperty("alert")
+  @SerializedName("alert")
   private String alert;
-  @JsonProperty("colormode")
+  @SerializedName("colormode")
   private String colorMode;
-  @JsonProperty("mode")
+  @SerializedName("mode")
   private String mode;
-  @JsonProperty("reachable")
+  @SerializedName("reachable")
   private boolean reachable;
 
   public boolean isOn() {
@@ -40,7 +40,7 @@ public class LightState {
    * @param on
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setOn(boolean on) {
+  public void setOn(final boolean on) {
     this.on = on;
   }
 
@@ -52,7 +52,7 @@ public class LightState {
    * @param brightness
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setBrightness(int brightness) {
+  public void setBrightness(final int brightness) {
     this.brightness = brightness;
   }
 
@@ -64,7 +64,7 @@ public class LightState {
    * @param hue
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setHue(int hue) {
+  public void setHue(final int hue) {
     this.hue = hue;
   }
 
@@ -76,7 +76,7 @@ public class LightState {
    * @param saturation
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setSaturation(int saturation) {
+  public void setSaturation(final int saturation) {
     this.saturation = saturation;
   }
 
@@ -88,7 +88,7 @@ public class LightState {
    * @param effect
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setEffect(String effect) {
+  public void setEffect(final String effect) {
     this.effect = effect;
   }
 
@@ -100,7 +100,7 @@ public class LightState {
    * @param xy
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setXy(List<Float> xy) {
+  public void setXy(final List<Float> xy) {
     this.xy = xy;
   }
 
@@ -112,7 +112,7 @@ public class LightState {
    * @param ct
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setCt(int ct) {
+  public void setCt(final int ct) {
     this.ct = ct;
   }
 
@@ -124,7 +124,7 @@ public class LightState {
    * @param alert
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setAlert(String alert) {
+  public void setAlert(final String alert) {
     this.alert = alert;
   }
 
@@ -136,7 +136,7 @@ public class LightState {
    * @param colorMode
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setColorMode(String colorMode) {
+  public void setColorMode(final String colorMode) {
     this.colorMode = colorMode;
   }
 
@@ -148,7 +148,7 @@ public class LightState {
    * @param mode
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setMode(String mode) {
+  public void setMode(final String mode) {
     this.mode = mode;
   }
 
@@ -160,7 +160,7 @@ public class LightState {
    * @param reachable
    * @deprecated The state cannot be changed with this class. Use {@link io.github.zeroone3010.yahueapi.State} instead.
    */
-  public void setReachable(boolean reachable) {
+  public void setReachable(final boolean reachable) {
     this.reachable = reachable;
   }
 

@@ -1,6 +1,6 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import io.github.zeroone3010.yahueapi.domain.SensorDto;
 
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 
 final class SensorFactory {
   private final Hue hue;
-  private final ObjectMapper objectMapper;
+  private final Gson objectMapper;
 
-  SensorFactory(final Hue hue, final ObjectMapper objectMapper) {
+  SensorFactory(final Hue hue, final Gson objectMapper) {
     this.hue = hue;
     this.objectMapper = objectMapper;
   }
@@ -47,8 +47,8 @@ final class SensorFactory {
         return hue.getRaw().getSensors().get(id).getState();
       }
       try {
-        return objectMapper.readValue(url, SensorDto.class).getState();
-      } catch (IOException e) {
+        return objectMapper.fromJson(HttpUtil.getString(url), SensorDto.class).getState();
+      } catch (final IOException e) {
         throw new HueApiException(e);
       }
     };

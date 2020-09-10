@@ -23,6 +23,6 @@ final class DimmerSwitchImpl extends BasicSensor implements DimmerSwitch {
 
   @Override
   public DimmerSwitchButtonEvent getLatestButtonEvent() {
-    return new DimmerSwitchButtonEvent(readStateValue("buttonevent", Integer.class));
+    return new DimmerSwitchButtonEvent((int) (double) readStateValue("buttonevent", Double.class));
   }
 }

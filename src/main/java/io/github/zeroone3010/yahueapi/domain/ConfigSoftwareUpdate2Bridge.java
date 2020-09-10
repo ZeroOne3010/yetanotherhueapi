@@ -1,11 +1,11 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class ConfigSoftwareUpdate2Bridge {
-  @JsonProperty("state")
+  @SerializedName("state")
   private String state;
-  @JsonProperty("lastinstall")
+  @SerializedName("lastinstall")
   private String lastInstall;
 
   public String getState() {

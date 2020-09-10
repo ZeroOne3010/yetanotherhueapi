@@ -1,23 +1,23 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class ResourceLink {
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("description")
+  @SerializedName("description")
   private String description;
-  @JsonProperty("type")
+  @SerializedName("type")
   private String type;
-  @JsonProperty("classid")
+  @SerializedName("classid")
   private int classid;
-  @JsonProperty("owner")
+  @SerializedName("owner")
   private String owner;
-  @JsonProperty("recycle")
+  @SerializedName("recycle")
   private boolean recycle;
-  @JsonProperty("links")
+  @SerializedName("links")
   private List<String> links;
 
 

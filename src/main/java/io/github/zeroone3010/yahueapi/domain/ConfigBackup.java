@@ -1,11 +1,11 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class ConfigBackup {
-  @JsonProperty("status")
+  @SerializedName("status")
   private String status;
-  @JsonProperty("errorcode")
+  @SerializedName("errorcode")
   private int errorCode;
 
   public String getStatus() {

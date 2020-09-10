@@ -1,27 +1,27 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class Rule {
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("owner")
+  @SerializedName("owner")
   private String owner;
-  @JsonProperty("created")
+  @SerializedName("created")
   private String created;
-  @JsonProperty("lasttriggered")
+  @SerializedName("lasttriggered")
   private String lastTriggered;
-  @JsonProperty("timestriggered")
+  @SerializedName("timestriggered")
   private int timesTriggered;
-  @JsonProperty("status")
+  @SerializedName("status")
   private String status;
-  @JsonProperty("recycle")
+  @SerializedName("recycle")
   private boolean recycle;
-  @JsonProperty("conditions")
+  @SerializedName("conditions")
   private List<RuleCondition> conditions;
-  @JsonProperty("actions")
+  @SerializedName("actions")
   private List<RuleAction> actions;
 
   public String getName() {

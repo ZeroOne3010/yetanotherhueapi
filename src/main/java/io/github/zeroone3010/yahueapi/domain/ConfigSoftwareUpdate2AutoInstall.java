@@ -1,11 +1,11 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class ConfigSoftwareUpdate2AutoInstall {
-  @JsonProperty("updatetime")
+  @SerializedName("updatetime")
   private String updateTime;
-  @JsonProperty("on")
+  @SerializedName("on")
   private boolean on;
 
   public String getUpdateTime() {

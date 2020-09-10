@@ -6,13 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
-import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
-import io.github.zeroone3010.yahueapi.domain.LightConfig;
-import io.github.zeroone3010.yahueapi.domain.ResourceLink;
-import io.github.zeroone3010.yahueapi.domain.Root;
-import io.github.zeroone3010.yahueapi.domain.RuleAction;
-import io.github.zeroone3010.yahueapi.domain.RuleCondition;
 import io.github.zeroone3010.yahueapi.domain.Scene;
+import io.github.zeroone3010.yahueapi.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,32 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.github.zeroone3010.yahueapi.domain.StartupMode.BRIGHT_LIGHT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HueTest {
   private static final String API_KEY = "abcd1234";
@@ -617,7 +594,7 @@ class HueTest {
   void testGetRawResourcelinks() {
     final Hue hue = createHueAndInitializeMockServer();
     final Map<String, ResourceLink> resourcelinks = hue.getRaw().getResourcelinks();
-    ResourceLink resourceLink = resourcelinks.get("27890");
+    final ResourceLink resourceLink = resourcelinks.get("27890");
     assertEquals("MotionSensor 16", resourceLink.getName());
     assertEquals("MotionSensor 16 behavior", resourceLink.getDescription());
     assertEquals("Link", resourceLink.getType());
@@ -643,8 +620,8 @@ class HueTest {
     assertEquals(true, scene.isRecycle());
     assertEquals(true, scene.isLocked());
     assertEquals(new HashMap() {{
-      put("version", 1);
       put("data", "MKoLK_r01_d21");
+      put("version", 1.0);
     }}, scene.getAppdata());
     assertEquals("", scene.getPicture());
     assertEquals("2018-01-19T01:23:45", scene.getLastUpdated());

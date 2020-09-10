@@ -1,32 +1,32 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
 
 public class Scene {
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("type")
+  @SerializedName("type")
   private String type;
-  @JsonProperty("group")
+  @SerializedName("group")
   private String group;
-  @JsonProperty("lights")
+  @SerializedName("lights")
   private List<String> lights;
-  @JsonProperty("owner")
+  @SerializedName("owner")
   private String owner;
-  @JsonProperty("recycle")
+  @SerializedName("recycle")
   private boolean recycle;
-  @JsonProperty("locked")
+  @SerializedName("locked")
   private boolean locked;
-  @JsonProperty("appdata")
+  @SerializedName("appdata")
   private Map<String, Object> appdata;
-  @JsonProperty("picture")
+  @SerializedName("picture")
   private String picture;
-  @JsonProperty("lastupdated")
+  @SerializedName("lastupdated")
   private String lastUpdated;
-  @JsonProperty("version")
+  @SerializedName("version")
   private int version;
 
   public String getName() {

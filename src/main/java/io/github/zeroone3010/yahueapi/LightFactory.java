@@ -1,7 +1,7 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import io.github.zeroone3010.yahueapi.domain.LightDto;
 import io.github.zeroone3010.yahueapi.domain.LightState;
 import io.github.zeroone3010.yahueapi.domain.Root;
@@ -16,9 +16,9 @@ final class LightFactory {
   private static final String ACTION_PATH = "/state";
 
   private final Hue hue;
-  private final ObjectMapper objectMapper;
+  private final Gson objectMapper;
 
-  LightFactory(final Hue hue, final ObjectMapper objectMapper) {
+  LightFactory(final Hue hue, final Gson objectMapper) {
     this.hue = hue;
     this.objectMapper = objectMapper;
   }
@@ -43,7 +43,7 @@ final class LightFactory {
         return hue.getRaw().getLights().get(id).getState();
       }
       try {
-        return objectMapper.readValue(url, LightDto.class).getState();
+        return objectMapper.fromJson(HttpUtil.getString(url), LightDto.class).getState();
       } catch (final IOException e) {
         throw new HueApiException(e);
       }
@@ -54,8 +54,8 @@ final class LightFactory {
     return state -> {
       final String body;
       try {
-        body = objectMapper.writeValueAsString(state);
-      } catch (final JsonProcessingException e) {
+        body = objectMapper.toJson(state);
+      } catch (final JsonIOException e) {
         throw new HueApiException(e);
       }
       return HttpUtil.put(url, ACTION_PATH, body);

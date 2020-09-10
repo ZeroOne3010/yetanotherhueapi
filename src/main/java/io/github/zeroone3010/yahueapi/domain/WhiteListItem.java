@@ -1,20 +1,20 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class WhiteListItem {
-  @JsonProperty("last use date")
+  @SerializedName("last use date")
   private String lastUseDate;
-  @JsonProperty("create date")
+  @SerializedName("create date")
   private String createDate;
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
 
   public String getLastUseDate() {
     return lastUseDate;
   }
 
-  public void setLastUseDate(String lastUseDate) {
+  public void setLastUseDate(final String lastUseDate) {
     this.lastUseDate = lastUseDate;
   }
 
@@ -22,7 +22,7 @@ public class WhiteListItem {
     return createDate;
   }
 
-  public void setCreateDate(String createDate) {
+  public void setCreateDate(final String createDate) {
     this.createDate = createDate;
   }
 
@@ -30,7 +30,7 @@ public class WhiteListItem {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 

@@ -1,30 +1,14 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.BuildStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.ColorStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.ColorTemperatureStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.HueStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.InitialStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.OnOffStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.TransitionTimeStep;
-import io.github.zeroone3010.yahueapi.StateBuilderSteps.XyStep;
+import com.google.gson.Gson;
+import io.github.zeroone3010.yahueapi.StateBuilderSteps.*;
 import io.github.zeroone3010.yahueapi.domain.LightState;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.awt.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
-@JsonInclude(Include.NON_NULL)
 public final class State {
   private static final Logger logger = Logger.getLogger("State");
 
@@ -104,8 +88,12 @@ public final class State {
 
   @Override
   public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     final State state = (State) o;
     return Objects.equals(on, state.on) &&
         Objects.equals(hue, state.hue) &&
@@ -132,25 +120,25 @@ public final class State {
     private String scene;
 
     @Override
-    public SaturationStep hue(int hue) {
+    public SaturationStep hue(final int hue) {
       this.hue = hue;
       return this;
     }
 
     @Override
-    public BrightnessStep saturation(int saturation) {
+    public BrightnessStep saturation(final int saturation) {
       this.sat = saturation;
       return this;
     }
 
     @Override
-    public BuildStep brightness(int brightness) {
+    public BuildStep brightness(final int brightness) {
       this.bri = brightness;
       return this;
     }
 
     @Override
-    public BrightnessStep xy(List<Float> xy) {
+    public BrightnessStep xy(final List<Float> xy) {
       if (xy == null || xy.size() != 2 || !isInRange(xy.get(0), 0, 1) || !isInRange(xy.get(1), 0, 1)) {
         throw new IllegalArgumentException("The xy list must contain exactly 2 values, between 0 and 1.");
       }
@@ -165,7 +153,7 @@ public final class State {
     }
 
     @Override
-    public BuildStep color(Color color) {
+    public BuildStep color(final Color color) {
       if (color == null) {
         throw new IllegalArgumentException("Color must not be null");
       }
@@ -176,30 +164,30 @@ public final class State {
     }
 
     @Override
-    public BuildStep color(String color) {
+    public BuildStep color(final String color) {
       return color(hexToColor(color));
     }
 
     @Override
-    public BrightnessStep colorTemperatureInMireks(int colorTemperature) {
+    public BrightnessStep colorTemperatureInMireks(final int colorTemperature) {
       this.ct = colorTemperature;
       return this;
     }
 
     @Override
-    public OnOffStep transitionTime(int tenths) {
+    public OnOffStep transitionTime(final int tenths) {
       this.transitionTime = tenths;
       return this;
     }
 
     @Override
-    public State on(Boolean on) {
+    public State on(final Boolean on) {
       this.on = on;
       return build();
     }
 
     @Override
-    public BuildStep scene(String scene) {
+    public BuildStep scene(final String scene) {
       this.scene = scene;
       return this;
     }
@@ -230,7 +218,7 @@ public final class State {
       return new XAndYAndBrightness(x, y, (int) (rgbY * 255f));
     }
 
-    private static double gammaCorrection(float component) {
+    private static double gammaCorrection(final float component) {
       return (component > 0.04045f) ? Math.pow((component + 0.055f) / (1.0f + 0.055f), 2.4f) : (component / 12.92f);
     }
   }
@@ -260,11 +248,7 @@ public final class State {
 
     @Override
     public String toString() {
-      try {
-        return new ObjectMapper().writeValueAsString(this);
-      } catch (final JsonProcessingException e) {
-        throw new RuntimeException(e);
-      }
+      return new Gson().toJson(this);
     }
   }
 

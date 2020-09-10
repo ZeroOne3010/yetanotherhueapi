@@ -1,40 +1,40 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
 public class SensorDto {
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("type")
+  @SerializedName("type")
   private String type;
-  @JsonProperty("state")
+  @SerializedName("state")
   private Map<String, Object> state;
-  @JsonProperty("swupdate")
+  @SerializedName("swupdate")
   private ComponentSoftwareUpdate softwareUpdate;
-  @JsonProperty("config")
+  @SerializedName("config")
   private Map<String, Object> config;
-  @JsonProperty("modelid")
+  @SerializedName("modelid")
   private String modelId;
-  @JsonProperty("manufacturername")
+  @SerializedName("manufacturername")
   private String manufacturerName;
-  @JsonProperty("swversion")
+  @SerializedName("swversion")
   private String softwareVersion;
-  @JsonProperty("uniqueid")
+  @SerializedName("uniqueid")
   private String uniqueId;
-  @JsonProperty("recycle")
+  @SerializedName("recycle")
   private Boolean recycle;
-  @JsonProperty("productname")
+  @SerializedName("productname")
   private String productName;
-  @JsonProperty("capabilities")
+  @SerializedName("capabilities")
   private Map<String, Object> capabilities;
 
   public Map<String, Object> getState() {
     return state;
   }
 
-  public void setState(Map<String, Object> state) {
+  public void setState(final Map<String, Object> state) {
     this.state = state;
   }
 
@@ -42,7 +42,7 @@ public class SensorDto {
     return softwareUpdate;
   }
 
-  public void setSoftwareUpdate(ComponentSoftwareUpdate softwareUpdate) {
+  public void setSoftwareUpdate(final ComponentSoftwareUpdate softwareUpdate) {
     this.softwareUpdate = softwareUpdate;
   }
 
@@ -50,7 +50,7 @@ public class SensorDto {
     return config;
   }
 
-  public void setConfig(Map<String, Object> config) {
+  public void setConfig(final Map<String, Object> config) {
     this.config = config;
   }
 
@@ -58,7 +58,7 @@ public class SensorDto {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
@@ -66,7 +66,7 @@ public class SensorDto {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(final String type) {
     this.type = type;
   }
 
@@ -74,7 +74,7 @@ public class SensorDto {
     return modelId;
   }
 
-  public void setModelId(String modelId) {
+  public void setModelId(final String modelId) {
     this.modelId = modelId;
   }
 
@@ -82,7 +82,7 @@ public class SensorDto {
     return manufacturerName;
   }
 
-  public void setManufacturerName(String manufacturerName) {
+  public void setManufacturerName(final String manufacturerName) {
     this.manufacturerName = manufacturerName;
   }
 
@@ -90,7 +90,7 @@ public class SensorDto {
     return softwareVersion;
   }
 
-  public void setSoftwareVersion(String softwareVersion) {
+  public void setSoftwareVersion(final String softwareVersion) {
     this.softwareVersion = softwareVersion;
   }
 
@@ -98,7 +98,7 @@ public class SensorDto {
     return uniqueId;
   }
 
-  public void setUniqueId(String uniqueId) {
+  public void setUniqueId(final String uniqueId) {
     this.uniqueId = uniqueId;
   }
 
@@ -106,7 +106,7 @@ public class SensorDto {
     return recycle;
   }
 
-  public void setRecycle(Boolean recycle) {
+  public void setRecycle(final Boolean recycle) {
     this.recycle = recycle;
   }
 
@@ -114,7 +114,7 @@ public class SensorDto {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName(final String productName) {
     this.productName = productName;
   }
 
@@ -122,7 +122,7 @@ public class SensorDto {
     return capabilities;
   }
 
-  public void setCapabilities(Map<String, Object> capabilities) {
+  public void setCapabilities(final Map<String, Object> capabilities) {
     this.capabilities = capabilities;
   }
 

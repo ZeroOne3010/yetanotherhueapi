@@ -1,36 +1,36 @@
 package io.github.zeroone3010.yahueapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
 
 public class Group {
 
-  @JsonProperty("name")
+  @SerializedName("name")
   private String name;
-  @JsonProperty("lights")
+  @SerializedName("lights")
   private List<String> lights;
-  @JsonProperty("type")
+  @SerializedName("type")
   private String type;
-  @JsonProperty("state")
+  @SerializedName("state")
   private GroupState state;
-  @JsonProperty("recycle")
+  @SerializedName("recycle")
   private boolean recycle;
-  @JsonProperty("class")
+  @SerializedName("class")
   private String roomClass;
-  @JsonProperty("action")
+  @SerializedName("action")
   private Action action;
-  @JsonProperty("stream")
+  @SerializedName("stream")
   private EntertainmentStream stream;
-  @JsonProperty("locations")
+  @SerializedName("locations")
   private Map<String, List<Integer>> locations;
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
@@ -38,7 +38,7 @@ public class Group {
     return lights;
   }
 
-  public void setLights(List<String> lights) {
+  public void setLights(final List<String> lights) {
     this.lights = lights;
   }
 
@@ -46,7 +46,7 @@ public class Group {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(final String type) {
     this.type = type;
   }
 
@@ -54,7 +54,7 @@ public class Group {
     return state;
   }
 
-  public void setState(GroupState state) {
+  public void setState(final GroupState state) {
     this.state = state;
   }
 
@@ -62,7 +62,7 @@ public class Group {
     return recycle;
   }
 
-  public void setRecycle(boolean recycle) {
+  public void setRecycle(final boolean recycle) {
     this.recycle = recycle;
   }
 
@@ -70,7 +70,7 @@ public class Group {
     return roomClass;
   }
 
-  public void setRoomClass(String roomClass) {
+  public void setRoomClass(final String roomClass) {
     this.roomClass = roomClass;
   }
 
@@ -78,7 +78,7 @@ public class Group {
     return action;
   }
 
-  public void setAction(Action action) {
+  public void setAction(final Action action) {
     this.action = action;
   }
 
@@ -86,7 +86,7 @@ public class Group {
     return stream;
   }
 
-  public void setStream(EntertainmentStream stream) {
+  public void setStream(final EntertainmentStream stream) {
     this.stream = stream;
   }
 
@@ -94,7 +94,7 @@ public class Group {
     return locations;
   }
 
-  public void setLocations(Map<String, List<Integer>> locations) {
+  public void setLocations(final Map<String, List<Integer>> locations) {
     this.locations = locations;
   }
 
