@@ -153,3 +153,7 @@ Notes
 <sup>1</sup> Java 8, while old already, was chosen because it is easy to 
 install and run it on a Raspberry Pi computer. For the installation instructions,
 see, for example, [this blog post](http://wp.brodzinski.net/raspberry-pi-3b/install-latest-java-8-raspbian/).
+
+NEDAP STUFF
+-------
+Building a new version of this api requires manually deploying the jar to the artifactory and changing the version.

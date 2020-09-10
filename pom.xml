@@ -2,22 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.zeroone3010</groupId>
+    <groupId>com.nedap.retail.renos</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>YetAnotherHueApi</name>
     <description>A library for controlling Philips Hue lights.</description>
     <url>https://github.com/ZeroOne3010/yetanotherhueapi</url>
-    <developers>
-        <developer>
-            <id>ZeroOne3010</id>
-            <name>Ville Saalo</name>
-            <email>ville.saalo+yahueapi@iki.fi</email>
-            <timezone>Europe/Helsinki</timezone>
-        </developer>
-    </developers>
 
     <build>
 
@@ -69,57 +61,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <localCheckout>true</localCheckout>
-                    <pushChanges>false</pushChanges>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.11.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-api</artifactId>
-                        <version>1.11.2</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
@@ -149,24 +90,6 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-    </distributionManagement>
-
-    <scm>
-        <connection>scm:git:git://github.com/ZeroOne3010/yetanotherhueapi.git</connection>
-        <developerConnection>scm:git:git@github.com:ZeroOne3010/yetanotherhueapi.git</developerConnection>
-        <url>https://github.com/ZeroOne3010/yetanotherhueapi</url>
-        <tag>HEAD</tag>
-    </scm>
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -191,8 +114,24 @@
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
+
+        <artifactory.server>10.1.8.247</artifactory.server>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>libs-snapshots</name>
+            <url>http://${artifactory.server}:8081/artifactory/libs-snapshots-local</url>
+        </snapshotRepository>
+        <repository>
+            <id>releases</id>
+            <name>libs-releases</name>
+            <url>http://${artifactory.server}:8081/artifactory/libs-releases-local</url>
+        </repository>
+    </distributionManagement>
 
     <licenses>
         <license>
