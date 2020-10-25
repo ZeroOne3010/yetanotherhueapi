@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class Scene {
   @JsonProperty("name")
@@ -28,6 +29,8 @@ public class Scene {
   private String lastUpdated;
   @JsonProperty("version")
   private int version;
+  @JsonProperty("image")
+  private UUID image;
 
   public String getName() {
     return name;
@@ -71,6 +74,10 @@ public class Scene {
 
   public int getVersion() {
     return version;
+  }
+
+  public UUID getImage() {
+    return image;
   }
 
   @Override

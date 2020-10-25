@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -647,6 +648,7 @@ class HueTest {
       put("data", "MKoLK_r01_d21");
     }}, scene.getAppdata());
     assertEquals("", scene.getPicture());
+    assertEquals(UUID.fromString("9c9435de-1c2f-425c-9351-7e487ab57d79"), scene.getImage());
     assertEquals("2018-01-19T01:23:45", scene.getLastUpdated());
     assertEquals(2, scene.getVersion());
   }
