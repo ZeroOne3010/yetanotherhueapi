@@ -38,7 +38,11 @@ public class HueTestRun {
       return;
     }
 
-    System.out.println("Zones:");
+    System.out.println("\nRooms:");
+    hue.getRooms().forEach(r -> System.out.println(String.format("\tRoom '%s' has these lights: %s",
+        r.getName(), r.getLights())));
+
+    System.out.println("\nZones:");
     hue.getZones().forEach(z -> System.out.println(String.format("\tZone '%s' has these lights: %s",
         z.getName(), z.getLights())));
 
@@ -64,5 +68,8 @@ public class HueTestRun {
 
     System.out.println("\nScenes:");
     hue.getRaw().getScenes().forEach((id, scene) -> System.out.println(String.format("\tScene %s: %s", id, scene)));
+
+    System.out.println("\nLights:");
+    hue.getRaw().getLights().forEach((id, light) -> System.out.println(String.format("\tLight %s: %s", id, light)));
   }
 }
