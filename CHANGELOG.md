@@ -6,12 +6,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+Unreleased
+----------
+
+### Deprecations
+
+* Deprecate the `LightType.ON_OFF` enumeration value: this one will be renamed to ON_OFF_LIGHT in the future
+
 v1.3.1 (2020-02-27)
 ----------
 
 ### Fixed
 
-* Fixed [issue #15](https://github.com/ZeroOne3010/yetanotherhueapi/issues/15): 
+* Fixed [issue #15](https://github.com/ZeroOne3010/yetanotherhueapi/issues/15):
   the `HueBridgeDiscoveryService` returned `HueBridge` objects with their name and IP address reversed
 
 v1.3.0 (2020-02-16)
