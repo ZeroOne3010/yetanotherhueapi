@@ -11,7 +11,7 @@ Unreleased
 
 ### Deprecations
 
-* Deprecate the `LightType.ON_OFF` enumeration value: this one will be renamed to ON_OFF_LIGHT in the future
+* Deprecate the `LightType.ON_OFF` enumeration value: this one will be renamed to `ON_OFF_LIGHT` in the future
 
 v1.3.1 (2020-02-27)
 ----------
