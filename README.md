@@ -73,12 +73,15 @@ final Hue hue = new Hue(bridgeIp, key);
 
 ### Using the rooms, lights, and scenes
 
+#### Lights that belong to a room or a zone
+
 [//]: # (requires-init)
 [//]: # (import java.util.Optional;)
 ```java
-// Get a room -- returns Optional.empty() if the room does not exist, but 
+// Get a room or a zone -- returns Optional.empty() if the room does not exist, but
 // let's assume we know for a fact it exists and can do the .get() right away:
 final Room room = hue.getRoomByName("Basement").get();
+final Room zone = hue.getZoneByName("Route to the basement").get();
 
 // Turn the lights on, make them pink:
 room.setState(State.builder().color(java.awt.Color.PINK).on());
@@ -95,6 +98,19 @@ light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keep
 
 // Activate a scene:
 room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
+```
+
+#### Lights that do not belong to a room or a zone (in a future version of this library!)
+
+In an upcoming version of this library, one will be able to retrieve even those lights that do not belong to any room or zone.
+The lights that have not been assigned to any room or zone can be accessed with the `getUnassignedLights()` method
+of the `Hue` object. For example, in order to turn on all the unassigned lights, one would do it like this:
+
+[//]: # (requires-init)
+[//]: # (import java.util.Collection;)
+```java
+final Collection<Light> lights = hue.getUnassignedLights();
+lights.forEach(Light::turnOn);
 ```
 
 ### Caching

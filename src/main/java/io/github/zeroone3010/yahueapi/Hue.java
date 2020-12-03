@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +23,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
@@ -40,6 +43,7 @@ public final class Hue {
   private Map<String, Room> groups;
   private Map<String, Sensor> sensors;
   private boolean caching = false;
+  private Collection<Light> unassignedLights;
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
@@ -149,6 +153,15 @@ public final class Hue {
     this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
+
+    final Collection<String> lightsInUse = getRaw().getGroups().values().stream()
+        .flatMap(group -> group.getLights().stream())
+        .collect(toSet());
+    this.unassignedLights = lights.entrySet().stream()
+        .filter(light -> !lightsInUse.contains(light.getKey()))
+        .map(light -> buildLight(light.getKey(), root))
+        .sorted(comparing(Light::getName))
+        .collect(toList());
   }
 
   private Map<String, Scene> findScenesOfGroup(final String groupId, final Map<String, Scene> scenes) {
@@ -355,6 +368,17 @@ public final class Hue {
         .filter(sensor -> Objects.equals(sensor.getName(), switchName))
         .map(DimmerSwitch.class::cast)
         .findFirst();
+  }
+
+  /**
+   * Returns all lights that do not belong to any group or zone.
+   *
+   * @return A collection of lights.
+   * @since 1.4.0
+   */
+  public Collection<Light> getUnassignedLights() {
+    doInitialDataLoadIfRequired();
+    return unassignedLights;
   }
 
   /**

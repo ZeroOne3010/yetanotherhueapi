@@ -80,6 +80,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "lights", "101");
       mockIndividualGetResponse(jsonNode, "lights", "200");
       mockIndividualGetResponse(jsonNode, "lights", "300");
+      mockIndividualGetResponse(jsonNode, "lights", "400");
       mockIndividualGetResponse(jsonNode, "sensors", "1");
       mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
@@ -700,6 +701,29 @@ class HueTest {
 
     final Room hallway = hue.getRoomByName("Hallway 1").get();
     assertEquals(0, hallway.getScenes().size());
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testUnassignedLights() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    final Collection<Light> lights = hue.getUnassignedLights();
+    assertEquals(1, lights.size());
+    lights.forEach(light -> {
+      assertEquals("Hue Smart plug 1", light.getName());
+      assertEquals(LightType.ON_OFF_PLUGIN_UNIT, light.getType());
+      assertTrue(light.isReachable());
+      assertTrue(light.getState().getOn());
+//      assertNull(light.getState().getBri());
+//      assertNull(light.getState().getCt());
+      assertNull(light.getState().getHue());
+      assertNull(light.getState().getSat());
+      assertNull(light.getState().getScene());
+      assertNull(light.getState().getTransitiontime());
+      assertNull(light.getState().getXy());
+    });
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
