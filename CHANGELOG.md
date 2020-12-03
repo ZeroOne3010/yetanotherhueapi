@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+### Added
+
+* Support for Smart Plugs: they will appear in the API with the type `LightType.ON_OFF_PLUGIN_UNIT`
+
 ### Deprecations
 
 * Deprecate the `LightType.ON_OFF` enumeration value: this one will be renamed to `ON_OFF_LIGHT` in the future

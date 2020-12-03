@@ -10,6 +10,7 @@ public enum LightType {
   COLOR_TEMPERATURE,
   COLOR,
   EXTENDED_COLOR,
+  ON_OFF_PLUGIN_UNIT,
   UNKNOWN;
 
   static LightType parseTypeString(final String type) {
@@ -27,6 +28,8 @@ public enum LightType {
         return COLOR;
       case "extended color light":
         return EXTENDED_COLOR;
+      case "on/off plug-in unit":
+        return ON_OFF_PLUGIN_UNIT;
       default:
         return UNKNOWN;
     }
