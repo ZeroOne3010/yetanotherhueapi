@@ -2,7 +2,7 @@ Yet Another Hue API
 ===================
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.zeroone3010/yetanotherhueapi.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.zeroone3010%22%20AND%20a:%22yetanotherhueapi%22)
 
-This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official 
+This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
 This library has been confirmed to work with the Philips Hue Bridge API version 1.41.0.
 
@@ -22,15 +22,15 @@ import io.github.zeroone3010.yahueapi.discovery.*;
 #### Bridge discovery
 
 If you do not know the IP address of the Bridge, you can use the automatic Bridge discovery functionality.
-The `discoverBridges` method of the `HueBridgeDiscoveryService` class accepts a `Consumer` 
+The `discoverBridges` method of the `HueBridgeDiscoveryService` class accepts a `Consumer`
 that is called whenever a new Bridge is found. You may either hook into that or you can supply a no-op consumer
 and just use the `Future<List<HueBridge>>` that is returned. Please do note, however, that it may take
 approximately five seconds for the discovery process to complete. The `HueBridge` objects hold an IP address
 that may be then used to initiate a connection with the Bridge.
 
-Without any parameters besides the consumer the `discoverBridges` method uses all available discovery 
+Without any parameters besides the consumer the `discoverBridges` method uses all available discovery
 methods simultaneously, namely N-UPnP and UPnP. If you wish to change that, the method accepts a varargs
-list of discovery method enum values. 
+list of discovery method enum values.
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 [//]: # (import java.util.List;)
@@ -38,11 +38,11 @@ list of discovery method enum values.
 ```java
 Future<List<HueBridge>> bridgesFuture = new HueBridgeDiscoveryService()
         .discoverBridges(bridge -> System.out.println("Bridge found: " + bridge));
-final List<HueBridge> bridges = bridgesFuture.get(); 
+final List<HueBridge> bridges = bridgesFuture.get();
 if( !bridges.isEmpty() ) {
   final String bridgeIp = bridges.get(0).getIp();
   System.out.println("Bridge found at " + bridgeIp);
-  // Then follow the code snippets below under the "Once you have a Bridge IP address" header 
+  // Then follow the code snippets below under the "Once you have a Bridge IP address" header
 }
 ```
 
@@ -122,7 +122,7 @@ query to the Bridge. Instead they will return the state that was current when ca
 that the `refresh()` method of the `Hue` object was called. Toggling caching off by calling `setCaching(false)`
 will direct subsequent state queries to the Bridge again. Caching is off by default. When toggling caching on/off
 there is no need to get the `Light`, `Room` or `Sensor` from the `Hue` object again: you can keep using the same
-object reference all the time. Objects that return a cached state will accept and execute state changes (calls to 
+object reference all the time. Objects that return a cached state will accept and execute state changes (calls to
 the `setState` method) just fine, but they will *not* update their cached state with those calls.
 
 Including the library with Maven
@@ -143,7 +143,7 @@ Scope and philosophy
 
 This library is not intended to have all the possible functionality of the SDK
 or the REST API. Instead it is focusing on the essentials: querying and setting
-the states of the rooms and the lights. And this library should do those 
+the states of the rooms and the lights. And this library should do those
 essential functions well: in an intuitive and usable way for the programmer.
 The number of external dependencies should be kept to a minimum.
 Version numbering follows the [Semantic Versioning](https://semver.org/).
@@ -166,6 +166,6 @@ This project elsewhere
 Notes
 -----
 
-<sup>1</sup> Java 8, while old already, was chosen because it is easy to 
+<sup>1</sup> Java 8, while old already, was chosen because it is easy to
 install and run it on a Raspberry Pi computer. For the installation instructions,
 see, for example, [this blog post](http://wp.brodzinski.net/raspberry-pi-3b/install-latest-java-8-raspbian/).
