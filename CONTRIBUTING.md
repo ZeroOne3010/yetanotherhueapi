@@ -26,6 +26,7 @@ Please write tests for your change. Also run all the existing tests before and a
 * Finalize those variables whose value never changes
 * Don't do empty `catch` blocks
 * Use the `@Override` annotation always when overriding a method of an interface or a superclass
+* Do not use wildcard imports (as in `import java.util.*`), always import all the required classes individually
 
 ## Commit conventions
 
