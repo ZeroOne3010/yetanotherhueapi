@@ -12,6 +12,7 @@ Unreleased
 ### Added
 
 * Support for Smart Plugs: they will appear in the API with the type `LightType.ON_OFF_PLUGIN_UNIT`
+* Support for lights that do not belong to any group or zone: accessible using the `getUnassignedLights()` of the `Hue` object
 
 ### Deprecations
 
