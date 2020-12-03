@@ -1,7 +1,7 @@
 # Contributing
 
 Contributions are very welcome! If your contribution is trivial, feel free to submit a pull request directly.
-If it's not trivial, please open an issue first to discuss the matter. 
+If it's not trivial, please open an issue first to discuss the matter.
 
 Be nice and assume good faith from other contributors.
 
@@ -9,7 +9,7 @@ Be nice and assume good faith from other contributors.
 
 ### Formatting
 
-The repository has a [.editorconfig](.editorconfig) file that defines the basic coding conventions, 
+The repository has a [.editorconfig](.editorconfig) file that defines the basic coding conventions,
 so please use an editor that supports it. You may find a list of such editors from https://editorconfig.org/,
 but if you use a recent version of any of the top IDEs, you should be good to go. The conventions
 that are not defined in the .editorconfig file are based on IntelliJ Idea's default formatting settings.
@@ -21,7 +21,7 @@ Please write tests for your change. Also run all the existing tests before and a
 
 ### Miscellaneous
 
-* Use descriptive variable names. Bad variables: "x", "supplier", "gType". Good variables: "lightId", 
+* Use descriptive variable names. Bad variables: "x", "supplier", "gType". Good variables: "lightId",
 "apiKeySupplier", "groupType".
 * Finalize those variables whose value never changes
 * Don't do empty `catch` blocks
@@ -30,8 +30,8 @@ Please write tests for your change. Also run all the existing tests before and a
 
 ## Commit conventions
 
-* Use descriptive commit messages. Use present tense. Capitalize the first letter. 
-  * Examples of good commit messages: "Add support for zones" or "Refactor: extract method". 
+* Use descriptive commit messages. Use present tense. Capitalize the first letter.
+  * Examples of good commit messages: "Add support for zones" or "Refactor: extract method".
   * Bad commit messages: "Fixes", "Added support for zones", "refactor: extract method"
   * If there's an issue about your change, it would be a great idea to add the issue number into your commit message,
   as in "Add support for xyz (#123)" or even "Add support for xyz. Closes #123." if your commit resolves the issue for good.
@@ -52,6 +52,6 @@ Please write tests for your change. Also run all the existing tests before and a
   use [amend](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) or
   [squash](https://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git)
   to change your initial commit and then force-push the fixed version of the fork instead.
-  * Further reading: 
+  * Further reading:
     * [Luke Metcalfe: 5 Reasons for Keeping Your Git Commits as Small as You Can](https://crealytics.com/blog/5-reasons-keeping-git-commits-small/)
     * [Lucas Rocha: Micro Commits](https://lucasr.org/2011/01/29/micro-commits/)
