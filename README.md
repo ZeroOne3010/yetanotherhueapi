@@ -100,9 +100,8 @@ light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keep
 room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
 ```
 
-#### Lights that do not belong to a room or a zone (in a future version of this library!)
+#### Lights that do not belong to a room or a zone
 
-In an upcoming version of this library, one will be able to retrieve even those lights that do not belong to any room or zone.
 The lights that have not been assigned to any room or zone can be accessed with the `getUnassignedLights()` method
 of the `Hue` object. For example, in order to turn on all the unassigned lights, one would do it like this:
 
@@ -134,7 +133,7 @@ Add the following dependency to your pom.xml file:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.3.1</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
