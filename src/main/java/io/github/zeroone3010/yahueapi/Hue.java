@@ -296,6 +296,16 @@ public final class Hue {
   }
 
   /**
+   * Returns all the Friends of Hue switches configured into the Bridge.
+   *
+   * @return A Collection of dimmer switches.
+   * @since 1.0.0
+   */
+  public Collection<FriendsOfHueSwitch> getFriendsOfHueSwitches() {
+    return getSensorsByType(SensorType.FOH_SWITCH, FriendsOfHueSwitch.class);
+  }
+
+  /**
    * Returns all the motion sensors configured into the Bridge.
    *
    * @return A Collection of motion sensors.

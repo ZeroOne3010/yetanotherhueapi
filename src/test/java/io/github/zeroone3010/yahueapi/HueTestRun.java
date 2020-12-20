@@ -46,6 +46,10 @@ public class HueTestRun {
     hue.getZones().forEach(z -> System.out.println(String.format("\tZone '%s' has these lights: %s",
         z.getName(), z.getLights())));
 
+    System.out.println("\nFriends of Hue switches:");
+    hue.getFriendsOfHueSwitches().forEach(s -> System.out.println(String.format("\t%s (%s): %s",
+        s.getName(), s.getId(), s.getLatestButtonEvent())));
+
     System.out.println("\nMotion sensors:");
     hue.getMotionSensors().forEach(s -> System.out.println(String.format("\t%s (%s): Presence %s",
         s.getName(), s.getId(), s.isPresence())));

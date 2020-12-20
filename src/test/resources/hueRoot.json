@@ -689,6 +689,85 @@
         "certified": true
       }
     },
+    "5": {
+      "capabilities": {
+        "certified": true,
+        "inputs": [
+          {
+            "events": [
+              {
+                "buttonevent": 16,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 20,
+                "eventtype": "short_release"
+              }
+            ],
+            "repeatintervals": []
+          },
+          {
+            "events": [
+              {
+                "buttonevent": 17,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 21,
+                "eventtype": "short_release"
+              }
+            ],
+            "repeatintervals": []
+          },
+          {
+            "events": [
+              {
+                "buttonevent": 19,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 23,
+                "eventtype": "short_release"
+              }
+            ],
+            "repeatintervals": []
+          },
+          {
+            "events": [
+              {
+                "buttonevent": 18,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 22,
+                "eventtype": "short_release"
+              }
+            ],
+            "repeatintervals": []
+          }
+        ],
+        "primary": true
+      },
+      "config": {
+        "on": true
+      },
+      "manufacturername": "PhilipsFoH",
+      "modelid": "FOHSWITCH",
+      "name": "Friends of Hue Switch",
+      "productname": "Friends of Hue Switch",
+      "recycle": null,
+      "state": {
+        "buttonevent": 22,
+        "lastupdated": "2020-12-17T08:32:32"
+      },
+      "swupdate": {
+        "lastinstall": null,
+        "state": "notupdatable"
+      },
+      "swversion": null,
+      "type": "ZGPSwitch",
+      "uniqueid": "00:00:00:00:01:23:45:67-89"
+    },
     "15": {
       "state": {
         "temperature": 2953,

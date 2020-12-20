@@ -286,6 +286,15 @@ class HueTest {
   }
 
   @Test
+  void testGetFriendsOfHueSwitch() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Collection<FriendsOfHueSwitch> switches = hue.getFriendsOfHueSwitches()
+        .stream().filter(s -> s.getName().equals("Friends of Hue Switch"))
+        .collect(Collectors.toList());
+    assertEquals(1, switches.size());
+  }
+
+  @Test
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
     final Collection<Sensor> sensors = hue.getUnknownSensors();

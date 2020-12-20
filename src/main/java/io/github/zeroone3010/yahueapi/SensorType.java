@@ -20,6 +20,11 @@ public enum SensorType {
   DIMMER_SWITCH,
 
   /**
+   * A Friends of Hue switch.
+   */
+  FOH_SWITCH,
+
+  /**
    * A daylight sensor, i.e. the one in the Bridge.
    */
   DAYLIGHT,
@@ -45,6 +50,8 @@ public enum SensorType {
         return MOTION;
       case "zllswitch":
         return DIMMER_SWITCH;
+      case "zgpswitch":
+        return FOH_SWITCH;
       case "daylight":
         return DAYLIGHT;
       default:
