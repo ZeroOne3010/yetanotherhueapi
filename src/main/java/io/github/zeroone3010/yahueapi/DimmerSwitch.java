@@ -4,7 +4,7 @@ public interface DimmerSwitch extends Sensor {
   /**
    * The latest button event of this switch.
    *
-   * @return {@code true} if presence detected, {@code false} if not.
+   * @return the last button event.
    */
   DimmerSwitchButtonEvent getLatestButtonEvent();
 }
