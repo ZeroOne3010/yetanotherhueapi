@@ -28,7 +28,7 @@ public class SensorDto {
   @JsonProperty("productname")
   private String productName;
   @JsonProperty("capabilities")
-  private Map<String, Object> capabilities;
+  private SensorCapabilities capabilities;
 
   public Map<String, Object> getState() {
     return state;
@@ -118,11 +118,11 @@ public class SensorDto {
     this.productName = productName;
   }
 
-  public Map<String, Object> getCapabilities() {
+  public SensorCapabilities getCapabilities() {
     return capabilities;
   }
 
-  public void setCapabilities(Map<String, Object> capabilities) {
+  public void setCapabilities(SensorCapabilities capabilities) {
     this.capabilities = capabilities;
   }
 

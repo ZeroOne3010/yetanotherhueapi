@@ -686,7 +686,102 @@
       "swversion": "5.45.1.17846",
       "uniqueid": "00:17:88:55:55:55:44:66-22-ffcc",
       "capabilities": {
-        "certified": true
+        "certified": true,
+        "primary": true,
+        "inputs": [
+          {
+            "repeatintervals": [
+              800
+            ],
+            "events": [
+              {
+                "buttonevent": 1000,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 1001,
+                "eventtype": "repeat"
+              },
+              {
+                "buttonevent": 1002,
+                "eventtype": "short_release"
+              },
+              {
+                "buttonevent": 1003,
+                "eventtype": "long_release"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [
+              800
+            ],
+            "events": [
+              {
+                "buttonevent": 2000,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 2001,
+                "eventtype": "repeat"
+              },
+              {
+                "buttonevent": 2002,
+                "eventtype": "short_release"
+              },
+              {
+                "buttonevent": 2003,
+                "eventtype": "long_release"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [
+              800
+            ],
+            "events": [
+              {
+                "buttonevent": 3000,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 3001,
+                "eventtype": "repeat"
+              },
+              {
+                "buttonevent": 3002,
+                "eventtype": "short_release"
+              },
+              {
+                "buttonevent": 3003,
+                "eventtype": "long_release"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [
+              800
+            ],
+            "events": [
+              {
+                "buttonevent": 4000,
+                "eventtype": "initial_press"
+              },
+              {
+                "buttonevent": 4001,
+                "eventtype": "repeat"
+              },
+              {
+                "buttonevent": 4002,
+                "eventtype": "short_release"
+              },
+              {
+                "buttonevent": 4003,
+                "eventtype": "long_release"
+              }
+            ]
+          }
+        ]
       }
     },
     "15": {
@@ -798,6 +893,68 @@
       "swversion": "1.0",
       "uniqueid": "MotionSensor 16.Companion",
       "recycle": true
+    },
+    "20": {
+      "state": {
+        "buttonevent": 16,
+        "lastupdated": "2020-12-29T10:11:12"
+      },
+      "swupdate": {
+        "state": "notupdatable",
+        "lastinstall": null
+      },
+      "config": {
+        "on": true
+      },
+      "name": "Hue tap switch 1",
+      "type": "ZGPSwitch",
+      "modelid": "ZGPSWITCH",
+      "manufacturername": "Signify Netherlands B.V.",
+      "productname": "Hue tap switch",
+      "diversityid": "8aa0561b-95f1-41a4-8a15-5de2eb171555",
+      "uniqueid": "00:00:00:00:00:8a:a0:56-ff",
+      "capabilities": {
+        "certified": true,
+        "primary": true,
+        "inputs": [
+          {
+            "repeatintervals": [],
+            "events": [
+              {
+                "buttonevent": 34,
+                "eventtype": "initial_press"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [],
+            "events": [
+              {
+                "buttonevent": 16,
+                "eventtype": "initial_press"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [],
+            "events": [
+              {
+                "buttonevent": 17,
+                "eventtype": "initial_press"
+              }
+            ]
+          },
+          {
+            "repeatintervals": [],
+            "events": [
+              {
+                "buttonevent": 18,
+                "eventtype": "initial_press"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "resourcelinks": {

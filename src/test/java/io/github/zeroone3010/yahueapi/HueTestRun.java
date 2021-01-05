@@ -2,6 +2,8 @@ package io.github.zeroone3010.yahueapi;
 
 import java.util.Comparator;
 
+import static java.util.stream.Collectors.joining;
+
 public class HueTestRun {
   /**
    * Copies state from a light in one room to another light in another (or the same) room.
@@ -38,6 +40,8 @@ public class HueTestRun {
       return;
     }
 
+    hue.setCaching(true);
+
     System.out.println("\nRooms:");
     hue.getRooms().forEach(r -> System.out.println(String.format("\tRoom '%s' has these lights: %s",
         r.getName(), r.getLights())));
@@ -58,6 +62,22 @@ public class HueTestRun {
     hue.getDaylightSensors().forEach(s -> System.out.println(String.format("\t%s (%s): Is daylight: %s",
         s.getName(), s.getId(), s.isDaylightTime())));
 
+    System.out.println("\nSwitches:");
+    hue.getSwitches().stream().sorted(Comparator.comparing(s -> Integer.valueOf(s.getId())))
+        .forEach(s -> System.out.println(
+            String.format("\tSwitch %s: %s (last updated: %s; event: button #%s %s(%d))\n\t\tButtons: %d (events: %s)",
+                s.getId(), s.getName(), s.getLastUpdated(),
+                s.getLatestEvent().getButton().getNumber(),
+                s.getLatestEvent().getAction().getEventType(),
+                s.getLatestEvent().getAction().getEventCode(),
+                s.getButtons().size(),
+                s.getButtons().stream()
+                    .map(b -> b.getPossibleEvents().stream()
+                        .map(e -> e.getEventType() + "(" + e.getEventCode() + ")")
+                        .collect(joining(", ", "[", "]"))
+                    ).collect(joining("; ", "{", "}"))
+            )));
+
     System.out.println("\nUnknown sensors:");
     hue.getUnknownSensors().stream().sorted(Comparator.comparing(s -> Integer.valueOf(s.getId())))
         .forEach(s -> System.out.println(
@@ -71,5 +91,11 @@ public class HueTestRun {
 
     System.out.println("\nLights:");
     hue.getRaw().getLights().forEach((id, light) -> System.out.println(String.format("\tLight %s: %s", id, light)));
+
+    hue.getSwitches().forEach(s -> System.out.println(String.format("Switch: %s; last pressed button: #%d (%s) at %s",
+        s.getName(),
+        s.getLatestEvent().getButton().getNumber(),
+        s.getLatestEvent().getAction().getEventType(),
+        s.getLastUpdated())));
   }
 }

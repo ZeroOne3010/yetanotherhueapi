@@ -120,7 +120,7 @@ public final class Hue {
   /**
    * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
    * it has been updated since the application was started.
-   *
+   * <p>
    * This method is particularly useful if caching is enabled
    * with the {@link #setCaching(boolean)} method. Calls to {@code refresh()}
    * will, in that case, refresh the states of the lights.
@@ -251,13 +251,12 @@ public final class Hue {
    * Returns the raw root node information of the REST API. Not required for anything but querying the most
    * technical details of the Bridge setup. Note that it is not possible to change the state of the Bridge or
    * the lights by using any values returned by this method: the results are read-only.
-   *
+   * <p>
    * The results of this method are also always cached, so a call to this method never triggers a query to the Bridge
    * (unless no other queries have been made to the Bridge since this instance of {@code Hue} was constructed).
    * To refresh the cache call the {@link #refresh()} method.
    *
    * @return A Root element, as received from the Bridge REST API. Always returns a cached version of the data.
-   *
    * @since 1.0.0
    */
   public Root getRaw() {
@@ -286,13 +285,14 @@ public final class Hue {
   }
 
   /**
-   * Returns all the dimmer switches configured into the Bridge.
+   * Returns all the switches configured into the Bridge.
+   * Different kinds of switches include, for example, the Philips Hue dimmer switch and the Philips Hue Tap switch.
    *
-   * @return A Collection of dimmer switches.
-   * @since 1.0.0
+   * @return A Collection of switches.
+   * @since 2.0.0
    */
-  public Collection<DimmerSwitch> getDimmerSwitches() {
-    return getSensorsByType(SensorType.DIMMER_SWITCH, DimmerSwitch.class);
+  public Collection<Switch> getSwitches() {
+    return getSensorsByType(SensorType.SWITCH, Switch.class);
   }
 
   /**
@@ -354,17 +354,17 @@ public final class Hue {
   }
 
   /**
-   * Returns a specific dimmer switch by its name.
+   * Returns a specific switch by its name.
    *
    * @param switchName The name of a switch
-   * @return A dimmer switch or {@code Optional.empty()} if a dimmer switch with the given name does not exist.
-   * @since 1.0.0
+   * @return A switch or {@code Optional.empty()} if a switch with the given name does not exist.
+   * @since 2.0.0
    */
-  public Optional<DimmerSwitch> getDimmerSwitchByName(final String switchName) {
+  public Optional<Switch> getSwitchByName(final String switchName) {
     doInitialDataLoadIfRequired();
-    return getDimmerSwitches().stream()
+    return getSwitches().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), switchName))
-        .map(DimmerSwitch.class::cast)
+        .map(Switch.class::cast)
         .findFirst();
   }
 

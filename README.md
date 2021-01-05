@@ -124,6 +124,33 @@ there is no need to get the `Light`, `Room` or `Sensor` from the `Hue` object ag
 object reference all the time. Objects that return a cached state will accept and execute state changes (calls to
 the `setState` method) just fine, but they will *not* update their cached state with those calls.
 
+### Switches (upcoming version!)
+
+In an upcoming version of this library, you will be able to easily access the details of all of your switches.
+Switches include, for example, Philips Hue dimmer switchers, Philips Hue Tap switches, and various Friends of Hue switches.
+
+[//]: # (requires-init)
+```java
+hue.getSwitches().forEach(s -> System.out.println(String.format("Switch: %s; last pressed button: #%d (%s) at %s",
+    s.getName(),
+    s.getLatestEvent().getAction().getEventType(),
+    s.getLatestEvent().getButton().getNumber(),
+    s.getLastUpdated())));
+```
+
+Depending on your setup, the above snippet will print something along the following lines:
+
+```
+Switch: Living room dimmer; last pressed button: #1 (SHORT_RELEASED) at 2021-01-05T12:30:33Z[UTC]
+Switch: Kitcher dimmer; last pressed button: #2 (LONG_RELEASED) at 2021-01-05T06:13:18Z[UTC]
+Switch: Hue tap switch 1; last pressed button: #4 (INITIAL_PRESS) at 2021-01-05T20:58:10Z[UTC]
+```
+
+Unfortunately the Hue Bridge does not allow applications to "listen" for button press events, so the Bridge will not "push"
+any events to the library. Instead, one must unfortunately always just poll the statuses of the switches to find
+out whether any button is pressed. This is a limitation of the Philips Hue system itself.
+
+
 Including the library with Maven
 --------------------------------
 
