@@ -380,6 +380,20 @@ public final class Hue {
   }
 
   /**
+   * Returns a specific unassigned light by its name.
+   *
+   * @param lightName The name of a light
+   * @return A light or {@code Optional.empty()} if an unassigned light with the given name does not exist.
+   * @since 2.0.0
+   */
+  public Optional<Light> getUnassignedLightByName(final String lightName) {
+    doInitialDataLoadIfRequired();
+    return getUnassignedLights().stream()
+        .filter(light -> Objects.equals(light.getName(), lightName))
+        .findFirst();
+  }
+
+  /**
    * The method to be used if you do not have an API key for your application yet.
    * Returns a {@code HueBridgeConnectionBuilder} that initializes the process of
    * adding a new application to the Bridge.

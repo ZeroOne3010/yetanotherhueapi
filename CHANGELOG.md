@@ -15,6 +15,7 @@ you _may_ need to change your code to account for the changes in this version. S
 ### Added
 
 * Support for other kinds of switches than just the Philips Hue dimmer switches.
+* `getUnassignedLightByName(String)` method, to accompany the `getUnassignedLights()` method added in the previous release.
 
 ### Changed
 

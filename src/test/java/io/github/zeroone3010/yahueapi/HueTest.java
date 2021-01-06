@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -808,6 +809,29 @@ class HueTest {
       assertNull(light.getState().getTransitiontime());
       assertNull(light.getState().getXy());
     });
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testGetUnassignedLightByName() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    final Light light = hue.getUnassignedLightByName("Hue Smart plug 1").get();
+    assertEquals("Hue Smart plug 1", light.getName());
+    assertEquals(LightType.ON_OFF_PLUGIN_UNIT, light.getType());
+    assertTrue(light.isReachable());
+    assertTrue(light.getState().getOn());
+//      assertNull(light.getState().getBri());
+//      assertNull(light.getState().getCt());
+    assertNull(light.getState().getHue());
+    assertNull(light.getState().getSat());
+    assertNull(light.getState().getScene());
+    assertNull(light.getState().getTransitiontime());
+    assertNull(light.getState().getXy());
+
+    final Optional<Light> unknown = hue.getUnassignedLightByName("Foo");
+    assertFalse(unknown.isPresent());
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
