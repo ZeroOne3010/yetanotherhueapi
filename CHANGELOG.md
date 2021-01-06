@@ -6,6 +6,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+Unreleased
+----------
+
+This release contains breaking changes. This means that if you have been using a previous version of this library,
+you _may_ need to change your code to account for the changes in this version. See below for the details.
+
+### Added
+
+* Support for other kinds of switches than just the Philips Hue dimmer switches.
+
+### Changed
+
+* Changed how switches are handled: Philips Hue dimmer switches are no longer considered special in any way.
+Instead, all switches are equal and can be accessed with the new `Switch` interface.
+The `Hue` class now has `getSwitches()` and `getSwitchByName(String)` methods instead of the old `getDimmerSwitches()` and `getDimmerSwitchByName(String)` methods.
+
+### Removed
+
+* `DimmerSwitch`, `DimmerSwitchAction`, `DimmerSwitchButton`, and `DimmerSwitchButtonEvent` classes.
+These have basically been replaced with the `Switch`, `SwitchEvent`, `Button`, and `ButtonEvent` classes.
+
 v1.4.0 (2020-12-08)
 ----------
 

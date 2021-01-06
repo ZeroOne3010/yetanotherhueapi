@@ -15,9 +15,9 @@ public enum SensorType {
   MOTION,
 
   /**
-   * A dimmer switch, i.e. a ZLLSwitch sensor.
+   * A switch, e.g. a dimmer switch or a Hue Tap switch.
    */
-  DIMMER_SWITCH,
+  SWITCH,
 
   /**
    * A daylight sensor, i.e. the one in the Bridge.
@@ -44,7 +44,9 @@ public enum SensorType {
       case "clippresence":
         return MOTION;
       case "zllswitch":
-        return DIMMER_SWITCH;
+        return SWITCH;
+      case "zgpswitch":
+        return SWITCH;
       case "daylight":
         return DAYLIGHT;
       default:

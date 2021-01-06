@@ -4,11 +4,18 @@ import java.time.ZonedDateTime;
 
 public interface Sensor {
   /**
-   * Returns the human readable name of the sensor.
+   * Returns the human readable name of the sensor as set by the user, e.g. "Living room switch".
    *
    * @return Name of the sensor.
    */
   String getName();
+
+  /**
+   * Returns the human readable name of the sensor product, e.g. "Hue motion sensor" or "Hue tap switch".
+   *
+   * @return Name of the sensor product. May be null.
+   */
+  String getProductName();
 
   /**
    * Returns the id of the sensor, as assigned by the Bridge.

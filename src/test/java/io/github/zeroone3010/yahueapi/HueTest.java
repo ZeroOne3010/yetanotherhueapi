@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import io.github.zeroone3010.yahueapi.domain.LightConfig;
 import io.github.zeroone3010.yahueapi.domain.ResourceLink;
@@ -43,6 +44,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.HOLD;
+import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.INITIAL_PRESS;
+import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.LONG_RELEASED;
+import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.SHORT_RELEASED;
 import static io.github.zeroone3010.yahueapi.domain.StartupMode.BRIGHT_LIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -55,6 +60,7 @@ class HueTest {
   private static final String MOTION_SENSOR_NAME = "Hallway sensor";
   private static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
   private static final String DIMMER_SWITCH_NAME = "Living room door";
+  private static final String TAP_SWITCH_NAME = "Hue tap switch 1";
 
   final WireMockServer wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
 
@@ -85,6 +91,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
       mockIndividualGetResponse(jsonNode, "sensors", "16");
+      mockIndividualGetResponse(jsonNode, "sensors", "20");
       mockIndividualGetResponse(jsonNode, "groups", "1");
       mockIndividualGetResponse(jsonNode, "groups", "2");
     } catch (final IOException e) {
@@ -343,7 +350,7 @@ class HueTest {
   @Test
   void testDimmerSwitchLastUpdated() {
     final Hue hue = createHueAndInitializeMockServer();
-    final ZonedDateTime actual = hue.getDimmerSwitchByName(DIMMER_SWITCH_NAME).map(Sensor::getLastUpdated).get();
+    final ZonedDateTime actual = hue.getSwitchByName(DIMMER_SWITCH_NAME).map(Sensor::getLastUpdated).get();
     final ZonedDateTime expected = ZonedDateTime.of(LocalDate.of(2018, Month.JULY, 28),
         LocalTime.of(21, 12, 00), ZoneId.of("UTC"));
     assertEquals(expected, actual);
@@ -352,9 +359,86 @@ class HueTest {
   @Test
   void testDimmerSwitchLastButtonEvent() {
     final Hue hue = createHueAndInitializeMockServer();
-    final DimmerSwitchButtonEvent event = hue.getDimmerSwitchByName(DIMMER_SWITCH_NAME).map(DimmerSwitch::getLatestButtonEvent).get();
-    assertEquals(DimmerSwitchAction.SHORT_RELEASED, event.getAction());
-    assertEquals(DimmerSwitchButton.OFF, event.getButton());
+    final SwitchEvent event = hue.getSwitchByName(DIMMER_SWITCH_NAME).map(Switch::getLatestEvent).get();
+    assertEquals(ButtonEventType.SHORT_RELEASED, event.getAction().getEventType());
+    assertEquals(4002, event.getAction().getEventCode());
+    assertEquals(4, event.getButton().getNumber());
+  }
+
+  @Test
+  void testHueDimmerSwitchButtons() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Switch dimmerSwitch = hue.getSwitchByName(DIMMER_SWITCH_NAME).get();
+    final List<Button> buttons = dimmerSwitch.getButtons();
+
+    assertEquals(4, buttons.size());
+
+    assertEquals(1, buttons.get(0).getNumber());
+    assertEquals(2, buttons.get(1).getNumber());
+    assertEquals(3, buttons.get(2).getNumber());
+    assertEquals(4, buttons.get(3).getNumber());
+
+    assertEquals(Arrays.asList(
+        new ButtonEvent(INITIAL_PRESS, 1000),
+        new ButtonEvent(HOLD, 1001),
+        new ButtonEvent(SHORT_RELEASED, 1002),
+        new ButtonEvent(LONG_RELEASED, 1003)),
+        buttons.get(0).getPossibleEvents());
+    assertEquals(Arrays.asList(
+        new ButtonEvent(INITIAL_PRESS, 2000),
+        new ButtonEvent(HOLD, 2001),
+        new ButtonEvent(SHORT_RELEASED, 2002),
+        new ButtonEvent(LONG_RELEASED, 2003)),
+        buttons.get(1).getPossibleEvents());
+    assertEquals(Arrays.asList(
+        new ButtonEvent(INITIAL_PRESS, 3000),
+        new ButtonEvent(HOLD, 3001),
+        new ButtonEvent(SHORT_RELEASED, 3002),
+        new ButtonEvent(LONG_RELEASED, 3003)),
+        buttons.get(2).getPossibleEvents());
+    assertEquals(Arrays.asList(
+        new ButtonEvent(INITIAL_PRESS, 4000),
+        new ButtonEvent(HOLD, 4001),
+        new ButtonEvent(SHORT_RELEASED, 4002),
+        new ButtonEvent(LONG_RELEASED, 4003)),
+        buttons.get(3).getPossibleEvents());
+
+  }
+
+  @Test
+  void testHueTapSwitchLastUpdated() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final ZonedDateTime actual = hue.getSwitchByName(TAP_SWITCH_NAME).map(Sensor::getLastUpdated).get();
+    final ZonedDateTime expected = ZonedDateTime.of(LocalDate.of(2020, Month.DECEMBER, 29),
+        LocalTime.of(10, 11, 12), ZoneId.of("UTC"));
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void testHueTapSwitchLastButtonEvent() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final SwitchEvent event = hue.getSwitchByName(TAP_SWITCH_NAME).map(Switch::getLatestEvent).get();
+    assertEquals(new ButtonEvent(INITIAL_PRESS, 16), event.getAction());
+    assertEquals(2, event.getButton().getNumber());
+  }
+
+  @Test
+  void testHueTapSwitchButtons() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Switch tapSwitch = hue.getSwitchByName(TAP_SWITCH_NAME).get();
+    final List<Button> buttons = tapSwitch.getButtons();
+
+    assertEquals(4, buttons.size());
+
+    assertEquals(1, buttons.get(0).getNumber());
+    assertEquals(2, buttons.get(1).getNumber());
+    assertEquals(3, buttons.get(2).getNumber());
+    assertEquals(4, buttons.get(3).getNumber());
+
+    assertEquals(Arrays.asList(new ButtonEvent(INITIAL_PRESS, 34)), buttons.get(0).getPossibleEvents());
+    assertEquals(Arrays.asList(new ButtonEvent(INITIAL_PRESS, 16)), buttons.get(1).getPossibleEvents());
+    assertEquals(Arrays.asList(new ButtonEvent(INITIAL_PRESS, 17)), buttons.get(2).getPossibleEvents());
+    assertEquals(Arrays.asList(new ButtonEvent(INITIAL_PRESS, 18)), buttons.get(3).getPossibleEvents());
   }
 
   @Test
