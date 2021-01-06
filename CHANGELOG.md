@@ -21,6 +21,7 @@ you _may_ need to change your code to account for the changes in this version. S
 * Changed how switches are handled: Philips Hue dimmer switches are no longer considered special in any way.
 Instead, all switches are equal and can be accessed with the new `Switch` interface.
 The `Hue` class now has `getSwitches()` and `getSwitchByName(String)` methods instead of the old `getDimmerSwitches()` and `getDimmerSwitchByName(String)` methods.
+* `LightType.ON_OFF` enum value was renamed to `LightType.ON_OFF_LIGHT` to better distinguish it from the `ON_OFF_PLUGIN_UNIT` value.
 
 ### Removed
 

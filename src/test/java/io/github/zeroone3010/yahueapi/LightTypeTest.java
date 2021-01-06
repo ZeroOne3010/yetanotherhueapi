@@ -10,7 +10,7 @@ class LightTypeTest {
   @CsvSource({
       ",UNKNOWN",
       "Foo,UNKNOWN",
-      "ON/OFF LIGHT,ON_OFF",
+      "ON/OFF LIGHT,ON_OFF_LIGHT",
       "Dimmable light,DIMMABLE",
       "Color temperature light,COLOR_TEMPERATURE",
       "Extended Color Light,EXTENDED_COLOR",
