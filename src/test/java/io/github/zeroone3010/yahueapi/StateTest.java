@@ -4,14 +4,21 @@ import io.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.OnOffStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class StateTest {
 
@@ -43,6 +50,32 @@ class StateTest {
     assertEquals(0.66f, state.getXy().get(1));
     assertEquals(100, state.getBri());
     assertNull(state.getOn());
+  }
+
+  private static Stream<Arguments> provideIllegalInputsForXyBuilder() {
+    return Stream.of(
+        Arguments.of(Arrays.asList(-0.33f, 0.66f)),
+        Arguments.of(Arrays.asList(0.33f, -0.66f)),
+        Arguments.of(Arrays.asList(-0.33f, -0.66f)),
+        Arguments.of(Arrays.asList(1.33f, 0.66f)),
+        Arguments.of(Arrays.asList(0.33f, 1.66f)),
+        Arguments.of(Arrays.asList(1.33f, 1.66f)),
+        Arguments.of(Arrays.asList()),
+        Arguments.of(Arrays.asList(1.33f)),
+        Arguments.of(Arrays.asList(1.33f, 1.66f, 1.99f))
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideIllegalInputsForXyBuilder")
+  @NullSource
+  void testXyBuilderWithIllegalValues(List<Float> illegalInput) {
+    try {
+      State.builder().xy(illegalInput);
+      fail("There should have been an exception");
+    } catch (IllegalArgumentException expected) {
+      assertEquals("The xy list must contain exactly 2 values, between 0 and 1.", expected.getMessage());
+    }
   }
 
   @Test
