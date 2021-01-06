@@ -8,16 +8,8 @@ public class Startup {
     return mode;
   }
 
-  public void setMode(StartupMode mode) {
-    this.mode = mode;
-  }
-
   public boolean isConfigured() {
     return configured;
-  }
-
-  public void setConfigured(boolean configured) {
-    this.configured = configured;
   }
 
   @Override

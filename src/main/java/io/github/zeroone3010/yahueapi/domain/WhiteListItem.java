@@ -14,24 +14,12 @@ public class WhiteListItem {
     return lastUseDate;
   }
 
-  public void setLastUseDate(String lastUseDate) {
-    this.lastUseDate = lastUseDate;
-  }
-
   public String getCreateDate() {
     return createDate;
   }
 
-  public void setCreateDate(String createDate) {
-    this.createDate = createDate;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   @Override

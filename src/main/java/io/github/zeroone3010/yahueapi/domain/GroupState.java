@@ -12,16 +12,8 @@ public class GroupState {
     return allOn;
   }
 
-  public void setAllOn(boolean allOn) {
-    this.allOn = allOn;
-  }
-
   public boolean isAnyOn() {
     return anyOn;
-  }
-
-  public void setAnyOn(boolean anyOn) {
-    this.anyOn = anyOn;
   }
 
   @Override

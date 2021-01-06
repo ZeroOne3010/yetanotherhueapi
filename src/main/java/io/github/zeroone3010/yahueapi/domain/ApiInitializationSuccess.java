@@ -7,10 +7,6 @@ public class ApiInitializationSuccess {
     return username;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
   @Override
   public String toString() {
     return JsonStringUtil.toJsonString(this);

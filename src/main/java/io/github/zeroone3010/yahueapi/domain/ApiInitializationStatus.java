@@ -8,16 +8,8 @@ public class ApiInitializationStatus {
     return error;
   }
 
-  public void setError(ApiInitializationError error) {
-    this.error = error;
-  }
-
   public ApiInitializationSuccess getSuccess() {
     return success;
-  }
-
-  public void setSuccess(ApiInitializationSuccess success) {
-    this.success = success;
   }
 
   @Override

@@ -8,16 +8,8 @@ public class ComponentSoftwareUpdate {
     return state;
   }
 
-  public void setState(String state) {
-    this.state = state;
-  }
-
   public String getLastinstall() {
     return lastinstall;
-  }
-
-  public void setLastinstall(String lastinstall) {
-    this.lastinstall = lastinstall;
   }
 
   @Override

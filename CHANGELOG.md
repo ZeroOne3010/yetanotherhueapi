@@ -27,6 +27,7 @@ The `Hue` class now has `getSwitches()` and `getSwitchByName(String)` methods in
 
 * `DimmerSwitch`, `DimmerSwitchAction`, `DimmerSwitchButton`, and `DimmerSwitchButtonEvent` classes.
 These have basically been replaced with the `Switch`, `SwitchEvent`, `Button`, and `ButtonEvent` classes.
+* Setter methods accessible with the `getRaw()` method. Some of these were deprecated in v1.1.0 already.
 
 v1.4.0 (2020-12-08)
 ----------
