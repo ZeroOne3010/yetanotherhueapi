@@ -235,6 +235,19 @@ public final class State {
     }
   }
 
+  @Override
+  public String toString() {
+    return "State{" +
+        "on=" + on +
+        ", hue=" + hue +
+        ", sat=" + sat +
+        ", bri=" + bri +
+        ", ct=" + ct +
+        ", transitiontime=" + transitiontime +
+        ", xy=" + xy +
+        ", scene='" + scene + '\'' +
+        '}';
+  }
 
   private static final class XAndYAndBrightness {
     final float x;
