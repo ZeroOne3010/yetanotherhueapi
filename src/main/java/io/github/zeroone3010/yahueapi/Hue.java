@@ -297,6 +297,7 @@ public final class Hue {
 
   /**
    * Returns all the motion sensors configured into the Bridge.
+   * For easy of use geofence sensors are considered motion sensors as well.
    *
    * @return A Collection of motion sensors.
    * @since 1.0.0
@@ -340,6 +341,7 @@ public final class Hue {
 
   /**
    * Returns a specific motion sensor by its name.
+   * For easy of use geofence sensors are considered motion sensors as well.
    *
    * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
