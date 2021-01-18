@@ -316,6 +316,16 @@ public final class Hue {
     return getSensorsByType(SensorType.DAYLIGHT, DaylightSensor.class);
   }
 
+  /**
+   * Returns all the ambient light sensors configured into the Bridge.
+   *
+   * @return A Collection of ambient light sensors.
+   * @since 1.5.0
+   */
+  public Collection<AmbientLightSensor> getAmbientLightSensors() {
+    return getSensorsByType(SensorType.AMBIENT_LIGHT, AmbientLightSensor.class);
+  }
+
   private <T> Collection<T> getSensorsByType(final SensorType type, final Class<T> sensorClass) {
     doInitialDataLoadIfRequired();
     return Collections.unmodifiableCollection(this.sensors.values().stream()
@@ -352,6 +362,21 @@ public final class Hue {
     return getMotionSensors().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
         .map(MotionSensor.class::cast)
+        .findFirst();
+  }
+
+  /**
+   * Returns a specific ambient sensor by its name.
+   *
+   * @param sensorName The name of a sensor
+   * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
+   * @since 1.5.0
+   */
+  public Optional<AmbientLightSensor> getAmbientSensorByName(final String sensorName) {
+    doInitialDataLoadIfRequired();
+    return getAmbientLightSensors().stream()
+        .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
+        .map(AmbientLightSensor.class::cast)
         .findFirst();
   }
 

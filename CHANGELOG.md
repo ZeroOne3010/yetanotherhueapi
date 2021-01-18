@@ -17,6 +17,7 @@ you _may_ need to change your code to account for the changes in this version. S
 * Support for other kinds of switches than just the Philips Hue dimmer switches.
 * `getUnassignedLightByName(String)` method, to accompany the `getUnassignedLights()` method added in the previous release.
 * Added geofence support as motion sensors. They can be retrieved like all motion sensors with `getMotionSensors()` or `getMotionSensorByName(String)` with the name of a registered device.
+* Added ambient light sensor support.
 
 ### Changed
 

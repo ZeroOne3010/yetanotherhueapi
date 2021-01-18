@@ -36,6 +36,8 @@ final class SensorFactory {
         return new DaylightSensorImpl(id, sensor, url, stateProvider);
       case SWITCH:
         return new SwitchImpl(id, sensor, url, stateProvider);
+      case AMBIENT_LIGHT:
+        return new AmbientLightSensorImpl(id, sensor, url, stateProvider);
       default:
         return new BasicSensor(id, sensor, url, stateProvider);
     }

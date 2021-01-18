@@ -59,6 +59,7 @@ class HueTest {
   private static final String API_KEY = "abcd1234";
   private static final String API_BASE_PATH = "/api/" + API_KEY + "/";
   private static final String MOTION_SENSOR_NAME = "Hallway sensor";
+  private static final String AMBIENT_LIGHT_SENSOR_NAME = "Hue ambient light sensor 1";
   private static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
   private static final String DIMMER_SWITCH_NAME = "Living room door";
   private static final String TAP_SWITCH_NAME = "Hue tap switch 1";
@@ -92,6 +93,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
       mockIndividualGetResponse(jsonNode, "sensors", "16");
+      mockIndividualGetResponse(jsonNode, "sensors", "17");
       mockIndividualGetResponse(jsonNode, "sensors", "20");
       mockIndividualGetResponse(jsonNode, "groups", "1");
       mockIndividualGetResponse(jsonNode, "groups", "2");
@@ -297,7 +299,7 @@ class HueTest {
   void testGetUnknownSensors() {
     final Hue hue = createHueAndInitializeMockServer();
     final Collection<Sensor> sensors = hue.getUnknownSensors();
-    assertEquals(2, sensors.size());
+    assertEquals(1, sensors.size());
   }
 
   @Test
@@ -312,6 +314,13 @@ class HueTest {
     final Hue hue = createHueAndInitializeMockServer();
     assertTrue(hue.getMotionSensorByName(MOTION_SENSOR_NAME).isPresent());
     assertFalse(hue.getMotionSensorByName("No such sensor").isPresent());
+  }
+
+  @Test
+  void testGetAmbientLightSensorByName() {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertTrue(hue.getAmbientSensorByName(AMBIENT_LIGHT_SENSOR_NAME).isPresent());
+    assertFalse(hue.getAmbientSensorByName("No such sensor").isPresent());
   }
 
   @Test
@@ -346,6 +355,15 @@ class HueTest {
         .map(DaylightSensor::isDaylightTime)
         .findFirst().get();
     assertTrue(daylight);
+  }
+
+  @Test
+  void testAmbientLightSensor() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final AmbientLightSensor ambientLightSensor = hue.getAmbientSensorByName(AMBIENT_LIGHT_SENSOR_NAME).get();
+    assertEquals(36, ambientLightSensor.getLightLevel());
+    assertTrue(ambientLightSensor.isDark());
+    assertFalse(ambientLightSensor.isDaylight());
   }
 
   @Test
