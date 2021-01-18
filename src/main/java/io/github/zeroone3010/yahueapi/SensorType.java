@@ -10,7 +10,7 @@ public enum SensorType {
   TEMPERATURE,
 
   /**
-   * A motion sensor, i.e. either a ZLLPresence or a CLIPPresence sensor.
+   * A motion sensor, i.e. either a ZLLPresence, a CLIPPresence or a Geofence sensor.
    */
   MOTION,
 
@@ -42,6 +42,8 @@ public enum SensorType {
       case "zllpresence":
         return MOTION;
       case "clippresence":
+        return MOTION;
+      case "geofence":
         return MOTION;
       case "zllswitch":
         return SWITCH;
