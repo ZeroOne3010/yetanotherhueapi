@@ -25,6 +25,11 @@ public enum SensorType {
   DAYLIGHT,
 
   /**
+   * A ambient light sensor, i.e. bundled with a motion sensor.
+   */
+  AMBIENT_LIGHT,
+
+  /**
    * Other kind of a sensor, not recognized by this library.
    */
   UNKNOWN;
@@ -49,6 +54,8 @@ public enum SensorType {
         return SWITCH;
       case "daylight":
         return DAYLIGHT;
+      case "zlllightlevel":
+        return AMBIENT_LIGHT;
       default:
         return UNKNOWN;
     }
