@@ -51,7 +51,7 @@ public class HueTestRun {
         z.getName(), z.getLights())));
 
     System.out.println("\nMotion sensors:");
-    hue.getMotionSensors().forEach(s -> System.out.println(String.format("\t%s (%s): Presence %s",
+    hue.getPresenceSensors().forEach(s -> System.out.println(String.format("\t%s (%s): Presence %s",
         s.getName(), s.getId(), s.isPresence())));
 
     System.out.println("\nTemperature sensors:");

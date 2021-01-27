@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 final class TemperatureSensorImpl extends BasicSensor implements TemperatureSensor {
-  private static final Logger logger = Logger.getLogger("MotionSensorImpl");
+  private static final Logger logger = Logger.getLogger("TemperatureSensorImpl");
 
   TemperatureSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
     super(id, sensor, url, stateProvider);

@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased v2.0.0
 ----------
 
-This release contains breaking changes. This means that if you have been using a previous version of this library,
-you _may_ need to change your code to account for the changes in this version. See below for the details.
+This release contains several breaking changes. This means that if you have been using a previous version of this library,
+you may need to change your code to account for the changes in this version. See below for the details.
 
 ### Added
 
 * Support for other kinds of switches than just the Philips Hue dimmer switches.
 * `getUnassignedLightByName(String)` method, to accompany the `getUnassignedLights()` method added in the previous release.
-* Added geofence support as motion sensors. They can be retrieved like all motion sensors with `getMotionSensors()` or `getMotionSensorByName(String)` with the name of a registered device.
+* Added geofence support as presence sensors. They can be retrieved like all motion sensors with `getPresenceSensors()` or `getPresenceSensorByName(String)` with the name of a registered device.
 * Added ambient light sensor support.
 * Support for Android, thanks to the removal of the dependency to the `java.awt.Color` class (see below).
 
@@ -29,6 +29,9 @@ The `Hue` class now has `getSwitches()` and `getSwitchByName(String)` methods in
 * Light color is to be set with the new `io.github.zeroone3010.yahueapi.Color` class. The class contains a multitude
 of factory methods, so that the transition from the old `java.awt.Color` would be as easy as possible. This change
 was made to remove the dependency on the `java.awt` package, which is not available in the Android environment.
+* Motion sensors renamed to presence sensors to account for the addition of geofence sensors. This means that in the
+`Hue` class `getMotionSensors()` and `getMotionSensorByName(String)` methods have been renamed to
+`getPresenceSensors()` and `getPresenceSensorByName(String)` respectively.
 
 ### Removed
 

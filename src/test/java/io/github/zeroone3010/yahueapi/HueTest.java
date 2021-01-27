@@ -310,10 +310,10 @@ class HueTest {
   }
 
   @Test
-  void testGetMotionSensorByName() {
+  void testGetPresenceSensorByName() {
     final Hue hue = createHueAndInitializeMockServer();
-    assertTrue(hue.getMotionSensorByName(MOTION_SENSOR_NAME).isPresent());
-    assertFalse(hue.getMotionSensorByName("No such sensor").isPresent());
+    assertTrue(hue.getPresenceSensorByName(MOTION_SENSOR_NAME).isPresent());
+    assertFalse(hue.getPresenceSensorByName("No such sensor").isPresent());
   }
 
   @Test
@@ -326,7 +326,7 @@ class HueTest {
   @Test
   void testMotionSensorLastUpdated() {
     final Hue hue = createHueAndInitializeMockServer();
-    final ZonedDateTime actual = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(Sensor::getLastUpdated).get();
+    final ZonedDateTime actual = hue.getPresenceSensorByName(MOTION_SENSOR_NAME).map(Sensor::getLastUpdated).get();
     final ZonedDateTime expected = ZonedDateTime.of(LocalDate.of(2018, Month.JULY, 29),
         LocalTime.of(6, 6, 6), ZoneId.of("UTC"));
     assertEquals(expected, actual);
@@ -335,7 +335,7 @@ class HueTest {
   @Test
   void testMotionSensorPresence() {
     final Hue hue = createHueAndInitializeMockServer();
-    final boolean presence = hue.getMotionSensorByName(MOTION_SENSOR_NAME).map(MotionSensor::isPresence).get();
+    final boolean presence = hue.getPresenceSensorByName(MOTION_SENSOR_NAME).map(PresenceSensor::isPresence).get();
     assertTrue(presence);
   }
 

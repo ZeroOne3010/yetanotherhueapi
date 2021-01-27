@@ -6,15 +6,15 @@ import java.net.URL;
 import java.util.Map;
 import java.util.function.Supplier;
 
-final class MotionSensorImpl extends BasicSensor implements MotionSensor {
+final class PresenceSensorImpl extends BasicSensor implements PresenceSensor {
 
-  MotionSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
+  PresenceSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
     super(id, sensor, url, stateProvider);
   }
 
   @Override
   public String toString() {
-    return "MotionSensor{" +
+    return "PresenceSensor{" +
         "id='" + super.id + '\'' +
         ", name='" + super.name + '\'' +
         ", type=" + super.type +

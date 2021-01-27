@@ -10,9 +10,9 @@ public enum SensorType {
   TEMPERATURE,
 
   /**
-   * A motion sensor, i.e. either a ZLLPresence, a CLIPPresence or a Geofence sensor.
+   * A presence sensor, i.e. a motion sensor or a geofence sensor.
    */
-  MOTION,
+  PRESENCE,
 
   /**
    * A switch, e.g. a dimmer switch or a Hue Tap switch.
@@ -25,7 +25,7 @@ public enum SensorType {
   DAYLIGHT,
 
   /**
-   * A ambient light sensor, i.e. bundled with a motion sensor.
+   * A ambient light sensor, e.g. the one bundled with a Hue motion sensor.
    */
   AMBIENT_LIGHT,
 
@@ -45,11 +45,11 @@ public enum SensorType {
       case "cliptemperature":
         return TEMPERATURE;
       case "zllpresence":
-        return MOTION;
+        return PRESENCE;
       case "clippresence":
-        return MOTION;
+        return PRESENCE;
       case "geofence":
-        return MOTION;
+        return PRESENCE;
       case "zllswitch":
         return SWITCH;
       case "zgpswitch":

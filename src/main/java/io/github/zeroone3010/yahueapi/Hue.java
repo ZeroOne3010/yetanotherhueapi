@@ -296,14 +296,13 @@ public final class Hue {
   }
 
   /**
-   * Returns all the motion sensors configured into the Bridge.
-   * For easy of use geofence sensors are considered motion sensors as well.
+   * Returns all the presence sensors configured into the Bridge.
    *
-   * @return A Collection of motion sensors.
-   * @since 1.0.0
+   * @return A Collection of presence sensors.
+   * @since 2.0.0
    */
-  public Collection<MotionSensor> getMotionSensors() {
-    return getSensorsByType(SensorType.MOTION, MotionSensor.class);
+  public Collection<PresenceSensor> getPresenceSensors() {
+    return getSensorsByType(SensorType.PRESENCE, PresenceSensor.class);
   }
 
   /**
@@ -350,18 +349,17 @@ public final class Hue {
   }
 
   /**
-   * Returns a specific motion sensor by its name.
-   * For easy of use geofence sensors are considered motion sensors as well.
+   * Returns a specific presence sensor by its name.
    *
    * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
-   * @since 1.0.0
+   * @since 2.0.0
    */
-  public Optional<MotionSensor> getMotionSensorByName(final String sensorName) {
+  public Optional<PresenceSensor> getPresenceSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
-    return getMotionSensors().stream()
+    return getPresenceSensors().stream()
         .filter(sensor -> Objects.equals(sensor.getName(), sensorName))
-        .map(MotionSensor.class::cast)
+        .map(PresenceSensor.class::cast)
         .findFirst();
   }
 

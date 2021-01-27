@@ -28,8 +28,8 @@ final class SensorFactory {
     final SensorType type = SensorType.parseTypeString(sensor.getType());
     final Supplier<Map<String, Object>> stateProvider = createStateProvider(url, id);
     switch (type) {
-      case MOTION:
-        return new MotionSensorImpl(id, sensor, url, stateProvider);
+      case PRESENCE:
+        return new PresenceSensorImpl(id, sensor, url, stateProvider);
       case TEMPERATURE:
         return new TemperatureSensorImpl(id, sensor, url, stateProvider);
       case DAYLIGHT:
