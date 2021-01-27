@@ -1,6 +1,5 @@
 package io.github.zeroone3010.yahueapi;
 
-import java.awt.Color;
 import java.util.List;
 
 public final class StateBuilderSteps {
@@ -56,18 +55,10 @@ public final class StateBuilderSteps {
     /**
      * Color.
      *
-     * @param color The color as a {@link java.awt.Color} object.
+     * @param color The color as a {@link Color} object.
      * @return The next step of this state builder
      */
     BuildStep color(Color color);
-
-    /**
-     * Color.
-     *
-     * @param color The color as a hexadecimal string, for example "#ff0000" for red.
-     * @return The next step of this state builder
-     */
-    BuildStep color(String color);
   }
 
   public interface ColorTemperatureStep {

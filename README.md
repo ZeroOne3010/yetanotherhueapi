@@ -75,6 +75,24 @@ final Hue hue = new Hue(bridgeIp, key);
 
 #### Lights that belong to a room or a zone
 
+In the *upcoming version 2.0* of the library, you will not be able to use the `java.awt.Color` class as-is anymore.
+This is because the class is not available in Android environments. Instead, the library will use its own `io.github.zeroone3010.yahueapi.Color` class.
+The example below illustrates the new way of changing the colors, with `.color(Color.of(java.awt.Color.PINK))`.
+Library version 1.x.x will work with `.color(java.awt.Color.PINK)` instead.
+
+<!--
+There exists a few of ways to initialize the `io.github.zeroone3010.yahueapi.Color` class using its
+factory methods. `Color.of(int)` accepts a color code as an integer of the typical `0xRRGGBB` format.
+You may get an integer like this from, for example, from the `java.awt.Color#getRGB()` method.
+In Android environments you would use the `android.graphics.Color#toArgb()` method.
+Note that in this case the alpha channel will be ignored, because a transparency value does not really
+make sense in the context of lights. Alternatively, you may enter the color code as a six digit hexadecimal string
+with the `Color.of(String)` method, as integer parts from 0 to 255 with the `Color.of(int, int, int)` method,
+or as float parts from 0 to 1 with the `Color.of(float, float, float)` method.
+Finally, you can just supply any sensible third party color object into the general `Color.of(Object)` factory method,
+which will then attempt to parse it by finding its red, green and blue component methods using reflection.
+-->
+
 [//]: # (requires-init)
 [//]: # (import java.util.Optional;)
 ```java
@@ -84,7 +102,7 @@ final Room room = hue.getRoomByName("Basement").get();
 final Room zone = hue.getZoneByName("Route to the basement").get();
 
 // Turn the lights on, make them pink:
-room.setState(State.builder().color(java.awt.Color.PINK).on());
+room.setState(State.builder().color(Color.of(java.awt.Color.PINK)).on());
 
 // Make the entire room dimly lit:
 room.setBrightness(10);
@@ -94,7 +112,7 @@ room.getLightByName("Corner").get().turnOff();
 
 // Turn one of the lights green. This also demonstrates the proper use of Optionals:
 final Optional<Light> light = room.getLightByName("Ceiling 1");
-light.ifPresent(l -> l.setState(State.builder().color(java.awt.Color.GREEN).keepCurrentState()));
+light.ifPresent(l -> l.setState(State.builder().color(Color.of(java.awt.Color.GREEN.getRGB())).keepCurrentState()));
 
 // Activate a scene:
 room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);

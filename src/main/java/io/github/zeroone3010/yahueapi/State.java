@@ -16,13 +16,14 @@ import io.github.zeroone3010.yahueapi.StateBuilderSteps.TransitionTimeStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.XyStep;
 import io.github.zeroone3010.yahueapi.domain.LightState;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
+
+import static io.github.zeroone3010.yahueapi.MathUtil.isInRange;
 
 @JsonInclude(Include.NON_NULL)
 public final class State {
@@ -160,10 +161,6 @@ public final class State {
       return this;
     }
 
-    private boolean isInRange(final Float value, final float min, final float max) {
-      return value != null && !(value < min) && !(value > max);
-    }
-
     @Override
     public BuildStep color(Color color) {
       if (color == null) {
@@ -173,11 +170,6 @@ public final class State {
       this.xy = xAndYAndBrightness.getXY();
       this.bri = xAndYAndBrightness.getBrightness();
       return this;
-    }
-
-    @Override
-    public BuildStep color(String color) {
-      return color(hexToColor(color));
     }
 
     @Override
@@ -208,17 +200,10 @@ public final class State {
       return new State(this);
     }
 
-    private static Color hexToColor(final String hexColor) {
-      return Optional.ofNullable(hexColor)
-          .map(hex -> Integer.parseInt(hex, 16))
-          .map(Color::new)
-          .orElse(null);
-    }
-
     private static XAndYAndBrightness rgbToXy(final Color color) {
-      final float red = color.getRed() / 255f;
-      final float green = color.getGreen() / 255f;
-      final float blue = color.getBlue() / 255f;
+      final float red = color.getRed();
+      final float green = color.getGreen();
+      final float blue = color.getBlue();
       final double r = gammaCorrection(red);
       final double g = gammaCorrection(green);
       final double b = gammaCorrection(blue);

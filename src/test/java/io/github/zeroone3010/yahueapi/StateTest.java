@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,14 +22,17 @@ import static org.junit.jupiter.api.Assertions.fail;
 class StateTest {
 
   @Test
-  void hexColorAndColorBuildersShouldYieldSameValues() {
-    final State hexColorRed = State.builder().color("FF0000").on();
-    final State colorRed = State.builder().color(Color.RED).on();
-    assertEquals(hexColorRed, colorRed);
-
-    final State hexColorBlue = State.builder().color("0000FF").on();
-    final State colorBlue = State.builder().color(Color.BLUE).on();
-    assertEquals(hexColorBlue, colorBlue);
+  void testColorBuilder() {
+    final State hexColorRed1 = State.builder().color(Color.of("FF0000")).on();
+    final State hexColorRed2 = State.builder().color(Color.of("#ff0000")).on();
+    final State intColorRed = State.builder().color(Color.of(0xFF0000)).on();
+    final State floatColorRed = State.builder().color(Color.of(1.0f, 0.0f, 0.0f)).on();
+    assertEquals(hexColorRed1, hexColorRed2);
+    assertEquals(intColorRed, hexColorRed1);
+    assertEquals(intColorRed, hexColorRed2);
+    assertEquals(hexColorRed1, floatColorRed);
+    assertEquals(hexColorRed2, floatColorRed);
+    assertEquals(intColorRed, floatColorRed);
   }
 
   @Test
