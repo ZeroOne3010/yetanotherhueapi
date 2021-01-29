@@ -10,17 +10,17 @@ public interface Button {
   /**
    * <p>The number of this button in a switch.</p>
    *
-   * <p>For a Philips Hue dimmer switch,<br/>
-   * <strong>1</strong> is the ON button,<br/>
-   * <strong>2</strong> is the button that makes the lights brighter,<br/>
-   * <strong>3</strong> is the button that makes the lights dimmer, and<br/>
+   * <p>For a Philips Hue dimmer switch,<br>
+   * <strong>1</strong> is the ON button,<br>
+   * <strong>2</strong> is the button that makes the lights brighter,<br>
+   * <strong>3</strong> is the button that makes the lights dimmer, and<br>
    * <strong>4</strong> is the OFF button.
    * </p>
    *
-   * <p>For a Philips Hue Tap switch,<br/>
-   * <strong>1</strong> is the button with one dot,<br/>
-   * <strong>2</strong> is the button with two dots,<br/>
-   * <strong>3</strong> is the button with three dots, and<br/>
+   * <p>For a Philips Hue Tap switch,<br>
+   * <strong>1</strong> is the button with one dot,<br>
+   * <strong>2</strong> is the button with two dots,<br>
+   * <strong>3</strong> is the button with three dots, and<br>
    * <strong>4</strong> is the button with four dots.
    * </p>
    *
