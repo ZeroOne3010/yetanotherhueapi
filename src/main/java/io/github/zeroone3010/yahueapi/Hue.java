@@ -319,7 +319,7 @@ public final class Hue {
    * Returns all the ambient light sensors configured into the Bridge.
    *
    * @return A Collection of ambient light sensors.
-   * @since 1.5.0
+   * @since 2.0.0
    */
   public Collection<AmbientLightSensor> getAmbientLightSensors() {
     return getSensorsByType(SensorType.AMBIENT_LIGHT, AmbientLightSensor.class);
@@ -368,7 +368,7 @@ public final class Hue {
    *
    * @param sensorName The name of a sensor
    * @return A sensor or {@code Optional.empty()} if a sensor with the given name does not exist.
-   * @since 1.5.0
+   * @since 2.0.0
    */
   public Optional<AmbientLightSensor> getAmbientSensorByName(final String sensorName) {
     doInitialDataLoadIfRequired();
