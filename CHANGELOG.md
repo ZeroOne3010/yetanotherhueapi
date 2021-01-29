@@ -11,7 +11,7 @@ Unreleased
 
 * TBA
 
-v2.0.0
+v2.0.0 (2021-01-29)
 ----------
 
 This release contains several breaking changes. This means that if you have been using a previous version of this library,
