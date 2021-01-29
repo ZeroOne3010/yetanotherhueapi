@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-Unreleased v2.0.0
+Unreleased
+----------
+
+* TBA
+
+v2.0.0
 ----------
 
 This release contains several breaking changes. This means that if you have been using a previous version of this library,
 you may need to change your code to account for the changes in this version. See below for the details.
+Also, many thanks to everyone who contributed issues and pull requests!
 
 ### Added
 

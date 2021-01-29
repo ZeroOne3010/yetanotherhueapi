@@ -73,15 +73,10 @@ final Hue hue = new Hue(bridgeIp, key);
 
 ### Using the rooms, lights, and scenes
 
-#### Lights that belong to a room or a zone
+#### A note on setting colors
 
-In the *upcoming version 2.0* of the library, you will not be able to use the `java.awt.Color` class as-is anymore.
-This is because the class is not available in Android environments. Instead, the library will use its own `io.github.zeroone3010.yahueapi.Color` class.
-The example below illustrates the new way of changing the colors, with `.color(Color.of(java.awt.Color.PINK))`.
-Library version 1.x.x will work with `.color(java.awt.Color.PINK)` instead.
-
-<!--
-There exists a few of ways to initialize the `io.github.zeroone3010.yahueapi.Color` class using its
+When setting the color of a light or a room, one must use the `io.github.zeroone3010.yahueapi.Color` class.
+There exists several ways to initialize the class using its
 factory methods. `Color.of(int)` accepts a color code as an integer of the typical `0xRRGGBB` format.
 You may get an integer like this from, for example, from the `java.awt.Color#getRGB()` method.
 In Android environments you would use the `android.graphics.Color#toArgb()` method.
@@ -91,7 +86,11 @@ with the `Color.of(String)` method, as integer parts from 0 to 255 with the `Col
 or as float parts from 0 to 1 with the `Color.of(float, float, float)` method.
 Finally, you can just supply any sensible third party color object into the general `Color.of(Object)` factory method,
 which will then attempt to parse it by finding its red, green and blue component methods using reflection.
--->
+
+In the pre-2.x.x versions of this library, one could set the color directly using `java.awt.Color` objects only.
+This was all nice and fine, except for the fact that Android environments do not have that class at their disposal.
+
+### Lights that belong to a room or a zone
 
 [//]: # (requires-init)
 [//]: # (import java.util.Optional;)
@@ -120,7 +119,8 @@ room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
 
 #### Lights that do not belong to a room or a zone
 
-The lights that have not been assigned to any room or zone can be accessed with the `getUnassignedLights()` method
+The lights that have not been assigned to any room or zone can be accessed with the `getUnassignedLights()`
+and `getUnassignedLightByName(String)` methods
 of the `Hue` object. For example, in order to turn on all the unassigned lights, one would do it like this:
 
 [//]: # (requires-init)
@@ -142,9 +142,8 @@ there is no need to get the `Light`, `Room` or `Sensor` from the `Hue` object ag
 object reference all the time. Objects that return a cached state will accept and execute state changes (calls to
 the `setState` method) just fine, but they will *not* update their cached state with those calls.
 
-### Switches (upcoming version!)
+### Switches
 
-In an upcoming version of this library, you will be able to easily access the details of all of your switches.
 Switches include, for example, Philips Hue dimmer switchers, Philips Hue Tap switches, and various Friends of Hue switches.
 
 [//]: # (requires-init)
@@ -168,6 +167,11 @@ Unfortunately the Hue Bridge does not allow applications to "listen" for button 
 any events to the library. Instead, one must unfortunately always just poll the statuses of the switches to find
 out whether any button is pressed. This is a limitation of the Philips Hue system itself.
 
+### Sensors
+
+You can also use this library to read the states of various sensors in the Hue system. The main `Hue` class
+contains methods for getting temperature sensors, presence sensors (i.e. motion sensors and geofence sensors),
+daylight sensors, and ambient light sensors.
 
 Including the library with Maven
 --------------------------------
@@ -178,7 +182,7 @@ Add the following dependency to your pom.xml file:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>1.4.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
