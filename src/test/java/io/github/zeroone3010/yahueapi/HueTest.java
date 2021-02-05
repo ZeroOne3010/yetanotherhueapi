@@ -17,6 +17,8 @@ import io.github.zeroone3010.yahueapi.domain.Scene;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -852,6 +854,34 @@ class HueTest {
     assertFalse(unknown.isPresent());
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testSettingAlert() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .withRequestBody(equalToJson("{\"alert\":\"select\"}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/alert\": \"select\"}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.setState(State.SHORT_ALERT);
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToJsonPattern("{\"alert\":\"select\"}", false, false)));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+      "Living room,LR 1,NONE",
+      "Living room,LR 2,SHORT_ALERT",
+      "Bedroom,Pendant,LONG_ALERT",
+      "Hallway 1,LED strip 1,UNKNOWN",
+  })
+  void testGetAlert(final String roomName, final String lightName, final AlertType expectedAlertType) {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName(roomName).get().getLightByName(lightName).get();
+    assertEquals(expectedAlertType, light.getState().getAlert());
   }
 
   private String readFile(final String fileName) {

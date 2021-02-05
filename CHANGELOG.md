@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-* TBA
+### Added
+
+* Support for alerts. Alerts can be activated with the light `State`. There are two types of alerts currently supported
+by the Hue API: short alerts, i.e. one "breath cycle", and long alerts, where the light blinks for 15 seconds,
+or until the alert type `NONE` is issued.
 
 v2.0.0 (2021-01-29)
 ----------
