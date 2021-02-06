@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.zeroone3010.yahueapi.StateBuilderSteps.AlertStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.BuildStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.ColorStep;
@@ -31,6 +32,21 @@ public final class State {
 
   private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 
+  /**
+   * A state that causes a short blink to occur.
+   */
+  public static final State SHORT_ALERT = new State(AlertType.SHORT_ALERT);
+
+  /**
+   * A state that causes light(s) to blink for 15 seconds.
+   */
+  public static final State LONG_ALERT = new State(AlertType.LONG_ALERT);
+
+  /**
+   * A state that stops lights from blinking.
+   */
+  public static final State NO_ALERT = new State(AlertType.NONE);
+
   private final Boolean on;
   private final Integer hue;
   private final Integer sat;
@@ -39,6 +55,7 @@ public final class State {
   private final Integer transitiontime;
   private final List<Float> xy;
   private final String scene;
+  private final AlertType alert;
 
   private State(final Builder builder) {
     this.on = builder.on;
@@ -49,6 +66,19 @@ public final class State {
     this.ct = builder.ct;
     this.transitiontime = builder.transitionTime;
     this.scene = builder.scene;
+    this.alert = builder.alert;
+  }
+
+  State(final AlertType alertType) {
+    this.on = null;
+    this.bri = null;
+    this.xy = null;
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+    this.transitiontime = null;
+    this.scene = null;
+    this.alert = alertType;
   }
 
   public Boolean getOn() {
@@ -83,22 +113,33 @@ public final class State {
     return scene;
   }
 
+  /**
+   * The latest alert command issued. Does not automatically reset to {@link AlertType#NONE} when the alert ends.
+   *
+   * @return Latest alert command issued.
+   * @since 2.1.0
+   */
+  public AlertType getAlert() {
+    return alert;
+  }
+
   public static InitialStep builder() {
     return new Builder();
   }
 
   static State build(final LightState state) {
     logger.fine(state.toString());
+    final InitialStep builder = new State.Builder(AlertType.parseTypeString(state.getAlert()));
     if (state.getColorMode() == null) {
-      return State.builder().colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
+      return builder.colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
     }
     switch (state.getColorMode()) {
       case "xy":
-        return State.builder().xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
+        return builder.xy(state.getXy()).brightness(state.getBrightness()).on(state.isOn());
       case "ct":
-        return State.builder().colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
+        return builder.colorTemperatureInMireks(state.getCt()).brightness(state.getBrightness()).on(state.isOn());
       case "hs":
-        return State.builder().hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
+        return builder.hue(state.getHue()).saturation(state.getSaturation()).brightness(state.getBrightness()).on(state.isOn());
     }
     throw new HueApiException("Unknown color mode '" + state.getColorMode() + "'.");
   }
@@ -113,16 +154,17 @@ public final class State {
         Objects.equals(sat, state.sat) &&
         Objects.equals(bri, state.bri) &&
         Objects.equals(ct, state.ct) &&
-        Objects.equals(xy, state.xy);
+        Objects.equals(xy, state.xy) &&
+        Objects.equals(alert, state.alert);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(on, hue, sat, bri, ct, xy);
+    return Objects.hash(on, hue, sat, bri, ct, xy, alert);
   }
 
 
-  public static final class Builder implements InitialStep, HueStep, SaturationStep, BrightnessStep, XyStep, ColorStep, ColorTemperatureStep, TransitionTimeStep, BuildStep, OnOffStep {
+  public static final class Builder implements InitialStep, HueStep, SaturationStep, BrightnessStep, XyStep, ColorStep, ColorTemperatureStep, TransitionTimeStep, BuildStep, OnOffStep, AlertStep {
     private Boolean on;
     private Integer hue;
     private Integer sat;
@@ -131,6 +173,14 @@ public final class State {
     private Integer transitionTime;
     private List<Float> xy;
     private String scene;
+    private AlertType alert;
+
+    public Builder() {
+    }
+
+    Builder(AlertType alert) {
+      this.alert = alert;
+    }
 
     @Override
     public SaturationStep hue(int hue) {
@@ -196,6 +246,11 @@ public final class State {
       return this;
     }
 
+    @Override
+    public State alert(AlertType alert) {
+      return new State(alert);
+    }
+
     private State build() {
       return new State(this);
     }
@@ -231,6 +286,7 @@ public final class State {
         ", transitiontime=" + transitiontime +
         ", xy=" + xy +
         ", scene='" + scene + '\'' +
+        ", alert=" + alert +
         '}';
   }
 

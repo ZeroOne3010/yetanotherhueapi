@@ -6,6 +6,7 @@ import io.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 
@@ -125,6 +126,28 @@ class StateTest {
     assertNull(state.getBri());
     assertNull(state.getOn());
     assertNull(state.getScene());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"SHORT_ALERT", "LONG_ALERT", "NONE", "UNKNOWN"})
+  void testAlert(final AlertType alert) {
+    final State state = State.builder().alert(alert);
+    assertEquals(alert, state.getAlert());
+    assertNull(state.getCt());
+    assertNull(state.getXy());
+    assertNull(state.getTransitiontime());
+    assertNull(state.getHue());
+    assertNull(state.getBri());
+    assertNull(state.getSat());
+    assertNull(state.getOn());
+    assertNull(state.getScene());
+  }
+
+  @Test
+  void testAlertConstants() {
+    assertEquals(State.SHORT_ALERT, State.builder().alert(AlertType.SHORT_ALERT));
+    assertEquals(State.LONG_ALERT, State.builder().alert(AlertType.LONG_ALERT));
+    assertEquals(State.NO_ALERT, State.builder().alert(AlertType.NONE));
   }
 
   @Test

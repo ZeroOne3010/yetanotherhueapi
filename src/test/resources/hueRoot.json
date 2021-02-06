@@ -73,7 +73,7 @@
         "on": false,
         "bri": 123,
         "ct": 230,
-        "alert": "none",
+        "alert": "select",
         "colormode": "ct",
         "mode": "homeautomation",
         "reachable": true
@@ -121,7 +121,7 @@
         "on": true,
         "bri": 144,
         "ct": 443,
-        "alert": "none",
+        "alert": "lselect",
         "colormode": "ct",
         "mode": "homeautomation",
         "reachable": false
@@ -175,7 +175,7 @@
           0.3678,
           0.3720
         ],
-        "alert": "select",
+        "alert": "blinkenlights",
         "colormode": "hs",
         "mode": "homeautomation",
         "reachable": true

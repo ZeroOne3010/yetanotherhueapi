@@ -7,7 +7,7 @@ public final class StateBuilderSteps {
     // prevent instantiation
   }
 
-  public interface InitialStep extends SceneStep, HueStep, XyStep, ColorStep, ColorTemperatureStep {
+  public interface InitialStep extends SceneStep, HueStep, XyStep, ColorStep, ColorTemperatureStep, AlertStep {
 
   }
 
@@ -89,6 +89,17 @@ public final class StateBuilderSteps {
      * @return The next step of this state builder
      */
     OnOffStep scene(String scene);
+  }
+
+  public interface AlertStep {
+    /**
+     * Alert. Instead of this builder, you may also use the static constants
+     * {@link State#SHORT_ALERT}, {@link State#LONG_ALERT}, and {@link State#NO_ALERT}.
+     *
+     * @param alertType Type of the alert to be activated, or {@code AlertType.NONE} to stop the long alert.
+     * @return A new {@code State}.
+     */
+    State alert(AlertType alertType);
   }
 
   public interface BuildStep extends OnOffStep, TransitionTimeStep {
