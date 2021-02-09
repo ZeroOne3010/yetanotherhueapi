@@ -97,6 +97,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "sensors", "16");
       mockIndividualGetResponse(jsonNode, "sensors", "17");
       mockIndividualGetResponse(jsonNode, "sensors", "20");
+      mockIndividualGetResponse(jsonNode, "sensors", "99");
       mockIndividualGetResponse(jsonNode, "groups", "1");
       mockIndividualGetResponse(jsonNode, "groups", "2");
     } catch (final IOException e) {
@@ -354,9 +355,20 @@ class HueTest {
   void testDaylightSensor() {
     final Hue hue = createHueAndInitializeMockServer();
     final Boolean daylight = hue.getDaylightSensors().stream()
+        .filter(sensor -> "1".equals(sensor.getId()))
         .map(DaylightSensor::isDaylightTime)
         .findFirst().get();
     assertTrue(daylight);
+  }
+
+  @Test
+  void testUnconfiguredDaylightSensor() {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Boolean daylight = hue.getDaylightSensors().stream()
+        .filter(sensor -> "99".equals(sensor.getId()))
+        .map(DaylightSensor::isDaylightTime)
+        .findFirst().get();
+    assertFalse(daylight);
   }
 
   @Test

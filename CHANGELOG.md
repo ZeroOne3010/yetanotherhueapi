@@ -15,6 +15,12 @@ Unreleased
 by the Hue API: short alerts, i.e. one "breath cycle", and long alerts, where the light blinks for 15 seconds,
 or until the alert type `NONE` is issued.
 
+### Changed
+
+* Fixed a `NullPointerException` when trying to read the daylight status from a daylight sensor that had not been configured.
+Now it will just return `false` and log a warning message when queried. The need to configure such a sensor has also
+been explained in the Javadoc of the `DaylightSensorImpl` class.
+
 v2.0.0 (2021-01-29)
 ----------
 
