@@ -14,6 +14,7 @@ Unreleased
 * Support for alerts. Alerts can be activated with the light `State`. There are two types of alerts currently supported
 by the Hue API: short alerts, i.e. one "breath cycle", and long alerts, where the light blinks for 15 seconds,
 or until the alert type `NONE` is issued.
+* More Javadoc documentation
 
 ### Changed
 

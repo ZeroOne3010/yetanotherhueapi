@@ -109,6 +109,14 @@ public final class State {
     return transitiontime;
   }
 
+  /**
+   * The id of the scene that this state will activate. Note that the API does <strong>not</strong> populate
+   * this value when you get the state of a light or a room. This means that unless you created this State object
+   * manually, this value will always be {@code null}.
+   *
+   * @return Id of a scene, or {@code null} if this object was received from an actual {@code Light} object.
+   * @since 1.3.0
+   */
   public String getScene() {
     return scene;
   }
