@@ -25,15 +25,23 @@ class ColorTest {
         "000000,0,0,0",
         "336699,0.2,0.4,0.6",
         "BA0BAB,0.7294117647,0.0431372549,0.6705882353",
-        "ba0bab,0.7294117647,0.0431372549,0.6705882353"})
+        "ba0bab,0.7294117647,0.0431372549,0.6705882353",
+        "#ffffff,1.0,1.0,1.0",
+        "#FFFFFF,1,1,1",
+        "#FFFFFF,1,1,1",
+        "#ff0000,1,0,0",
+        "#00ff00 ,0,1,0",
+        "#0000ff,0,0,1",
+        "#000000,0,0,0",
+        "#336699,0.2,0.4,0.6",
+        "#BA0BAB,0.7294117647,0.0431372549,0.6705882353",
+        "#ba0bab,0.7294117647,0.0431372549,0.6705882353"
+    })
     void validInput(final String input, final float expectedRed, final float expectedGreen, final float expectedBlue) {
       final Color color = Color.of(input);
       assertEquals(expectedRed, color.getRed());
       assertEquals(expectedGreen, color.getGreen());
       assertEquals(expectedBlue, color.getBlue());
-
-      final Color colorWithNumberSign = Color.of("#" + input);
-      assertEquals(color, colorWithNumberSign);
     }
 
     @ParameterizedTest
