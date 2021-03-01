@@ -1,6 +1,7 @@
 Yet Another Hue API
 ===================
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.zeroone3010/yetanotherhueapi.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.zeroone3010%22%20AND%20a:%22yetanotherhueapi%22)
+[![javadoc](https://javadoc.io/badge2/io.github.zeroone3010/yetanotherhueapi/javadoc.svg)](https://javadoc.io/doc/io.github.zeroone3010/yetanotherhueapi)
 
 This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official
 Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
