@@ -56,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class HueTest {
   private static final String API_KEY = "abcd1234";
@@ -881,6 +882,24 @@ class HueTest {
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
         .withRequestBody(new EqualToJsonPattern("{\"alert\":\"select\"}", false, false)));
+  }
+
+  @Test
+  void testInvalidApiKey() {
+    final Hue hue = createHueAndInitializeMockServer();
+
+    // Interestingly enough, the Bridge does respond with status code "200 OK" even the API key is wrong:
+    wireMockServer.stubFor(get(API_BASE_PATH)
+        .willReturn(okJson("[{\"error\":{\"type\":1,\"address\":\"/\",\"description\":\"unauthorized user\"}}]")));
+
+    try {
+      hue.getRooms(); // This will crash with a MismatchedInputException.
+      fail("There should have been an exception.");
+    } catch (HueApiException expected) {
+      assertTrue(expected.getMessage().startsWith("Unauthorized user."));
+    }
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 
   @ParameterizedTest

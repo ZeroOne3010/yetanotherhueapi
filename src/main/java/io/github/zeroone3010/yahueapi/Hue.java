@@ -107,6 +107,7 @@ public final class Hue {
       TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     }
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.addHandler(new UnauthorizedUserHandler());
     roomFactory = new RoomFactory(this, objectMapper, uri);
     lightFactory = new LightFactory(this, objectMapper);
   }
