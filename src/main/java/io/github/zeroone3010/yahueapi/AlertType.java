@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * @since 2.1.0
+ */
 public enum AlertType {
   /**
    * A short blink.
