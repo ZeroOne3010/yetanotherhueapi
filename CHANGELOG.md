@@ -6,15 +6,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-Unreleased
+v2.2.0 (2021-03-15)
 ----------
+
+### Added
+
+* More Javadoc documentation
 
 ### Changed
 
 * Fixed possible null pointer exceptions, should the Bridge ever return any collections (lights, sensors, etc) as `null`.
 This is probably not possible with the actual Hue Bridge, but there are emulator systems that may behave like this.
 * Handle *unauthorized user error* more gracefully, explaining the situation in the exception.
-* Add more Javadoc documentation
 
 v2.1.0 (2021-02-21)
 ----------
