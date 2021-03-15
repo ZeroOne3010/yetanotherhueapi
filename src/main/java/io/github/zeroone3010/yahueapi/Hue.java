@@ -29,6 +29,10 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * The main class. This class creates and holds the connection with the Bridge. This class also holds all the methods
+ * with which one can get all the lights, sensors, rooms, etc. to interact with them.
+ */
 public final class Hue {
   private final ObjectMapper objectMapper = new ObjectMapper();
 

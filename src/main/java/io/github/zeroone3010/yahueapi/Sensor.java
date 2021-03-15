@@ -2,6 +2,10 @@ package io.github.zeroone3010.yahueapi;
 
 import java.time.ZonedDateTime;
 
+/**
+ * A sensor, physical or virtual, capable of producing input into the Hue Bridge so that the Bridge can react to it.
+ * A wall switch with one or more buttons, a motion detector, a temperature sensor, or any other such device.
+ */
 public interface Sensor {
   /**
    * Returns the human readable name of the sensor as set by the user, e.g. "Living room switch".

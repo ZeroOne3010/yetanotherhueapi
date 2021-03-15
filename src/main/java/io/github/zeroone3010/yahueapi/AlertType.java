@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
+ * The Hue Bridge recognizes the concept of an "alert" as blinking the lights. This enumeration holds
+ * the different alert types so that one may activate a short alert, a long alert, or stop alerting altogether.
+ *
  * @since 2.1.0
  */
 public enum AlertType {

@@ -20,6 +20,9 @@ import java.util.stream.Stream;
  * </p>
  */
 public final class ButtonEvent {
+  /**
+   * An enumeration of the actions that a user may take with a physical button.
+   */
   public enum ButtonEventType {
     /**
      * An event was reported but its nature is unclear. It may originate from, say, a Friends of Hue compatible device.

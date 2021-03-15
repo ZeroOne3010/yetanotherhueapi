@@ -21,9 +21,17 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
+/**
+ * A service with which one can discover the available Hue Bridges.
+ */
 public final class HueBridgeDiscoveryService {
   private static final Logger logger = Logger.getLogger("HueBridgeDiscoveryService");
 
+  /**
+   * The different methods that one can use to discover the available bridges.
+   * If one does not work, try the other. By default, if none of these options
+   * are given to the {@link #discoverBridges} method, then all of the methods are used.
+   */
   public enum DiscoveryMethod {
     /**
      * With the N-UPnP method the Philips Hue portal is polled over the internet

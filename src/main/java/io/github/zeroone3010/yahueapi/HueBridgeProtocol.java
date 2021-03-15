@@ -1,9 +1,12 @@
 package io.github.zeroone3010.yahueapi;
 
+/**
+ * An enumeration on what kind of a connection one wants with the Bridge: HTTP or HTTPS.
+ */
 public enum HueBridgeProtocol {
 
   /**
-   * A regular HTTP connection.
+   * A regular, unprotected HTTP connection.
    */
   HTTP("http"),
 

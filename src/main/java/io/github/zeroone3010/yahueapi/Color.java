@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Use this class to define a color for a color light -- or for a room with color lights.
+ */
 public final class Color {
   private final float red;
   private final float green;
