@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -134,11 +135,11 @@ public final class Hue {
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
-    this.lights = Collections.unmodifiableMap(root.getLights().entrySet().stream()
+    this.lights = Collections.unmodifiableMap(Optional.ofNullable(root.getLights()).orElse(emptyMap()).entrySet().stream()
         .map(light -> buildLight(light.getKey(), root))
         .collect(toMap(LightImpl::getId, light -> light)));
 
-    final Collection<Room> tempGroups = root.getGroups().entrySet().stream()
+    final Collection<Room> tempGroups = Optional.ofNullable(root.getGroups()).orElse(emptyMap()).entrySet().stream()
         .map(group -> buildRoom(group.getKey(), group.getValue(), findScenesOfGroup(group.getKey(), root.getScenes())))
         .collect(toSet());
     final Map<String, Long> groupNameCounts = tempGroups.stream()
@@ -149,11 +150,11 @@ public final class Hue {
                 : room.getName(),
             room -> room)));
 
-    this.sensors = Collections.unmodifiableMap(root.getSensors().entrySet().stream()
+    this.sensors = Collections.unmodifiableMap(Optional.ofNullable(root.getSensors()).orElse(emptyMap()).entrySet().stream()
         .map(sensor -> buildSensor(sensor.getKey(), root))
         .collect(toMap(Sensor::getId, sensor -> sensor)));
 
-    final Collection<String> lightsInUse = getRaw().getGroups().values().stream()
+    final Collection<String> lightsInUse = Optional.ofNullable(getRaw().getGroups()).orElse(emptyMap()).values().stream()
         .flatMap(group -> group.getLights().stream())
         .collect(toSet());
     this.unassignedLights = lights.entrySet().stream()
@@ -164,7 +165,7 @@ public final class Hue {
   }
 
   private Map<String, Scene> findScenesOfGroup(final String groupId, final Map<String, Scene> scenes) {
-    return Optional.ofNullable(scenes).orElse(Collections.emptyMap()).entrySet().stream()
+    return Optional.ofNullable(scenes).orElse(emptyMap()).entrySet().stream()
         .filter(e -> Objects.equals(groupId, e.getValue().getGroup()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }

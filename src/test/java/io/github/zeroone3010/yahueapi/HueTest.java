@@ -915,6 +915,29 @@ class HueTest {
     assertEquals(expectedAlertType, light.getState().getAlert());
   }
 
+  @Test
+  void testBridgeReturningNullCollections() {
+    final String hueRoot = readFile("hueRootWithNullCollections.json");
+
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final JsonNode jsonNode;
+    try {
+      jsonNode = objectMapper.readTree(hueRoot);
+      wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
+    final Hue hue = new Hue("localhost:" + wireMockServer.port(), API_KEY);
+    assertTrue(hue.getRooms().isEmpty());
+    assertTrue(hue.getAmbientLightSensors().isEmpty());
+    assertTrue(hue.getDaylightSensors().isEmpty());
+    assertTrue(hue.getPresenceSensors().isEmpty());
+    assertTrue(hue.getSwitches().isEmpty());
+    assertTrue(hue.getTemperatureSensors().isEmpty());
+    assertTrue(hue.getUnknownSensors().isEmpty());
+    assertTrue(hue.getZones().isEmpty());
+  }
+
   private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());
