@@ -13,6 +13,7 @@ Unreleased
 
 * Fixed possible null pointer exceptions, should the Bridge ever return any collections (lights, sensors, etc) as `null`.
 This is probably not possible with the actual Hue Bridge, but there are emulator systems that may behave like this.
+* Handle *unauthorized user error* more gracefully, explaining the situation in the exception.
 
 v2.1.0 (2021-02-21)
 ----------
