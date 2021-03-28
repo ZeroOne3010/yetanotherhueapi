@@ -174,10 +174,10 @@ You can also use this library to read the states of various sensors in the Hue s
 contains methods for getting temperature sensors, presence sensors (i.e. motion sensors and geofence sensors),
 daylight sensors, and ambient light sensors.
 
-Including the library with Maven
+Including the library using Maven or Gradle
 --------------------------------
 
-Add the following dependency to your pom.xml file:
+Add the following dependency to your pom.xml file if you are using Maven:
 
 ```xml
 <dependency>
@@ -185,6 +185,18 @@ Add the following dependency to your pom.xml file:
     <artifactId>yetanotherhueapi</artifactId>
     <version>2.2.0</version>
 </dependency>
+```
+
+This is how you add it to your build.gradle file when using Gradle:
+
+```gradle
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'io.github.zeroone3010:yetanotherhueapi:2.2.0'
+}
 ```
 
 Scope and philosophy
