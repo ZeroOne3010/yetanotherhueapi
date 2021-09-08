@@ -47,6 +47,16 @@ public final class State {
    */
   public static final State NO_ALERT = new State(AlertType.NONE);
 
+  /**
+   * A state that turns on the {@link EffectType#COLOR_LOOP} effect.
+   */
+  public static final State COLOR_LOOP = new State(EffectType.COLOR_LOOP);
+
+  /**
+   * A state that stops effects.
+   */
+  public static final State NO_EFFECTS = new State(EffectType.NONE);
+
   private final Boolean on;
   private final Integer hue;
   private final Integer sat;
@@ -56,6 +66,7 @@ public final class State {
   private final List<Float> xy;
   private final String scene;
   private final AlertType alert;
+  private final EffectType effect;
 
   private State(final Builder builder) {
     this.on = builder.on;
@@ -67,6 +78,7 @@ public final class State {
     this.transitiontime = builder.transitionTime;
     this.scene = builder.scene;
     this.alert = builder.alert;
+    this.effect = builder.effect;
   }
 
   State(final AlertType alertType) {
@@ -79,6 +91,20 @@ public final class State {
     this.transitiontime = null;
     this.scene = null;
     this.alert = alertType;
+    this.effect = null;
+  }
+
+  State(final EffectType effect) {
+    this.on = null;
+    this.bri = null;
+    this.xy = null;
+    this.hue = null;
+    this.sat = null;
+    this.ct = null;
+    this.transitiontime = null;
+    this.scene = null;
+    this.alert = null;
+    this.effect = effect;
   }
 
   public Boolean getOn() {
@@ -131,6 +157,16 @@ public final class State {
     return alert;
   }
 
+  /**
+   * The latest effect command issued. Does not automatically reset to {@link EffectType#NONE} when the effect ends.
+   *
+   * @return Latest effect command issued.
+   * @since 2.2.0
+   */
+  public EffectType getEffect() {
+    return effect;
+  }
+
   public static InitialStep builder() {
     return new Builder();
   }
@@ -163,12 +199,13 @@ public final class State {
         Objects.equals(bri, state.bri) &&
         Objects.equals(ct, state.ct) &&
         Objects.equals(xy, state.xy) &&
-        Objects.equals(alert, state.alert);
+        Objects.equals(alert, state.alert) &&
+        Objects.equals(effect, state.effect);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(on, hue, sat, bri, ct, xy, alert);
+    return Objects.hash(on, hue, sat, bri, ct, xy, alert, effect);
   }
 
 
@@ -182,12 +219,17 @@ public final class State {
     private List<Float> xy;
     private String scene;
     private AlertType alert;
+    private EffectType effect;
 
     public Builder() {
     }
 
     Builder(AlertType alert) {
       this.alert = alert;
+    }
+
+    Builder(EffectType effect) {
+      this.effect = effect;
     }
 
     @Override
@@ -259,6 +301,11 @@ public final class State {
       return new State(alert);
     }
 
+    @Override
+    public State effect(EffectType effect) {
+      return new State(effect);
+    }
+
     private State build() {
       return new State(this);
     }
@@ -295,6 +342,7 @@ public final class State {
         ", xy=" + xy +
         ", scene='" + scene + '\'' +
         ", alert=" + alert +
+        ", effect=" + effect +
         '}';
   }
 

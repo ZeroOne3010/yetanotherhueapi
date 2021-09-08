@@ -7,7 +7,7 @@ public final class StateBuilderSteps {
     // prevent instantiation
   }
 
-  public interface InitialStep extends SceneStep, HueStep, XyStep, ColorStep, ColorTemperatureStep, AlertStep {
+  public interface InitialStep extends SceneStep, HueStep, XyStep, ColorStep, ColorTemperatureStep, AlertStep, EffectStep {
 
   }
 
@@ -100,6 +100,17 @@ public final class StateBuilderSteps {
      * @return A new {@code State}.
      */
     State alert(AlertType alertType);
+  }
+
+  public interface EffectStep {
+    /**
+     * Effect. Instead of this builder, you may also use the static constants
+     * {@link State#COLOR_LOOP_EFFECT} and {@link State#NO_EFFECT}.
+     *
+     * @param effect Type of the effect to be activated, or {@code EffectType.NONE} to stop the long effect.
+     * @return A new {@code State}.
+     */
+    State effect(EffectType effect);
   }
 
   public interface BuildStep extends OnOffStep, TransitionTimeStep {

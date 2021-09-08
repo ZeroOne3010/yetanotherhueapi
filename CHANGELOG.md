@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+Unreleased
+----------
+
+### Added
+
+* Support for effects. Just like alerts, effects can be activated with the light `State`. The Hue API currently supports
+only one type of effect: the color loop. It cycles indefinitely through all the hues using the current brightness and
+saturation settings.
+
 v2.2.0 (2021-03-15)
 ----------
 

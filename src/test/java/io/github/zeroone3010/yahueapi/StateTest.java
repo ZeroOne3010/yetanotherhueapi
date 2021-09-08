@@ -150,6 +150,27 @@ class StateTest {
     assertEquals(State.NO_ALERT, State.builder().alert(AlertType.NONE));
   }
 
+  @ParameterizedTest
+  @CsvSource({"COLOR_LOOP", "NONE"})
+  void testAlert(final EffectType effect) {
+    final State state = State.builder().effect(effect);
+    assertEquals(effect, state.getEffect());
+    assertNull(state.getCt());
+    assertNull(state.getXy());
+    assertNull(state.getTransitiontime());
+    assertNull(state.getHue());
+    assertNull(state.getBri());
+    assertNull(state.getSat());
+    assertNull(state.getOn());
+    assertNull(state.getScene());
+  }
+
+  @Test
+  void testEffectConstants() {
+    assertEquals(State.COLOR_LOOP, State.builder().effect(EffectType.COLOR_LOOP));
+    assertEquals(State.NO_EFFECTS, State.builder().effect(EffectType.NONE));
+  }
+
   @Test
   void testScene() {
     final State state = State.builder().scene("AB34EF5").keepCurrentState();

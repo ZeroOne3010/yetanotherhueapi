@@ -938,6 +938,21 @@ class HueTest {
     assertTrue(hue.getZones().isEmpty());
   }
 
+  @Test
+  void testSettingEffect() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "lights/100/state")
+        .withRequestBody(equalToJson("{\"effect\":\"colorloop\"}"))
+        .willReturn(okJson("[{\"success\":{\"/lights/100/state/effect\": \"colorloop\"}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
+    light.setState(State.COLOR_LOOP);
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
+        .withRequestBody(new EqualToJsonPattern("{\"effect\":\"colorloop\"}", false, false)));
+  }
+
   private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());
