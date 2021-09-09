@@ -105,7 +105,7 @@ public final class StateBuilderSteps {
   public interface EffectStep {
     /**
      * Effect. Instead of this builder, you may also use the static constants
-     * {@link State#COLOR_LOOP_EFFECT} and {@link State#NO_EFFECT}.
+     * {@link State#COLOR_LOOP_EFFECT} and {@link State#NO_EFFECTS}.
      *
      * @param effect Type of the effect to be activated, or {@code EffectType.NONE} to stop the long effect.
      * @return A new {@code State}.

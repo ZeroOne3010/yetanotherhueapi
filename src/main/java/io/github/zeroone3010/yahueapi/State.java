@@ -50,7 +50,7 @@ public final class State {
   /**
    * A state that turns on the {@link EffectType#COLOR_LOOP} effect.
    */
-  public static final State COLOR_LOOP = new State(EffectType.COLOR_LOOP);
+  public static final State COLOR_LOOP_EFFECT = new State(EffectType.COLOR_LOOP);
 
   /**
    * A state that stops effects.

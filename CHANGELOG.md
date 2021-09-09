@@ -13,7 +13,8 @@ Unreleased
 
 * Support for effects. Just like alerts, effects can be activated with the light `State`. The Hue API currently supports
 only one type of effect: the color loop. It cycles indefinitely through all the hues using the current brightness and
-saturation settings.
+saturation settings. The color loop effect can be activated with the `.setState(State.COLOR_LOOP_EFFECT)` method of
+a light, and subsequently stopped with `.setState(State.NO_EFFECTS)`.
 * `turnOn()` and `turnOff()` methods for the `Room` interface, for toggling all the lights in a room or zone.
 
 v2.2.0 (2021-03-15)

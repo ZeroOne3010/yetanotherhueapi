@@ -167,7 +167,7 @@ class StateTest {
 
   @Test
   void testEffectConstants() {
-    assertEquals(State.COLOR_LOOP, State.builder().effect(EffectType.COLOR_LOOP));
+    assertEquals(State.COLOR_LOOP_EFFECT, State.builder().effect(EffectType.COLOR_LOOP));
     assertEquals(State.NO_EFFECTS, State.builder().effect(EffectType.NONE));
   }
 

@@ -976,7 +976,7 @@ class HueTest {
 
     final Hue hue = createHueAndInitializeMockServer();
     final Light light = hue.getRoomByName("Living room").get().getLightByName("LR 1").get();
-    light.setState(State.COLOR_LOOP);
+    light.setState(State.COLOR_LOOP_EFFECT);
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "lights/100/state"))
