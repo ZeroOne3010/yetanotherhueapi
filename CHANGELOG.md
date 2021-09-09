@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+* TBD
+
+v2.3.0 (2021-09-09)
+----------
+
 ### Added
 
 * Support for effects. Just like alerts, effects can be activated with the light `State`. The Hue API currently supports

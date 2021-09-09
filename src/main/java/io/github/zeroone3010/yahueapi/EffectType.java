@@ -6,7 +6,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * @since 2.2.0
+ * Light effect, as supported by the Hue API.
+ *
+ * @since 2.3.0
  */
 public enum EffectType {
   /**

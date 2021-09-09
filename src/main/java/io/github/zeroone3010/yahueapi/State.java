@@ -161,7 +161,7 @@ public final class State {
    * The latest effect command issued. Does not automatically reset to {@link EffectType#NONE} when the effect ends.
    *
    * @return Latest effect command issued.
-   * @since 2.2.0
+   * @since 2.3.0
    */
   public EffectType getEffect() {
     return effect;
