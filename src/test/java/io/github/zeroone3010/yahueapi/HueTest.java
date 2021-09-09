@@ -616,6 +616,36 @@ class HueTest {
   }
 
   @Test
+  void testTurnRoomLightsOff() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1/action")
+        .withRequestBody(equalToJson("{\"on\":false}"))
+        .willReturn(okJson("[{\"success\":{\"/groups/1/action/on\":false}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Room room = hue.getRoomByName("Living room").get();
+    room.turnOff();
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
+        .withRequestBody(new EqualToJsonPattern("{\"on\":false}", false, false)));
+  }
+
+  @Test
+  void testTurnRoomLightsOn() {
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1/action")
+        .withRequestBody(equalToJson("{\"on\":true}"))
+        .willReturn(okJson("[{\"success\":{\"/groups/1/action/on\":true}}]")));
+
+    final Hue hue = createHueAndInitializeMockServer();
+    final Room room = hue.getRoomByName("Living room").get();
+    room.turnOn();
+
+    wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+    wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
+        .withRequestBody(new EqualToJsonPattern("{\"on\":true}", false, false)));
+  }
+
+  @Test
   void testGetRoomStateQueriesTheBridgeEveryTimeWhenCachingIsOffByDefault() {
     final Hue hue = createHueAndInitializeMockServer();
     final Room room = hue.getRoomByName("Living room").get();

@@ -44,6 +44,16 @@ public interface Room {
   boolean isAllOn();
 
   /**
+   * Turns the lights on.
+   */
+  void turnOn();
+
+  /**
+   * Turns the lights off.
+   */
+  void turnOff();
+
+  /**
    * Sets a state for the group.
    *
    * @param state A state to be set for this group.

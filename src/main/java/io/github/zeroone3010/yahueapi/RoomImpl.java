@@ -70,6 +70,16 @@ final class RoomImpl implements Room {
   }
 
   @Override
+  public void turnOn() {
+    setState(((StateBuilderSteps.OnOffStep) State.builder()).on());
+  }
+
+  @Override
+  public void turnOff() {
+    setState(((StateBuilderSteps.OnOffStep) State.builder()).off());
+  }
+
+  @Override
   public void setState(final State state) {
     final String result = stateSetter.apply(state);
     logger.fine(result);
