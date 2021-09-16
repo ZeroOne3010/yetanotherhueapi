@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toSet;
 
 final class RoomFactory {
   private static final String ACTION_PATH = "/action";
+  static final String ALL_LIGHTS_GROUP_ID = "0";
 
   private final Hue hue;
   private final ObjectMapper objectMapper;
@@ -59,7 +60,7 @@ final class RoomFactory {
   private Supplier<GroupState> createStateProvider(final URL url,
                                                    final String id) {
     return () -> {
-      if (hue.isCaching()) {
+      if (hue.isCaching() && !ALL_LIGHTS_GROUP_ID.equals(id)) {
         return hue.getRaw().getGroups().get(id).getState();
       }
       try {

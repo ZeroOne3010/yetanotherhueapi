@@ -1,0 +1,59 @@
+{
+  "name": "Group 0",
+  "lights": [
+    "100",
+    "101",
+    "200",
+    "300",
+    "400"
+  ],
+  "sensors": [
+    "1",
+    "4",
+    "15",
+    "16",
+    "17",
+    "18",
+    "20",
+    "99"
+  ],
+  "type": "LightGroup",
+  "state": {
+    "all_on": false,
+    "any_on": true
+  },
+  "presence": {
+    "state": {
+      "presence": false,
+      "presence_all": false,
+      "lastupdated": "2021-09-15T07:57:29"
+    }
+  },
+  "lightlevel": {
+    "state": {
+      "dark": true,
+      "dark_all": true,
+      "daylight": false,
+      "daylight_any": false,
+      "lightlevel": 10014,
+      "lightlevel_min": 9561,
+      "lightlevel_max": 10466,
+      "lastupdated": "2021-09-15T08:12:32"
+    }
+  },
+  "recycle": false,
+  "action": {
+    "on": false,
+    "bri": 254,
+    "hue": 40191,
+    "sat": 254,
+    "effect": "none",
+    "xy": [
+      0.1586,
+      0.2573
+    ],
+    "ct": 500,
+    "alert": "select",
+    "colormode": "hs"
+  }
+}

@@ -61,6 +61,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class HueTest {
   private static final String API_KEY = "abcd1234";
   private static final String API_BASE_PATH = "/api/" + API_KEY + "/";
+  private static final String GROUP_0_PATH = API_BASE_PATH + "groups/0";
   private static final String MOTION_SENSOR_NAME = "Hallway sensor";
   private static final String AMBIENT_LIGHT_SENSOR_NAME = "Hue ambient light sensor 1";
   private static final String TEMPERATURE_SENSOR_NAME = "Hue temperature sensor 1";
@@ -874,6 +875,36 @@ class HueTest {
     });
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testGetAllLights() {
+    final Hue hue = createHueAndInitializeMockServer();
+    wireMockServer.stubFor(get(GROUP_0_PATH).willReturn(okJson(readFile("group0.json"))));
+
+    hue.setCaching(false);
+
+    Room allLights = hue.getAllLights();
+    assertEquals("Group 0", allLights.getName());
+    assertEquals(5, allLights.getLights().size());
+    assertFalse(allLights.isAllOn());
+    assertTrue(allLights.isAnyOn());
+    assertTrue(allLights.getScenes().isEmpty());
+
+    // 3 calls: the initial one when created; the "allOn" query; and the "anyOn" query:
+    wireMockServer.verify(3, getRequestedFor(urlEqualTo(GROUP_0_PATH)));
+
+    hue.setCaching(true);
+
+    allLights = hue.getAllLights();
+    assertEquals("Group 0", allLights.getName());
+    assertEquals(5, allLights.getLights().size());
+    assertFalse(allLights.isAllOn());
+    assertTrue(allLights.isAnyOn());
+    assertTrue(allLights.getScenes().isEmpty());
+
+    // Should have 3 more calls, i.e. 6 in total, as caching should have no effect on this method:
+    wireMockServer.verify(6, getRequestedFor(urlEqualTo(GROUP_0_PATH)));
   }
 
   @Test

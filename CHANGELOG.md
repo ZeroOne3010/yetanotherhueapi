@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-* TBD
+### Added
+
+* `getAllLights()` method for the `Hue` object, returning a `Room` object with all the lights that the Bridge knows
+about. This is a convenience method provided by the Hue API itself, and it allows you to easily toggle all the lights
+in the system at once.
 
 v2.3.0 (2021-09-09)
 ----------

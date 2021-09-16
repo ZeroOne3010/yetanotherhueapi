@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static io.github.zeroone3010.yahueapi.RoomFactory.ALL_LIGHTS_GROUP_ID;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -422,6 +423,26 @@ public final class Hue {
     return getUnassignedLights().stream()
         .filter(light -> Objects.equals(light.getName(), lightName))
         .findFirst();
+  }
+
+  /**
+   * <p>Returns all lights known by the Bridge. This is a convenience method provided by the API, making it easy to,
+   * for example, turn on or off all lights at once.</p>
+   *
+   * <p>Note that due to the special nature of this group, caching has no effect on this method. Every time this method
+   * is called or the state of this group is queried, a call is made directly into the Bridge.</p>
+   *
+   * @return A {@link Room} object containing all the lights known by the Bridge.
+   * @since 2.4.0
+   */
+  public Room getAllLights() {
+    final Group group0;
+    try {
+      group0 = objectMapper.readValue(new URL(uri + "groups/" + ALL_LIGHTS_GROUP_ID), Group.class);
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+    return buildRoom("0", group0, emptyMap());
   }
 
   /**
