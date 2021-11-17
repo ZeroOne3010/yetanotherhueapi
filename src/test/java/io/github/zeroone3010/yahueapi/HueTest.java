@@ -166,6 +166,19 @@ class HueTest {
   }
 
   @Test
+  void testGetZoneId() {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertEquals("4", hue.getZoneByName("Path to toilet").get().getId());
+  }
+
+  @Test
+  void testGetLightId() {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertEquals("300",
+        hue.getRoomByName("Hallway 1").get().getLightByName("LED strip 1").get().getId());
+  }
+
+  @Test
   void testGetLightReachability() {
     final Hue hue = createHueAndInitializeMockServer();
 
