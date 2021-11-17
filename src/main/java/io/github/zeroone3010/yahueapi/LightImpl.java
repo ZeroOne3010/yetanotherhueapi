@@ -15,9 +15,10 @@ final class LightImpl implements Light {
   private final Supplier<LightState> stateProvider;
   private final Function<State, String> stateSetter;
   private final LightType type;
+  private final Integer maxLumens;
 
   LightImpl(final String id, final LightDto light, final Supplier<LightState> stateProvider,
-            final Function<State, String> stateSetter) {
+            final Function<State, String> stateSetter, final Integer maxLumens) {
     this.id = id;
     if (light == null) {
       throw new HueApiException("Light " + id + " cannot be found.");
@@ -26,6 +27,7 @@ final class LightImpl implements Light {
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
     this.type = LightType.parseTypeString(light.getType());
+    this.maxLumens = maxLumens;
   }
 
   protected String getId() {
@@ -85,11 +87,17 @@ final class LightImpl implements Light {
   }
 
   @Override
+  public Integer getMaxLumens() {
+    return maxLumens;
+  }
+
+  @Override
   public String toString() {
     return "Light{" +
         "id='" + id + '\'' +
         ", name='" + name + '\'' +
         ", type=" + type +
+        ", maxLumens=" + maxLumens +
         '}';
   }
 }

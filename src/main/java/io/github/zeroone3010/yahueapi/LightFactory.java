@@ -9,8 +9,13 @@ import io.github.zeroone3010.yahueapi.domain.Root;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static java.util.Collections.emptyMap;
 
 final class LightFactory {
   private static final String ACTION_PATH = "/state";
@@ -30,10 +35,25 @@ final class LightFactory {
           lightId,
           root.getLights().get(lightId),
           createStateProvider(url, lightId),
-          stateSetter(url));
+          stateSetter(url),
+          findMaxLumens(root, lightId));
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
+  }
+
+  private Integer findMaxLumens(final Root root, final String lightId) {
+    return Optional.ofNullable(root.getLights().get(lightId))
+        .map(LightDto::getCapabilities)
+        .filter(capabilities -> capabilities.containsKey("control"))
+        .map(capabilities -> capabilities.get("control"))
+        .filter(control -> control instanceof Map)
+        .map(control -> (Map<String, Object>) control)
+        .filter(control -> control.containsKey("maxlumen"))
+        .map(control -> control.get("maxlumen"))
+        .filter(maxlumen -> maxlumen instanceof Integer)
+        .map(maxlumen -> (Integer) maxlumen)
+        .orElse(null);
   }
 
   private Supplier<LightState> createStateProvider(final URL url,

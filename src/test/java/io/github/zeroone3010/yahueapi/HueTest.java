@@ -1014,6 +1014,18 @@ class HueTest {
         .withRequestBody(new EqualToJsonPattern("{\"effect\":\"colorloop\"}", false, false)));
   }
 
+  @Test
+  void testGetMaxLumens() {
+    final Hue hue = createHueAndInitializeMockServer();
+    wireMockServer.stubFor(get(GROUP_0_PATH).willReturn(okJson(readFile("group0.json"))));
+    final Room allLights = hue.getAllLights();
+    assertEquals(Integer.valueOf(250), allLights.getLightByName("LR 1").get().getMaxLumens());
+    assertEquals(Integer.valueOf(250), allLights.getLightByName("LR 2").get().getMaxLumens());
+    assertEquals(Integer.valueOf(3000), allLights.getLightByName("Pendant").get().getMaxLumens());
+    assertEquals(Integer.valueOf(120), allLights.getLightByName("LED strip 1").get().getMaxLumens());
+    assertNull(allLights.getLightByName("Hue Smart plug 1").get().getMaxLumens());
+  }
+
   private String readFile(final String fileName) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File file = new File(classLoader.getResource(fileName).getFile());

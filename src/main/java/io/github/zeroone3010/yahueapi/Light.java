@@ -66,4 +66,13 @@ public interface Light {
    * @return The current state of the light.
    */
   State getState();
+
+  /**
+   * Returns the maximum number of lumens that this light is capable of emitting, if the light reports such a number.
+   * This method will return {@code null} for, for example, smart plugs.
+   *
+   * @return Maximum lumens that this light is capable of emitting, or null if unknown or undefined.
+   * @since 2.4.0
+   */
+  Integer getMaxLumens();
 }
