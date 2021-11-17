@@ -30,7 +30,8 @@ final class LightImpl implements Light {
     this.maxLumens = maxLumens;
   }
 
-  protected String getId() {
+  @Override
+  public String getId() {
     return id;
   }
 

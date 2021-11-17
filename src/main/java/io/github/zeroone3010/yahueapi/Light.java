@@ -5,6 +5,18 @@ package io.github.zeroone3010.yahueapi;
  * Even remote controlled wall sockets are considered as "lights" by the Hue Bridge.
  */
 public interface Light {
+
+  /**
+   * <p>Returns the technical id of the light, as assigned by the Bridge. The id stays the same even if the light name
+   * is changed by the user.</p>
+   *
+   * <p>Note that the id is only unique within the context of a single bridge.</p>
+   *
+   * @return Id of the light.
+   * @since 2.4.0
+   */
+  String getId();
+
   /**
    * Returns the name of the light, as set by the user.
    *
