@@ -38,6 +38,7 @@ final class RoomImpl implements Room {
     this.groupType = GroupType.parseTypeString(group.getType());
   }
 
+  @Override
   public String getId() {
     return id;
   }

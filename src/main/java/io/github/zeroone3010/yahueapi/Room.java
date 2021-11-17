@@ -7,6 +7,18 @@ import java.util.Optional;
  * A room, a zone, or another type of group that has been configured into the Hue Bridge.
  */
 public interface Room {
+
+  /**
+   * <p>Returns the technical id of the room, zone, or light group, as assigned by the Bridge.
+   * The id stays the same even if the room name is changed by the user.</p>
+   *
+   * <p>Note that the id is only unique within the context of a single bridge.</p>
+   *
+   * @return Id of the room/zone/light group.
+   * @since 2.4.0
+   */
+  String getId();
+
   /**
    * Returns the name of the room or zone, as set by the user.
    *
