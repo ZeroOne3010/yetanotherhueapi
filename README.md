@@ -3,9 +3,10 @@ Yet Another Hue API
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.zeroone3010/yetanotherhueapi.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.zeroone3010%22%20AND%20a:%22yetanotherhueapi%22)
 [![javadoc](https://javadoc.io/badge2/io.github.zeroone3010/yetanotherhueapi/javadoc.svg)](https://javadoc.io/doc/io.github.zeroone3010/yetanotherhueapi)
 
-This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official
-Hue SDK but instead accesses the REST API of the Philips Hue Bridge directly.
-This library has been confirmed to work with the Philips Hue Bridge API version 1.41.0.
+This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official Hue SDK but instead accesses
+the REST API of the Philips Hue Bridge directly. This library should also work with Android projects using
+[API level 24 or higher](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels). This library
+has last been confirmed to work with the Philips Hue Bridge API in November 2021.
 
 Usage
 -----
@@ -183,7 +184,7 @@ Add the following dependency to your pom.xml file if you are using Maven:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
@@ -195,7 +196,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.github.zeroone3010:yetanotherhueapi:2.3.0'
+  implementation 'io.github.zeroone3010:yetanotherhueapi:2.4.0'
 }
 ```
 

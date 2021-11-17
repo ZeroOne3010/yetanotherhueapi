@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+* TBA
+
+v2.4.0 (2021-11-17)
+----------
+
 ### Added
 
 * `getAllLights()` method for the `Hue` object, returning a `Room` object with all the lights that the Bridge knows
@@ -16,6 +21,8 @@ about. This is a convenience method provided by the Hue API itself, and it allow
 in the system at once.
 * `getMaxLumens()` method for `Light` objects. With the recent addition of 1600 lumen bulbs into the Hue family,
 it seemed like a good idea to be able to differentiate the brighter lamps from the dimmer ones.
+* `getId()` method for `Light` and `Room` objects. Requested by users, these methods may be needed for
+advanced use cases.
 
 v2.3.0 (2021-09-09)
 ----------
