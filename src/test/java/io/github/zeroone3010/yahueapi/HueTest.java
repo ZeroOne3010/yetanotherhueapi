@@ -92,6 +92,10 @@ class HueTest {
   }
 
   private Hue createHueAndInitializeMockServer() {
+    return createHueAndInitializeMockServer(readFile("hueRoot.json"));
+  }
+
+  private Hue createHueAndInitializeMockServer(final String hueRootJsonString) {
     final String hueRoot = readFile("hueRoot.json");
     final String hueRootWithLight900 = readFile("hueRootWithLight900.json");
 
@@ -213,6 +217,19 @@ class HueTest {
     assertTrue(hue.getRoomByName("Living room").get().getLightByName("LR 1").get().isReachable());
     assertFalse(hue.getRoomByName("Bedroom").get().getLightByName("Pendant").get().isReachable());
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testBridgeDoesNotSupportApiV2() {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertFalse(hue.bridgeSupportsApiV2());
+  }
+
+  @Test
+  void testBridgeSupportsApiV2() {
+    final Hue hue = createHueAndInitializeMockServer(
+        readFile("hueRoot.json").replace("1806051111", "1948086000L"));
+    assertFalse(hue.bridgeSupportsApiV2());
   }
 
   @Test

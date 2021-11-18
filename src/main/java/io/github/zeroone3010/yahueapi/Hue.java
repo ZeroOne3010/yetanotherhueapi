@@ -46,6 +46,8 @@ public final class Hue {
 
   private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
 
+  private static final long MIN_API_V2_VERSION = 1948086000L;
+
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
@@ -544,6 +546,17 @@ public final class Hue {
         break;
     }
     return new NewLightsResult(newLights, status, lastScanTime);
+  }
+
+  /**
+   * Tells whether the Bridge supports the CLIP API v2, introduced in November 2021.
+   *
+   * @return {@code true} if there is a support for API v2, {@code false} if not.
+   * @since 2.7.0
+   */
+  public boolean bridgeSupportsApiV2() {
+    doInitialDataLoadIfRequired();
+    return Long.parseLong(root.getConfig().getSoftwareVersion()) >= MIN_API_V2_VERSION;
   }
 
   /**
