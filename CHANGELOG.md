@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-* TBA
+### Deprecated
+
+* Deprecated the UPnP bridge discovery method,
+  for Philips has announced it has been scheduled to be disabled in Q2 2022.
 
 v2.4.0 (2021-11-17)
 ----------

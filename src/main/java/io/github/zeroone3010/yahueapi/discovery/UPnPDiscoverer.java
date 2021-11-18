@@ -20,7 +20,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Discovers Hue Bridges using the UPnP protocol, i.e. by sending out Simple Service Discovery Protocol (SSDP)
  * packets and waiting for any Bridges to respond.
+ *
+ * @deprecated Philips Hue will disable the UPnP discovery method in Q2 2022.
+ * As such, this method will also be eventually removed from this library.
  */
+@Deprecated
 final class UPnPDiscoverer implements HueBridgeDiscoverer {
   private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
 
