@@ -7,7 +7,11 @@ public enum HueBridgeProtocol {
 
   /**
    * A regular, unprotected HTTP connection.
+   *
+   * @deprecated All the bridges will stop supporting plain HTTP connections once they eventually receive
+   * Signify signed certificates.
    */
+  @Deprecated
   HTTP("http"),
 
   /**

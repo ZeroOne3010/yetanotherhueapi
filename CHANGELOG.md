@@ -13,6 +13,7 @@ Unreleased
 
 * Deprecated the UPnP bridge discovery method,
   for Philips has announced it has been scheduled to be disabled in Q2 2022.
+* Deprecated plain HTTP as a communication protocol with the bridge, again due to Philips deprecating it too
 
 v2.4.0 (2021-11-17)
 ----------
