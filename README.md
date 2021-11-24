@@ -192,7 +192,7 @@ Add the following dependency to your pom.xml file if you are using Maven:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
@@ -204,7 +204,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.github.zeroone3010:yetanotherhueapi:2.4.0'
+  implementation 'io.github.zeroone3010:yetanotherhueapi:2.5.0'
 }
 ```
 
