@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+### Changed
+
+* Bridge connections are now using HTTPS by default, for the plain HTTP connections have been
+  scheduled for deprecation by Philips. Note, however, that as many bridges still have self-signed
+  certificates which cannot really be validated anyway, this means that by default all certificate
+  validations will be turned off. If the Hue bridge is not the only system that your application talks to,
+  you should consider whether this is an issue for you. Eventually Philips will update the bridges to
+  use a Signify root certificate, after which sensible validation can be performed.
+
 ### Deprecated
 
 * Deprecated the UPnP bridge discovery method,

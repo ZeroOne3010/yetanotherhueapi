@@ -51,14 +51,15 @@ public final class Hue {
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
-   * Use the {@code hueBridgeConnectionBuilder} method if you do not have an API key yet.
+   * Sets up an encrypted but unverified HTTPS connection -- see {@link HueBridgeProtocol#UNVERIFIED_HTTPS}.
+   * Use the {@link #hueBridgeConnectionBuilder(String)} method instead if you do not have an API key yet.
    *
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
    * @since 1.0.0
    */
   public Hue(final String bridgeIp, final String apiKey) {
-    this(HueBridgeProtocol.HTTP, bridgeIp, apiKey);
+    this(HueBridgeProtocol.UNVERIFIED_HTTPS, bridgeIp, apiKey);
   }
 
   /**
@@ -101,8 +102,9 @@ public final class Hue {
    * Use the {@code hueBridgeConnectionBuilder} method if you do not have an API key yet.
    *
    * @param protocol The desired protocol for the Bridge connection. HTTP or UNVERIFIED_HTTPS,
-   *                 as the certificate that the Bridge uses cannot be verified. Defaults to HTTP
-   *                 when using the other constructor.
+   *                 as the certificate that the Bridge uses cannot be verified. Defaults to UNVERIFIED_HTTPS
+   *                 since version 2.4.0 when using the other constructor (used to default to HTTP before that),
+   *                 for Philips will eventually deprecate the plain HTTP connection altogether.
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
    * @since 1.0.0
@@ -479,7 +481,8 @@ public final class Hue {
         final String body = "{\"devicetype\":\"yetanotherhueapi#" + appName + "\"}";
         final URL baseUrl;
         try {
-          baseUrl = new URL("http://" + bridgeIp + "/api");
+          TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+          baseUrl = new URL("https://" + bridgeIp + "/api");
         } catch (final MalformedURLException e) {
           throw new HueApiException(e);
         }

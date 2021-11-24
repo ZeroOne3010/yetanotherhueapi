@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi.discovery;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
+import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 
 import java.io.IOException;
@@ -127,7 +128,8 @@ public final class HueBridgeDiscoveryService {
 
   private BridgeConfig fetchBridgeConfiguration(final ObjectMapper objectMapper, final String ip) {
     try {
-      return objectMapper.readValue(new URL("http://" + ip + "/api/config"), BridgeConfig.class);
+      TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+      return objectMapper.readValue(new URL("https://" + ip + "/api/config"), BridgeConfig.class);
     } catch (final IOException e) {
       logger.severe("Unable to connect to a found Bridge at " + ip + ": " + e);
       return null;

@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.logging.Logger;
 
-class TrustEverythingManager implements X509TrustManager {
+public class TrustEverythingManager implements X509TrustManager {
   private static final Logger logger = Logger.getLogger("TrustEverythingManager");
 
   public X509Certificate[] getAcceptedIssuers() {
@@ -25,7 +25,7 @@ class TrustEverythingManager implements X509TrustManager {
     // Do nothing
   }
 
-  static void trustAllSslConnectionsByDisablingCertificateVerification() {
+  public static void trustAllSslConnectionsByDisablingCertificateVerification() {
     try {
       logger.fine("Turning off certificate verification...");
       final SSLContext sslContext = SSLContext.getInstance("SSL");

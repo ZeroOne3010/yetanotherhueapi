@@ -105,7 +105,7 @@ class HueTest {
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    return new Hue("localhost:" + wireMockServer.port(), API_KEY);
+    return new Hue(HueBridgeProtocol.HTTP, "localhost:" + wireMockServer.port(), API_KEY);
   }
 
   private void mockIndividualGetResponse(final JsonNode hueRoot, final String itemClass, final String id) throws JsonProcessingException {
@@ -1001,7 +1001,7 @@ class HueTest {
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    final Hue hue = new Hue("localhost:" + wireMockServer.port(), API_KEY);
+    final Hue hue = new Hue(HueBridgeProtocol.HTTP, "localhost:" + wireMockServer.port(), API_KEY);
     assertTrue(hue.getRooms().isEmpty());
     assertTrue(hue.getAmbientLightSensors().isEmpty());
     assertTrue(hue.getDaylightSensors().isEmpty());
