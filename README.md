@@ -8,6 +8,14 @@ the REST API of the Philips Hue Bridge directly. This library should also work w
 [API level 24 or higher](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels). This library
 has last been confirmed to work with the Philips Hue Bridge API in November 2021.
 
+----
+
+**NOTE: Philips has announced that plain HTTP connections with the bridges will be disabled and
+replaced with HTTPS only. HTTPS connections are the default for this library only from version *2.5.0* onwards.
+Make sure your dependency version is up to date.**
+
+----
+
 Usage
 -----
 

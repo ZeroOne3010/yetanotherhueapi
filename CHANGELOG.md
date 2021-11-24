@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+* TBA
+
+v2.5.0 (2021-11-24)
+----------
+
 ### Changed
 
 * Bridge connections are now using HTTPS by default, for the plain HTTP connections have been
