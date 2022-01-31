@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-* TBA
+### Added
+
+* Added mDNS (multicast DNS) as a new Bridge discovery method. This will be used instead of UPNP which Philips will
+  disable in the future.
 
 v2.5.0 (2021-11-24)
 ----------

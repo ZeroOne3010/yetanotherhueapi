@@ -49,7 +49,13 @@ public final class HueBridgeDiscoveryService {
      * As such, this method will also be eventually removed from this library.
      */
     @Deprecated
-    UPNP(UPnPDiscoverer::new);
+    UPNP(UPnPDiscoverer::new),
+
+    /**
+     * With the multicast DNS method discovery queries are sent into the local network.
+     * Any Bridges that are present in the network are expected to make themselves known by answering to these queries.
+     */
+    MDNS(MDNSDiscoverer::new);
 
     private final Function<Consumer<HueBridge>, HueBridgeDiscoverer> discovererCreator;
 
@@ -84,7 +90,7 @@ public final class HueBridgeDiscoveryService {
    *                         the same Bridge independently.
    * @param discoveryMethods With this argument one can limit the methods being used. For example, if it is known
    *                         that this local network has no access to the outside internet, then one should not
-   *                         try to use the NUPNP method in vain, but instead use just the UPNP method only.
+   *                         try to use the NUPNP method in vain, but instead use just the MDNS method only.
    * @return A Future that is completed once the discovery processes have been finished.
    * As a result, the Future will hold a list of any and all Hue Bridges that were found,
    * ready to be given to the {@link io.github.zeroone3010.yahueapi.Hue#hueBridgeConnectionBuilder(String)}

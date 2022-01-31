@@ -61,11 +61,6 @@ final class MDNSDiscoverer implements HueBridgeDiscoverer {
               final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
               try {
                 socket.receive(packet);
-                try {
-                  TimeUnit.MILLISECONDS.sleep(300L);
-                } catch (InterruptedException e) {
-                  e.printStackTrace();
-                }
               } catch (final Exception e) {
                 if (state == DiscoverState.STOPPED) {
                   // socket.receive(DatagramPacket) will throw a SocketException once the socket is closed,
