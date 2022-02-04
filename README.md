@@ -183,6 +183,18 @@ You can also use this library to read the states of various sensors in the Hue s
 contains methods for getting temperature sensors, presence sensors (i.e. motion sensors and geofence sensors),
 daylight sensors, and ambient light sensors.
 
+### Searching for new lights (coming up in version 2.6.0!)
+
+There is a method in the `Hue` class that starts searching for new lights and returns a `Future` that will be
+resolved with the found lights (if any) once the scan is finished. The scan seems to last around 45-60 seconds:
+
+[//]: # (requires-init)
+[//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
+```java
+Future<Collection<Light>> foundLights = hue.searchForNewLights();
+System.out.println("Lights found: " + foundLights.get());
+```
+
 Including the library using Maven or Gradle
 --------------------------------
 

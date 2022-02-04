@@ -52,7 +52,7 @@ class ReadmeDotMdTest {
   private Code readReadmeDotMdCodeBlocks(final URL readmeDotMdLocation) throws IOException {
     final StringBuilder sb = new StringBuilder();
     BlockType blockType = BlockType.NONE;
-    String codeHeader = null;
+    final List<String> codeHeaders = new ArrayList<>();
     int codeBlockNumber = 0;
     String checkedExceptions = null;
 
@@ -66,35 +66,35 @@ class ReadmeDotMdTest {
         if (header.startsWith(HEADER_IMPORT)) {
           importStatements.add(header);
         } else {
-          codeHeader = header;
+          codeHeaders.add(header);
         }
       } else if (line.equals(CODE_BLOCK_STARTS)) {
-        if (CODE_IMPORTS.equals(codeHeader)) {
+        if (hasImports(codeHeaders)) {
           blockType = BlockType.IMPORTS;
         } else {
           blockType = BlockType.CODE;
         }
-        if (codeHeader != null && codeHeader.startsWith(CODE_REQUIRES)) {
-          final String requiredBlock = codeHeader.replace(CODE_REQUIRES, "");
-          sb.append(codeBlocks.get(requiredBlock));
-          codeHeader = null;
+        while (hasThrows(codeHeaders) || hasRequirements(codeHeaders)) {
+          final String codeHeader = codeHeaders.remove(codeHeaders.size() - 1);
+          if (codeHeader.startsWith(CODE_REQUIRES)) {
+            final String requiredBlock = codeHeader.replace(CODE_REQUIRES, "");
+            sb.append(codeBlocks.get(requiredBlock));
+          } else if (codeHeader.startsWith(CODE_THROWS)) {
+            sb.append("try {");
+            checkedExceptions = codeHeader.replace(CODE_THROWS, "");
+          }
         }
-        if (codeHeader != null && codeHeader.startsWith(CODE_THROWS)) {
-          sb.append("try {");
-          checkedExceptions = codeHeader.replace(CODE_THROWS, "");
-          codeHeader = null;
+        if (codeHeaders.isEmpty()) {
+          codeHeaders.add(String.valueOf(codeBlockNumber));
         }
-        if (codeHeader == null) {
-          codeHeader = String.valueOf(codeBlockNumber);
-          codeBlockNumber++;
-        }
-      } else if (line.equals(CODE_BLOCK_ENDS) && codeHeader != null) {
+        codeBlockNumber++;
+      } else if (line.equals(CODE_BLOCK_ENDS) && !codeHeaders.isEmpty()) {
         if (checkedExceptions != null) {
           sb.append("} catch(").append(checkedExceptions).append(" e) {/* Ignoring on purpose */}");
         }
-        codeBlocks.put(codeHeader, sb.toString());
+        codeBlocks.put(codeHeaders.get(0), sb.toString());
         blockType = BlockType.NONE;
-        codeHeader = null;
+        codeHeaders.clear();
         checkedExceptions = null;
         sb.setLength(0);
       } else if (blockType == BlockType.CODE) {
@@ -104,6 +104,18 @@ class ReadmeDotMdTest {
       }
     }
     return new Code(importStatements, codeBlocks);
+  }
+
+  private boolean hasImports(final List<String> headers) {
+    return headers != null && headers.stream().anyMatch(h -> h.startsWith(CODE_IMPORTS));
+  }
+
+  private boolean hasThrows(final List<String> headers) {
+    return headers != null && headers.stream().anyMatch(h -> h.startsWith(CODE_THROWS));
+  }
+
+  private boolean hasRequirements(final List<String> headers) {
+    return headers != null && headers.stream().anyMatch(h -> h.startsWith(CODE_REQUIRES));
   }
 
   private void assertAllCodeBlocksCanBeCompiled(final Code code) throws IOException {
