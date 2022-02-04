@@ -8,4 +8,8 @@ final class HueApiException extends RuntimeException {
   HueApiException(final String message) {
     super(message);
   }
+
+  HueApiException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -11,6 +11,10 @@ Unreleased
 
 ### Added
 
+* Added a way to search for new lights in the system: the `searchForNewLights()` method in the `Hue` class.
+  It is accompanied by the `getNewLightsSearchStatus()` method, which, however, you do not need to use
+  when searching for new lights, as the first method will resolve a `Future` with a collection of the new
+  lights found, if any.
 * Added mDNS (multicast DNS) as a new Bridge discovery method. This will be used instead of UPNP which Philips will
   disable in the future.
 

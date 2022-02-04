@@ -28,10 +28,12 @@ final class HttpUtil {
       connection.setDoOutput(true);
       connection.setRequestMethod(method);
       connection.setRequestProperty("Host", connection.getURL().getHost());
-      try (final OutputStream outputStream = connection.getOutputStream()) {
-        try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8")) {
-          writer.write(body);
-          writer.flush();
+      if (body != null) {
+        try (final OutputStream outputStream = connection.getOutputStream()) {
+          try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8")) {
+            writer.write(body);
+            writer.flush();
+          }
         }
       }
       connection.connect();

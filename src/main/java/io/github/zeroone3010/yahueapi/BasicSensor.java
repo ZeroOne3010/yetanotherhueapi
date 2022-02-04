@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 class BasicSensor implements Sensor {
   private static final Logger logger = Logger.getLogger("BasicSensor");
-  private static final String UTC_SUFFIX = "+00:00[UTC]";
   private static final String NO_LAST_UPDATED_DATA = "none";
 
   protected final String id;
@@ -58,7 +57,7 @@ class BasicSensor implements Sensor {
     if (NO_LAST_UPDATED_DATA.equals(lastUpdated)) {
       return null;
     }
-    return ZonedDateTime.parse(lastUpdated + UTC_SUFFIX);
+    return TimeUtil.stringTimestampToZonedDateTime(lastUpdated);
   }
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {

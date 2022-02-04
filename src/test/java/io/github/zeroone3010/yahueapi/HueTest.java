@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import io.github.zeroone3010.yahueapi.domain.LightConfig;
@@ -36,13 +38,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -52,6 +58,8 @@ import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.INITIAL
 import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.LONG_RELEASED;
 import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.SHORT_RELEASED;
 import static io.github.zeroone3010.yahueapi.domain.StartupMode.BRIGHT_LIGHT;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -102,6 +110,21 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "sensors", "99");
       mockIndividualGetResponse(jsonNode, "groups", "1");
       mockIndividualGetResponse(jsonNode, "groups", "2");
+      wireMockServer.stubFor(post(API_BASE_PATH + "lights").willReturn(okJson(
+          "[ { \"success\": { \"/lights\": \"Searching for new devices\" }}]"
+      )));
+      wireMockServer.stubFor(get(API_BASE_PATH + "lights/new").inScenario("scan").whenScenarioStateIs(Scenario.STARTED)
+          .willReturn(okJson("{\"lastscan\": \"active\"}")).willSetStateTo("scan1"));
+      wireMockServer.stubFor(get(API_BASE_PATH + "lights/new").inScenario("scan").whenScenarioStateIs("scan1")
+          .willReturn(okJson("{\"lastscan\": \"active\"}")).willSetStateTo("scan2"));
+      wireMockServer.stubFor(get(API_BASE_PATH + "lights/new").inScenario("scan").whenScenarioStateIs("scan2")
+          .willReturn(okJson("{\"lastscan\": \"active\"}")).willSetStateTo("scan3"));
+      wireMockServer.stubFor(get(API_BASE_PATH + "lights/new").inScenario("scan").whenScenarioStateIs("scan3")
+          .willReturn(okJson("{\n" +
+              "    \"100\": {\"name\": \"LR 1\"},\n" +
+              "    \"101\": {\"name\": \"LR 2\"},\n" +
+              "    \"lastscan\": \"2022-02-04T12:00:00\"\n" +
+              "}")));
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -427,28 +450,28 @@ class HueTest {
     assertEquals(4, buttons.get(3).getNumber());
 
     assertEquals(Arrays.asList(
-        new ButtonEvent(INITIAL_PRESS, 1000),
-        new ButtonEvent(HOLD, 1001),
-        new ButtonEvent(SHORT_RELEASED, 1002),
-        new ButtonEvent(LONG_RELEASED, 1003)),
+            new ButtonEvent(INITIAL_PRESS, 1000),
+            new ButtonEvent(HOLD, 1001),
+            new ButtonEvent(SHORT_RELEASED, 1002),
+            new ButtonEvent(LONG_RELEASED, 1003)),
         buttons.get(0).getPossibleEvents());
     assertEquals(Arrays.asList(
-        new ButtonEvent(INITIAL_PRESS, 2000),
-        new ButtonEvent(HOLD, 2001),
-        new ButtonEvent(SHORT_RELEASED, 2002),
-        new ButtonEvent(LONG_RELEASED, 2003)),
+            new ButtonEvent(INITIAL_PRESS, 2000),
+            new ButtonEvent(HOLD, 2001),
+            new ButtonEvent(SHORT_RELEASED, 2002),
+            new ButtonEvent(LONG_RELEASED, 2003)),
         buttons.get(1).getPossibleEvents());
     assertEquals(Arrays.asList(
-        new ButtonEvent(INITIAL_PRESS, 3000),
-        new ButtonEvent(HOLD, 3001),
-        new ButtonEvent(SHORT_RELEASED, 3002),
-        new ButtonEvent(LONG_RELEASED, 3003)),
+            new ButtonEvent(INITIAL_PRESS, 3000),
+            new ButtonEvent(HOLD, 3001),
+            new ButtonEvent(SHORT_RELEASED, 3002),
+            new ButtonEvent(LONG_RELEASED, 3003)),
         buttons.get(2).getPossibleEvents());
     assertEquals(Arrays.asList(
-        new ButtonEvent(INITIAL_PRESS, 4000),
-        new ButtonEvent(HOLD, 4001),
-        new ButtonEvent(SHORT_RELEASED, 4002),
-        new ButtonEvent(LONG_RELEASED, 4003)),
+            new ButtonEvent(INITIAL_PRESS, 4000),
+            new ButtonEvent(HOLD, 4001),
+            new ButtonEvent(SHORT_RELEASED, 4002),
+            new ButtonEvent(LONG_RELEASED, 4003)),
         buttons.get(3).getPossibleEvents());
 
   }
@@ -1037,6 +1060,32 @@ class HueTest {
     assertEquals(Integer.valueOf(3000), allLights.getLightByName("Pendant").get().getMaxLumens());
     assertEquals(Integer.valueOf(120), allLights.getLightByName("LED strip 1").get().getMaxLumens());
     assertNull(allLights.getLightByName("Hue Smart plug 1").get().getMaxLumens());
+  }
+
+  @Test
+  void testSearchForNewLights() throws ExecutionException, InterruptedException {
+    final Hue hue = createHueAndInitializeMockServer();
+    final Future<Collection<Light>> newLights = hue.searchForNewLights();
+    final Collection<Light> lights = newLights.get();
+    assertEquals(Arrays.asList("100", "101"), lights.stream().map(Light::getId).collect(toList()));
+  }
+
+  @Test
+  void testGetNewLightsSearchStatus() throws ExecutionException, InterruptedException {
+    final Hue hue = createHueAndInitializeMockServer();
+    NewLightsResult status = hue.getNewLightsSearchStatus();
+    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
+
+    status = hue.getNewLightsSearchStatus();
+    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
+
+    status = hue.getNewLightsSearchStatus();
+    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
+
+    status = hue.getNewLightsSearchStatus();
+    assertEquals(NewLightsSearchStatus.COMPLETED, status.getStatus());
+    assertEquals(Optional.of(ZonedDateTime.parse("2022-02-04T12:00:00+00:00[UTC]")), status.getLastSearchTime());
+    assertEquals(Arrays.asList("100", "101"), status.getNewLights().stream().map(Light::getId).collect(toList()));
   }
 
   private String readFile(final String fileName) {
