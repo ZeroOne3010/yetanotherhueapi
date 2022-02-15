@@ -499,6 +499,7 @@ public final class Hue {
    * @since 2.6.0
    */
   public NewLightsResult getNewLightsSearchStatus() {
+    doInitialDataLoadIfRequired();
     final JsonNode result;
     try {
       result = objectMapper.readTree(new URL(uri + "lights/new"));
