@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import static java.util.stream.Collectors.toSet;
 
 final class RoomImpl implements Room {
-  private static final Logger logger = Logger.getLogger("RoomImpl");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private final String id;
   private final Supplier<Set<Light>> lights;

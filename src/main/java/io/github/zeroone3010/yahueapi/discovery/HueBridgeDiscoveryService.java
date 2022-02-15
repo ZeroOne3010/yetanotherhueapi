@@ -26,7 +26,7 @@ import static java.util.Arrays.asList;
  * A service with which one can discover the available Hue Bridges.
  */
 public final class HueBridgeDiscoveryService {
-  private static final Logger logger = Logger.getLogger("HueBridgeDiscoveryService");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   /**
    * The different methods that one can use to discover the available bridges.

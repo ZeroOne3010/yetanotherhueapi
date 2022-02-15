@@ -28,7 +28,7 @@ import static io.github.zeroone3010.yahueapi.MathUtil.isInRange;
 
 @JsonInclude(Include.NON_NULL)
 public final class State {
-  private static final Logger logger = Logger.getLogger("State");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 

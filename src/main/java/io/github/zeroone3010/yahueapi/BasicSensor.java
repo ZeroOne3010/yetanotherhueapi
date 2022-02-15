@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 class BasicSensor implements Sensor {
-  private static final Logger logger = Logger.getLogger("BasicSensor");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
   private static final String NO_LAST_UPDATED_DATA = "none";
 
   protected final String id;

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 final class LightImpl implements Light {
-  private static final Logger logger = Logger.getLogger("LightImpl");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private final String id;
   private final String name;

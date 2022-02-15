@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * that stores the external and internal IP addresses of the Bridge.
  */
 final class NUPnPDiscoverer implements HueBridgeDiscoverer {
-  private static final Logger logger = Logger.getLogger("NUPnPDiscoverer");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final String HUE_DISCOVERY_PORTAL = "https://discovery.meethue.com/";
   private static final String DEFAULT_TIMEOUT_MILLISECONDS = "4000";

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * and waiting for any Bridges to respond.
  */
 final class MDNSDiscoverer implements HueBridgeDiscoverer {
-  private static final Logger logger = Logger.getLogger("MDNSDiscoverer");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
   private static final int PORT = 5353;

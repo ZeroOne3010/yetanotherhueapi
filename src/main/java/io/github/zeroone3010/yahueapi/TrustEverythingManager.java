@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 import java.util.logging.Logger;
 
 public class TrustEverythingManager implements X509TrustManager {
-  private static final Logger logger = Logger.getLogger("TrustEverythingManager");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   public X509Certificate[] getAcceptedIssuers() {
     return new X509Certificate[]{};

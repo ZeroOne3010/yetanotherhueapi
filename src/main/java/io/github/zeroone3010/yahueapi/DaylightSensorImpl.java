@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 final class DaylightSensorImpl extends BasicSensor implements DaylightSensor {
-  private static final Logger logger = Logger.getLogger("DaylightSensor");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   DaylightSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
     super(id, sensor, url, stateProvider);

@@ -40,7 +40,7 @@ import static java.util.stream.Collectors.toSet;
  * with which one can get all the lights, sensors, rooms, etc. to interact with them.
  */
 public final class Hue {
-  private static final Logger logger = Logger.getLogger("Hue");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
 
@@ -473,7 +473,7 @@ public final class Hue {
         while (newLightsResult.getStatus() != NewLightsSearchStatus.COMPLETED) {
           try {
             TimeUnit.SECONDS.sleep(1L);
-            System.out.println("Searching for new lights. Approximately " + (seconds--) + " seconds left.");
+            logger.info("Searching for new lights. Approximately " + (seconds--) + " seconds left.");
             newLightsResult = getNewLightsSearchStatus();
           } catch (final InterruptedException e) {
             throw new HueApiException("Search for new lights was interrupted unexpectedly");
@@ -587,10 +587,10 @@ public final class Hue {
         String latestError = null;
         for (int triesLeft = MAX_TRIES; triesLeft > 0; triesLeft--) {
           try {
-            System.out.println("Please push the button on the Hue Bridge now (" + triesLeft + " seconds left).");
+            logger.info("Please push the button on the Hue Bridge now (" + triesLeft + " seconds left).");
 
             final String result = HttpUtil.post(baseUrl, "", body);
-            System.out.println(result);
+            logger.info(result);
             final ApiInitializationStatus status = new ObjectMapper().<ArrayList<ApiInitializationStatus>>readValue(result,
                 new TypeReference<ArrayList<ApiInitializationStatus>>() {
                 }).get(0);

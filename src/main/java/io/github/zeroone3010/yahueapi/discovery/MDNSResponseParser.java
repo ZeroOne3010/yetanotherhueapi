@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * MDNS response parser for parsing MDNS responses from the Bridge when using the MDNS discovery protocol.
  */
 final class MDNSResponseParser {
-  private static final Logger logger = Logger.getLogger("MDNSResponseParser");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final int EXPECTED_QUESTION_COUNT = 0x01;
   private static final int EXPECTED_ANSWER_COUNT = 0x01;

@@ -26,7 +26,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @Deprecated
 final class UPnPDiscoverer implements HueBridgeDiscoverer {
-  private static final Logger logger = Logger.getLogger("UPnPDiscoverer");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
   private static final int DEFAULT_PORT = 1900;

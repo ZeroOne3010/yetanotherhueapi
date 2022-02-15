@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 final class TemperatureSensorImpl extends BasicSensor implements TemperatureSensor {
-  private static final Logger logger = Logger.getLogger("TemperatureSensorImpl");
+  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
   TemperatureSensorImpl(final String id, final SensorDto sensor, final URL url, final Supplier<Map<String, Object>> stateProvider) {
     super(id, sensor, url, stateProvider);
