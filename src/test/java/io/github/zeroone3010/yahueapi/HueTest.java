@@ -395,6 +395,18 @@ class HueTest {
   }
 
   @Test
+  void testTemperatureSensorTemperatureWithDisabledSensor() throws JsonProcessingException {
+    final Hue hue = createHueAndInitializeMockServer();
+    final String hueRoot = readFile("hueRoot.json").replace("2953", "null");
+    wireMockServer.stubFor(get(API_BASE_PATH).willReturn(okJson(hueRoot)));
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final JsonNode jsonNode = objectMapper.readTree(hueRoot);
+    mockIndividualGetResponse(jsonNode, "sensors", "15");
+    final TemperatureSensor sensor = hue.getTemperatureSensorByName(TEMPERATURE_SENSOR_NAME).get();
+    assertNull(sensor.getDegreesCelsius());
+  }
+
+  @Test
   void testDaylightSensor() {
     final Hue hue = createHueAndInitializeMockServer();
     final Boolean daylight = hue.getDaylightSensors().stream()

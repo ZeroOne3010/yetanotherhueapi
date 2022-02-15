@@ -7,9 +7,10 @@ import java.math.BigDecimal;
  */
 public interface TemperatureSensor extends Sensor {
   /**
-   * Returns the detected temperature in degrees Celcius.
+   * Returns the detected temperature in degrees Celsius.
    *
    * @return A {@code BigDecimal} with two decimal places, indicating the current temperature.
+   * May also return {@code null} if the sensor is disabled in the Hue app.
    */
   BigDecimal getDegreesCelsius();
 }

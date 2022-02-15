@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 final class TemperatureSensorImpl extends BasicSensor implements TemperatureSensor {
@@ -27,7 +28,12 @@ final class TemperatureSensorImpl extends BasicSensor implements TemperatureSens
 
   @Override
   public BigDecimal getDegreesCelsius() {
-    return convertCenticelsiusToCelsius(readStateValue("temperature", Integer.class));
+    try {
+      return convertCenticelsiusToCelsius(readStateValue("temperature", Integer.class));
+    } catch (NullPointerException npe) {
+      logger.log(Level.WARNING, "It appears that the temperature sensor may be disabled.");
+      return null;
+    }
   }
 
   private static BigDecimal convertCenticelsiusToCelsius(final int centicelsius) {
