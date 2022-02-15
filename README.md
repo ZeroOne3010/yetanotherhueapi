@@ -183,7 +183,7 @@ You can also use this library to read the states of various sensors in the Hue s
 contains methods for getting temperature sensors, presence sensors (i.e. motion sensors and geofence sensors),
 daylight sensors, and ambient light sensors.
 
-### Searching for new lights (coming up in version 2.6.0!)
+### Searching for new lights and adding them into rooms (coming up in version 2.6.0!)
 
 There is a method in the `Hue` class that starts searching for new lights and returns a `Future` that will be
 resolved with the found lights (if any) once the scan is finished. The scan seems to last around 45-60 seconds:
@@ -191,9 +191,18 @@ resolved with the found lights (if any) once the scan is finished. The scan seem
 [//]: # (requires-init)
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 ```java
-Future<Collection<Light>> foundLights = hue.searchForNewLights();
-System.out.println("Lights found: " + foundLights.get());
+Future<Collection<Light>> lightSearch = hue.searchForNewLights();
+Collection<Light> foundLights = lightSearch.get();
+System.out.println("Lights found: " + foundLights);
+
+// If new lights have been found, you can add them into a room:
+
+hue.getRoomByName("Living Room").ifPresent(room -> foundLights.forEach(room::addLight));
 ```
+
+If you do not wish to add the new lights into a room, they will be accessible with the `hue.getUnassignedLights()`
+and `hue.getUnassignedLightByName(String)` methods.
+It is also possible to remove lights from a room with the `room.removeLight(Light)` method.
 
 Including the library using Maven or Gradle
 --------------------------------

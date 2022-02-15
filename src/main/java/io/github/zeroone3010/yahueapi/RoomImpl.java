@@ -5,6 +5,7 @@ import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.GroupState;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -12,23 +13,27 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import static java.util.stream.Collectors.toSet;
+
 final class RoomImpl implements Room {
   private static final Logger logger = Logger.getLogger("RoomImpl");
 
   private final String id;
-  private final Set<Light> lights;
+  private final Supplier<Set<Light>> lights;
   private final Set<Scene> scenes;
   private final String name;
   private final Supplier<GroupState> stateProvider;
   private final Function<State, String> stateSetter;
   private final GroupType groupType;
+  private final Function<Collection<String>, String> lightsSetter;
 
   RoomImpl(final String id,
            final Group group,
-           final Set<Light> lights,
+           final Supplier<Set<Light>> lights,
            final Set<Scene> scenes,
            final Supplier<GroupState> stateProvider,
-           final Function<State, String> stateSetter) {
+           final Function<State, String> stateSetter,
+           final Function<Collection<String>, String> lightsSetter) {
     this.id = id;
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
@@ -36,6 +41,7 @@ final class RoomImpl implements Room {
     this.scenes = scenes;
     this.name = group.getName();
     this.groupType = GroupType.parseTypeString(group.getType());
+    this.lightsSetter = lightsSetter;
   }
 
   @Override
@@ -50,12 +56,12 @@ final class RoomImpl implements Room {
 
   @Override
   public Collection<Light> getLights() {
-    return lights;
+    return lights.get();
   }
 
   @Override
   public Optional<Light> getLightByName(final String lightName) {
-    return lights.stream()
+    return lights.get().stream()
         .filter(light -> Objects.equals(light.getName(), lightName))
         .findFirst();
   }
@@ -113,10 +119,38 @@ final class RoomImpl implements Room {
   }
 
   @Override
+  public Collection<Light> addLight(final Light newLight) {
+    if (newLight == null || newLight.getId() == null) {
+      logger.warning("addLight: Given light was null. Doing nothing.");
+      return getLights();
+    }
+
+    final Set<String> lightIds = new HashSet<>(getLights().stream().map(Light::getId).collect(toSet()));
+    lightIds.add(newLight.getId());
+    final String result = lightsSetter.apply(lightIds);
+    logger.info(result);
+    return getLights();
+  }
+
+  @Override
+  public Collection<Light> removeLight(final Light lightToBeRemoved) {
+    if (lightToBeRemoved == null || lightToBeRemoved.getId() == null) {
+      logger.warning("removeLight: Given light was null. Doing nothing.");
+      return getLights();
+    }
+    final Set<String> lightIds = new HashSet<>(getLights().stream().map(Light::getId).collect(toSet()));
+    lightIds.remove(lightToBeRemoved.getId());
+    final String result = lightsSetter.apply(lightIds);
+    logger.fine(result);
+    return getLights();
+  }
+
+  @Override
   public String toString() {
     return "Group{" +
-        "name='" + name + '\'' +
-        "type='" + groupType + '\'' +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        ", type='" + groupType + '\'' +
         '}';
   }
 }

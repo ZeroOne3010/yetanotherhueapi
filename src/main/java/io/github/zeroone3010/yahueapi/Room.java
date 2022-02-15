@@ -105,4 +105,22 @@ public interface Room {
    * @since 1.3.0
    */
   Optional<Scene> getSceneByName(String sceneName);
+
+  /**
+   * Adds the given light into this group.
+   *
+   * @param newLight The light to be added
+   * @return A Collection of Lights in this room after the operation.
+   * @since 2.6.0
+   */
+  Collection<Light> addLight(Light newLight);
+
+  /**
+   * Removes the given light from this group.
+   *
+   * @param lightToBeRemoved The light to be removed
+   * @return A Collection of Lights in this room after the operation
+   * @since 2.6.0
+   */
+  Collection<Light> removeLight(Light lightToBeRemoved);
 }

@@ -309,7 +309,8 @@
       "name": "Living room",
       "lights": [
         "100",
-        "101"
+        "101",
+        "400"
       ],
       "type": "Room",
       "state": {

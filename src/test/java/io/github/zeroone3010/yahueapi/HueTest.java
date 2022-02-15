@@ -35,10 +35,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -76,7 +77,9 @@ class HueTest {
   private static final String DIMMER_SWITCH_NAME = "Living room door";
   private static final String TAP_SWITCH_NAME = "Hue tap switch 1";
 
-  final WireMockServer wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
+  final WireMockServer wireMockServer = new WireMockServer(wireMockConfig()
+      .notifier(new ConsoleNotifier(true))
+      .dynamicPort());
 
   @BeforeEach
   void startServer() {
@@ -90,6 +93,7 @@ class HueTest {
 
   private Hue createHueAndInitializeMockServer() {
     final String hueRoot = readFile("hueRoot.json");
+    final String hueRootWithLight900 = readFile("hueRootWithLight900.json");
 
     final ObjectMapper objectMapper = new ObjectMapper();
     final JsonNode jsonNode;
@@ -101,6 +105,7 @@ class HueTest {
       mockIndividualGetResponse(jsonNode, "lights", "200");
       mockIndividualGetResponse(jsonNode, "lights", "300");
       mockIndividualGetResponse(jsonNode, "lights", "400");
+      mockIndividualGetResponse(jsonNode, "lights", "500");
       mockIndividualGetResponse(jsonNode, "sensors", "1");
       mockIndividualGetResponse(jsonNode, "sensors", "4");
       mockIndividualGetResponse(jsonNode, "sensors", "15");
@@ -121,10 +126,10 @@ class HueTest {
           .willReturn(okJson("{\"lastscan\": \"active\"}")).willSetStateTo("scan3"));
       wireMockServer.stubFor(get(API_BASE_PATH + "lights/new").inScenario("scan").whenScenarioStateIs("scan3")
           .willReturn(okJson("{\n" +
-              "    \"100\": {\"name\": \"LR 1\"},\n" +
-              "    \"101\": {\"name\": \"LR 2\"},\n" +
+              "    \"900\": {\"name\": \"Hue bulb\"},\n" +
               "    \"lastscan\": \"2022-02-04T12:00:00\"\n" +
               "}")));
+      wireMockServer.stubFor(get(API_BASE_PATH).inScenario("scan").whenScenarioStateIs("scan3").willReturn(okJson(hueRootWithLight900)));
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -895,34 +900,83 @@ class HueTest {
     final Hue hue = createHueAndInitializeMockServer();
 
     final Collection<Light> lights = hue.getUnassignedLights();
-    assertEquals(1, lights.size());
-    lights.forEach(light -> {
-      assertEquals("Hue Smart plug 1", light.getName());
-      assertEquals(LightType.ON_OFF_PLUGIN_UNIT, light.getType());
-      assertTrue(light.isReachable());
-      assertTrue(light.getState().getOn());
+    assertEquals(2, lights.size());
+    final Iterator<Light> iterator = lights.iterator();
+    Light light = iterator.next();
+    assertEquals("400", light.getId());
+    assertEquals("Hue Smart plug 1", light.getName());
+    assertEquals(LightType.ON_OFF_PLUGIN_UNIT, light.getType());
+    assertTrue(light.isReachable());
+    assertTrue(light.getState().getOn());
 //      assertNull(light.getState().getBri());
 //      assertNull(light.getState().getCt());
-      assertNull(light.getState().getHue());
-      assertNull(light.getState().getSat());
-      assertNull(light.getState().getScene());
-      assertNull(light.getState().getTransitiontime());
-      assertNull(light.getState().getXy());
-    });
+    assertNull(light.getState().getHue());
+    assertNull(light.getState().getSat());
+    assertNull(light.getState().getScene());
+    assertNull(light.getState().getTransitiontime());
+    assertNull(light.getState().getXy());
+
+    light = iterator.next();
+    assertEquals("500", light.getId());
+    assertEquals("Hue Smart plug 2", light.getName());
 
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
   }
 
   @Test
+  void testAddingUnassignedLightsToRoom() {
+    final String hueRootWithLight400InGroup1 = readFile("hueRootWithLight400InGroup1.json");
+    final String hueRootWithLight400And500InGroup1 = readFile("hueRootWithLights400And500InGroup1.json");
+    final Hue hue = createHueAndInitializeMockServer();
+
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1").inScenario("adding")
+        .whenScenarioStateIs(Scenario.STARTED).willReturn(okJson(
+            "[{\"success\":{\"/groups/1/lights\":[\"100\",\"101\",\"400\"]}}]"
+        )).willSetStateTo("added400"));
+
+    wireMockServer.stubFor(get(API_BASE_PATH).inScenario("adding").whenScenarioStateIs("added400")
+        .willReturn(okJson(hueRootWithLight400InGroup1)));
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1").inScenario("adding")
+        .whenScenarioStateIs("added400").willReturn(okJson(
+            "[{\"success\":{\"/groups/1/lights\":[\"100\",\"101\",\"400\", \"500\"]}}]"
+        )).willSetStateTo("added500"));
+
+    wireMockServer.stubFor(get(API_BASE_PATH).inScenario("adding").whenScenarioStateIs("added500")
+        .willReturn(okJson(hueRootWithLight400And500InGroup1)));
+
+    final Room livingRoom = hue.getRoomByName("Living room").get();
+    final Light smartPlug1 = hue.getUnassignedLightByName("Hue Smart plug 1").get();
+
+    Collection<Light> livingRoomLights = livingRoom.addLight(smartPlug1);
+    HashSet<Object> expected = new HashSet<>();
+    expected.addAll(Arrays.asList("100", "101", "400"));
+    // Check with the old Room object first:
+    assertEquals(expected, livingRoomLights.stream().map(Light::getId).collect(toSet()));
+
+    // Then create a new object and check with that one too:
+    assertEquals(expected, hue.getRoomByName("Living room").get().getLights()
+        .stream().map(Light::getId).collect(toSet()));
+
+    final Light smartPlug2 = hue.getUnassignedLightByName("Hue Smart plug 2").get();
+    livingRoomLights = livingRoom.addLight(smartPlug2);
+    expected = new HashSet<>();
+    expected.addAll(Arrays.asList("100", "101", "400", "500"));
+    assertEquals(expected, livingRoomLights.stream().map(Light::getId).collect(toSet()));
+    assertEquals(expected, hue.getRoomByName("Living room").get().getLights()
+        .stream().map(Light::getId).collect(toSet()));
+  }
+
+  @Test
   void testGetAllLights() {
     final Hue hue = createHueAndInitializeMockServer();
+    final int expectedTotalNumberOfLights = 6;
     wireMockServer.stubFor(get(GROUP_0_PATH).willReturn(okJson(readFile("group0.json"))));
 
     hue.setCaching(false);
 
     Room allLights = hue.getAllLights();
     assertEquals("Group 0", allLights.getName());
-    assertEquals(5, allLights.getLights().size());
+    assertEquals(expectedTotalNumberOfLights, allLights.getLights().size());
     assertFalse(allLights.isAllOn());
     assertTrue(allLights.isAnyOn());
     assertTrue(allLights.getScenes().isEmpty());
@@ -934,7 +988,7 @@ class HueTest {
 
     allLights = hue.getAllLights();
     assertEquals("Group 0", allLights.getName());
-    assertEquals(5, allLights.getLights().size());
+    assertEquals(expectedTotalNumberOfLights, allLights.getLights().size());
     assertFalse(allLights.isAllOn());
     assertTrue(allLights.isAnyOn());
     assertTrue(allLights.getScenes().isEmpty());
@@ -1067,11 +1121,11 @@ class HueTest {
     final Hue hue = createHueAndInitializeMockServer();
     final Future<Collection<Light>> newLights = hue.searchForNewLights();
     final Collection<Light> lights = newLights.get();
-    assertEquals(Arrays.asList("100", "101"), lights.stream().map(Light::getId).collect(toList()));
+    assertEquals(Arrays.asList("900"), lights.stream().map(Light::getId).collect(toList()));
   }
 
   @Test
-  void testGetNewLightsSearchStatus() throws ExecutionException, InterruptedException {
+  void testGetNewLightsSearchStatus() {
     final Hue hue = createHueAndInitializeMockServer();
     NewLightsResult status = hue.getNewLightsSearchStatus();
     assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
@@ -1085,7 +1139,7 @@ class HueTest {
     status = hue.getNewLightsSearchStatus();
     assertEquals(NewLightsSearchStatus.COMPLETED, status.getStatus());
     assertEquals(Optional.of(ZonedDateTime.parse("2022-02-04T12:00:00+00:00[UTC]")), status.getLastSearchTime());
-    assertEquals(Arrays.asList("100", "101"), status.getNewLights().stream().map(Light::getId).collect(toList()));
+    assertEquals(Arrays.asList("900"), status.getNewLights().stream().map(Light::getId).collect(toList()));
   }
 
   private String readFile(final String fileName) {

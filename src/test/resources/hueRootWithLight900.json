@@ -302,6 +302,63 @@
       "swversion": "1.55.10_r29112",
       "swconfigid": "A641B5AB",
       "productid": "SmartPlug_OnOff_v01-00_01"
+    },
+    "900": {
+      "state": {
+        "on": false,
+        "bri": 254,
+        "hue": 33016,
+        "sat": 53,
+        "effect": "none",
+        "xy": [
+          0.3689,
+          0.3719
+        ],
+        "ct": 230,
+        "alert": "none",
+        "colormode": "xy",
+        "mode": "homeautomation",
+        "reachable": true
+      },
+      "swupdate": {
+        "state": "noupdates",
+        "lastinstall": "2021-12-28T10:00:00"
+      },
+      "type": "Extended color light",
+      "name": "Hue bulb",
+      "modelid": "LCT003",
+      "manufacturername": "Philips",
+      "productname": "Hue color spot",
+      "capabilities": {
+        "certified": true,
+        "control": {
+          "mindimlevel": 5000,
+          "maxlumen": 250,
+          "colorgamuttype": "B",
+          "colorgamut": [
+            [
+              0.6750,
+              0.3220
+            ],
+            [
+              0.4090,
+              0.5180
+            ],
+            [
+              0.1670,
+              0.0400
+            ]
+          ],
+          "ct": {
+            "min": 153,
+            "max": 500
+          }
+        },
+        "streaming": {
+          "renderer": true,
+          "proxy": true
+        }
+      }
     }
   },
   "groups": {

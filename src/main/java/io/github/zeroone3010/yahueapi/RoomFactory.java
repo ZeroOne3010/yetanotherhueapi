@@ -8,6 +8,7 @@ import io.github.zeroone3010.yahueapi.domain.GroupState;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -32,9 +33,14 @@ final class RoomFactory {
   Room buildRoom(final String groupId,
                  final Group group,
                  final Map<String, io.github.zeroone3010.yahueapi.domain.Scene> scenes) {
-    final Set<Light> lights = group.getLights().stream()
-        .map(hue::getLightById)
-        .collect(toSet());
+    final Supplier<Set<Light>> lights = () -> {
+      if (ALL_LIGHTS_GROUP_ID.equals(groupId)) {
+        return hue.getRaw().getLights().keySet().stream().map(hue::getLightById).collect(toSet());
+      }
+      return hue.getRaw().getGroups().get(groupId).getLights().stream()
+          .map(hue::getLightById)
+          .collect(toSet());
+    };
     try {
       final URL url = new URL(bridgeUri + "groups/" + groupId);
       final Function<State, String> stateSetter = stateSetter(url);
@@ -44,7 +50,8 @@ final class RoomFactory {
           lights,
           buildScenes(scenes, stateSetter),
           createStateProvider(url, groupId),
-          stateSetter);
+          stateSetter,
+          groupLightsSetter(url));
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
     }
@@ -81,5 +88,32 @@ final class RoomFactory {
       }
       return HttpUtil.put(url, ACTION_PATH, body);
     };
+  }
+
+  private Function<Collection<String>, String> groupLightsSetter(final URL url) {
+    return lightIds -> {
+      final String body;
+      try {
+        body = objectMapper.writeValueAsString(new GroupLights(lightIds));
+      } catch (final JsonProcessingException e) {
+        throw new HueApiException(e);
+      }
+      final String putResult = HttpUtil.put(url, "", body);
+      hue.refresh();
+      return putResult;
+    };
+  }
+
+
+  private static class GroupLights {
+    private final Collection<String> lights;
+
+    GroupLights(final Collection<String> lights) {
+      this.lights = lights;
+    }
+
+    public Collection<String> getLights() {
+      return lights;
+    }
   }
 }
