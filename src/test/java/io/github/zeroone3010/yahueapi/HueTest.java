@@ -979,6 +979,41 @@ class HueTest {
   }
 
   @Test
+  void testRemovingLightsFromRoom() {
+    final String hueRootWithLight400InGroup1 = readFile("hueRootWithLight400InGroup1.json");
+    final String hueRoot = readFile("hueRoot.json");
+    final Hue hue = createHueAndInitializeMockServer();
+
+    wireMockServer.stubFor(get(API_BASE_PATH).inScenario("removing").whenScenarioStateIs(Scenario.STARTED)
+        .willReturn(okJson(hueRootWithLight400InGroup1)));
+    wireMockServer.stubFor(put(API_BASE_PATH + "groups/1").inScenario("removing")
+        .whenScenarioStateIs(Scenario.STARTED).willReturn(okJson(
+            "[{\"success\":{\"/groups/1/lights\":[\"100\",\"101\"]}}]"
+        )).willSetStateTo("removed400"));
+
+    wireMockServer.stubFor(get(API_BASE_PATH).inScenario("removing").whenScenarioStateIs("removed400")
+        .willReturn(okJson(hueRoot)));
+
+    final Room livingRoom = hue.getRoomByName("Living room").get();
+
+    // Assert precondition first:
+    HashSet<Object> expected = new HashSet<>(Arrays.asList("100", "101", "400"));
+    assertEquals(expected, livingRoom.getLights().stream().map(Light::getId).collect(toSet()));
+
+    final Light smartPlug1 = livingRoom.getLightByName("Hue Smart plug 1").get();
+    // Do the action:
+    Collection<Light> livingRoomLights = livingRoom.removeLight(smartPlug1);
+
+    expected = new HashSet<>(Arrays.asList("100", "101"));
+    // Check with the old Room object first:
+    assertEquals(expected, livingRoomLights.stream().map(Light::getId).collect(toSet()));
+
+    // Then create a new object and check with that one too:
+    assertEquals(expected, hue.getRoomByName("Living room").get().getLights()
+        .stream().map(Light::getId).collect(toSet()));
+  }
+
+  @Test
   void testGetAllLights() {
     final Hue hue = createHueAndInitializeMockServer();
     final int expectedTotalNumberOfLights = 6;
