@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+TBA
+
+v2.6.0 (2022-02-16)
+----------
+
 ### Added
 
 * Added a way to search for new lights in the system: the `searchForNewLights()` method in the `Hue` class.
