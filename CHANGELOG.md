@@ -17,6 +17,17 @@ Unreleased
   lights found, if any.
 * Added mDNS (multicast DNS) as a new Bridge discovery method. This will be used instead of UPNP which Philips will
   disable in the future.
+* Added `Room.addLight(Light)` and  `Room.removeLight(Light)` methods for adding and removing lights to and from rooms.
+
+### Changed
+
+* Changed System.out.println commands into proper logger calls.
+* Changed logger names into `io.github.zeroone3010.yahueapi`.
+
+### Fixed
+
+* Fixed a possible `NullPointerException` when querying temperature from a temperature sensor if the sensor is disabled
+  in the app (now it just returns `null` instead).
 
 v2.5.0 (2021-11-24)
 ----------
