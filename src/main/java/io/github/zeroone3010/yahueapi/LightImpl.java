@@ -2,13 +2,14 @@ package io.github.zeroone3010.yahueapi;
 
 import io.github.zeroone3010.yahueapi.domain.LightDto;
 import io.github.zeroone3010.yahueapi.domain.LightState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 final class LightImpl implements Light {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(LightImpl.class);
 
   private final String id;
   private final String name;
@@ -62,7 +63,7 @@ final class LightImpl implements Light {
 
   private LightState getLightState() {
     final LightState state = stateProvider.get();
-    logger.fine(state.toString());
+    logger.debug(state.toString());
     return state;
   }
 
@@ -74,7 +75,7 @@ final class LightImpl implements Light {
   @Override
   public void setState(final State state) {
     final String result = stateSetter.apply(state);
-    logger.fine(result);
+    logger.debug(result);
   }
 
   @Override

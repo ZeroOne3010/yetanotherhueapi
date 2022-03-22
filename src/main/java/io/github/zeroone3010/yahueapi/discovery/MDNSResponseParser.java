@@ -1,5 +1,8 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,13 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * MDNS response parser for parsing MDNS responses from the Bridge when using the MDNS discovery protocol.
  */
 final class MDNSResponseParser {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(MDNSResponseParser.class);
 
   private static final int EXPECTED_QUESTION_COUNT = 0x01;
   private static final int EXPECTED_ANSWER_COUNT = 0x01;
@@ -114,7 +116,7 @@ final class MDNSResponseParser {
       labels.add(label.toString());
       names.put(questionNameLocation, labels);
     }
-    logger.fine("Names: " + names);
+    logger.debug("Names: " + names);
     final List<String> actualNames = names.get(questionNameLocation);
     if (expected != null && !Objects.equals(actualNames, expected)) {
       throw new MDNSException("Expected to see " + expected + " as labels, got " + actualNames + " instead.");
@@ -140,7 +142,7 @@ final class MDNSResponseParser {
       // It's a compressed field, the next byte (and the six least significant bits of this byte) is a pointer
       bytePointer++;
       int pointer = ((data[bytePointer - 1] & 0b00111111) << 8) | data[bytePointer++];
-      logger.fine("The answer has a pointer to " + pointer + " which means " + names.get(pointer));
+      logger.debug("The answer has a pointer to " + pointer + " which means " + names.get(pointer));
     } else {
       matchNames(expected);
     }

@@ -1,15 +1,16 @@
 package io.github.zeroone3010.yahueapi;
 
 import io.github.zeroone3010.yahueapi.domain.SensorDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 class BasicSensor implements Sensor {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(BasicSensor.class);
   private static final String NO_LAST_UPDATED_DATA = "none";
 
   protected final String id;
@@ -62,7 +63,7 @@ class BasicSensor implements Sensor {
 
   protected <T> T readStateValue(final String stateValueKey, final Class<T> type) {
     final Map<String, Object> state = stateProvider.get();
-      logger.fine(state.toString());
+      logger.debug(state.toString());
       return type.cast(state.get(stateValueKey));
   }
 
