@@ -10,6 +10,7 @@ import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.Scene;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
@@ -547,7 +548,8 @@ public final class Hue {
   /**
    * The method to be used if you do not have an API key for your application yet.
    * Returns a {@code HueBridgeConnectionBuilder} that initializes the process of
-   * adding a new application to the Bridge.
+   * adding a new application to the Bridge. You can test if you are connecting to
+   * a Hue Bridge endpoint before initializing the connection.
    *
    * @param bridgeIp The IP address of the Bridge.
    * @return A connection builder that initializes the application for the Bridge.
@@ -559,10 +561,31 @@ public final class Hue {
 
   public static class HueBridgeConnectionBuilder {
     private static final int MAX_TRIES = 30;
-    private String bridgeIp;
+    private String urlString;
 
     private HueBridgeConnectionBuilder(final String bridgeIp) {
-      this.bridgeIp = bridgeIp;
+      this.urlString = "https://" + bridgeIp;
+    }
+
+    /**
+     * Returns a {@code CompletableFuture} that calls the /api/config path of given Hue Bridge to verify
+     * that you are connecting to a Hue bridge.
+     *
+     * @return A {@code CompletableFuture} with an boolean that is true when the call to the bridge was successful.
+     * @since 2.7.0
+     */
+    public CompletableFuture<Boolean> isHueBridgeEndpoint() {
+      final Supplier<Boolean> isBridgeSupplier = () -> {
+        try {
+          TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+          HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString + "/api/config").openConnection();
+          int responseCode = urlConnection.getResponseCode();
+          return HttpURLConnection.HTTP_OK == responseCode;
+        } catch (IOException e) {
+          return false;
+        }
+      };
+      return CompletableFuture.supplyAsync(isBridgeSupplier);
     }
 
     /**
@@ -579,7 +602,7 @@ public final class Hue {
         final URL baseUrl;
         try {
           TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-          baseUrl = new URL("https://" + bridgeIp + "/api");
+          baseUrl = new URL(urlString + "/api");
         } catch (final MalformedURLException e) {
           throw new HueApiException(e);
         }
