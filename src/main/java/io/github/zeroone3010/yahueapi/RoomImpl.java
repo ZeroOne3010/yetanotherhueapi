@@ -3,6 +3,8 @@ package io.github.zeroone3010.yahueapi;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.BrightnessStep;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.GroupState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,12 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toSet;
 
 final class RoomImpl implements Room {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(RoomImpl.class);
 
   private final String id;
   private final Supplier<Set<Light>> lights;
@@ -89,7 +90,7 @@ final class RoomImpl implements Room {
   @Override
   public void setState(final State state) {
     final String result = stateSetter.apply(state);
-    logger.fine(result);
+    logger.debug(result);
   }
 
   @Override
@@ -121,7 +122,7 @@ final class RoomImpl implements Room {
   @Override
   public Collection<Light> addLight(final Light newLight) {
     if (newLight == null || newLight.getId() == null) {
-      logger.warning("addLight: Given light was null. Doing nothing.");
+      logger.warn("addLight: Given light was null. Doing nothing.");
       return getLights();
     }
 
@@ -135,13 +136,13 @@ final class RoomImpl implements Room {
   @Override
   public Collection<Light> removeLight(final Light lightToBeRemoved) {
     if (lightToBeRemoved == null || lightToBeRemoved.getId() == null) {
-      logger.warning("removeLight: Given light was null. Doing nothing.");
+      logger.warn("removeLight: Given light was null. Doing nothing.");
       return getLights();
     }
     final Set<String> lightIds = new HashSet<>(getLights().stream().map(Light::getId).collect(toSet()));
     lightIds.remove(lightToBeRemoved.getId());
     final String result = lightsSetter.apply(lightIds);
-    logger.fine(result);
+    logger.debug(result);
     return getLights();
   }
 

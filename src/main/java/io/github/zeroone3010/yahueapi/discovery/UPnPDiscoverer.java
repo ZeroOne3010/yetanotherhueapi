@@ -1,6 +1,8 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
 import io.github.zeroone3010.yahueapi.HueBridge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,7 +15,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -26,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @Deprecated
 final class UPnPDiscoverer implements HueBridgeDiscoverer {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(UPnPDiscoverer.class);
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
   private static final int DEFAULT_PORT = 1900;
@@ -110,7 +111,7 @@ final class UPnPDiscoverer implements HueBridgeDiscoverer {
       requestSendTask = scheduledExecutorService.schedule(() -> {
         try {
           for (int i = 0; i < DISCOVERY_MESSAGE_COUNT; i++) {
-            logger.fine("Sending a discovery message");
+            logger.debug("Sending a discovery message");
             socket.send(requestPacket);
             TimeUnit.MILLISECONDS.sleep(MILLISECONDS_BETWEEN_DISCOVERY_MESSAGES);
           }

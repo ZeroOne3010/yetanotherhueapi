@@ -1,6 +1,8 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
 import io.github.zeroone3010.yahueapi.HueBridge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,14 +16,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 /**
  * Discovers Hue Bridges using the mDNS protocol, i.e. by sending out multicast DNS queries
  * and waiting for any Bridges to respond.
  */
 final class MDNSDiscoverer implements HueBridgeDiscoverer {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(MDNSDiscoverer.class);
 
   private static final int DISCOVERY_MESSAGE_COUNT = 5;
   private static final int PORT = 5353;
@@ -108,7 +109,7 @@ final class MDNSDiscoverer implements HueBridgeDiscoverer {
           state = DiscoverState.CRASHED;
           e.printStackTrace();
         } catch (final MDNSException e) {
-          logger.warning(e.getMessage());
+          logger.warn(e.getMessage());
         } finally {
           stop();
         }
@@ -131,7 +132,7 @@ final class MDNSDiscoverer implements HueBridgeDiscoverer {
   private void packetHandler(final DatagramPacket packet) {
     final MDNSResponseParser parser = new MDNSResponseParser(packet, Arrays.asList("_hue", "_tcp", "local"));
     final String ip = parser.parse();
-    logger.fine(String.format("Got MDNS response '%s' from '%s'", ip, packet.getAddress()));
+    logger.debug("Got MDNS response '{}' from '{}'", ip, packet.getAddress());
     discoverer.accept(new HueBridge(ip));
   }
 

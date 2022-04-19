@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -26,7 +27,7 @@ import static java.util.Arrays.asList;
  * A service with which one can discover the available Hue Bridges.
  */
 public final class HueBridgeDiscoveryService {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(HueBridgeDiscoveryService.class);
 
   /**
    * The different methods that one can use to discover the available bridges.
@@ -137,7 +138,7 @@ public final class HueBridgeDiscoveryService {
       TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
       return objectMapper.readValue(new URL("https://" + ip + "/api/config"), BridgeConfig.class);
     } catch (final IOException e) {
-      logger.severe("Unable to connect to a found Bridge at " + ip + ": " + e);
+      logger.error("Unable to connect to a found Bridge at " + ip + ": " + e);
       return null;
     }
   }

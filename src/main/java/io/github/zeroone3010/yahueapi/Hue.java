@@ -8,6 +8,8 @@ import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.Scene;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -25,7 +27,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.RoomFactory.ALL_LIGHTS_GROUP_ID;
@@ -40,7 +41,7 @@ import static java.util.stream.Collectors.toSet;
  * with which one can get all the lights, sensors, rooms, etc. to interact with them.
  */
 public final class Hue {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(Hue.class);
 
   private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
 
@@ -536,7 +537,7 @@ public final class Hue {
           if (light != null) {
             newLights.add(light);
           } else {
-            logger.warning("New light " + lightIdField + " not found, but it was expected.");
+            logger.warn("New light {} not found, but it was expected.", lightIdField);
           }
         }
         break;

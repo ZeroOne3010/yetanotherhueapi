@@ -16,19 +16,20 @@ import io.github.zeroone3010.yahueapi.StateBuilderSteps.SaturationStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.TransitionTimeStep;
 import io.github.zeroone3010.yahueapi.StateBuilderSteps.XyStep;
 import io.github.zeroone3010.yahueapi.domain.LightState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import static io.github.zeroone3010.yahueapi.MathUtil.isInRange;
 
 @JsonInclude(Include.NON_NULL)
 public final class State {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger(State.class);
 
   private static final int DIMMABLE_LIGHT_COLOR_TEMPERATURE = 370;
 
@@ -172,7 +173,7 @@ public final class State {
   }
 
   static State build(final LightState state) {
-    logger.fine(state.toString());
+    logger.debug(state.toString());
     final InitialStep builder = new State.Builder(AlertType.parseTypeString(state.getAlert()));
     if (state.getColorMode() == null) {
       return builder.colorTemperatureInMireks(DIMMABLE_LIGHT_COLOR_TEMPERATURE).brightness(state.getBrightness()).on(state.isOn());
