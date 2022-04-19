@@ -572,7 +572,7 @@ public final class Hue {
      * Returns a {@code CompletableFuture} that calls the /api/config path of given Hue Bridge to verify
      * that you are connecting to a Hue bridge.
      *
-     * @return A {@code CompletableFuture} with an boolean that is true when the call to the bridge was successful.
+     * @return A {@code CompletableFuture} with a boolean that is true when the call to the bridge was successful.
      * @since 2.7.0
      */
     public CompletableFuture<Boolean> isHueBridgeEndpoint() {

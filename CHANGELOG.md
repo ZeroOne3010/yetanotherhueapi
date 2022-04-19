@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-TBA
+### Added
+
+* A new method, `HueBridgeConnectionBuilder.isHueBridgeEndpoint()`, to test whether you are indeed
+  trying to connect to a Hue bridge and not some other server by accident (contributed by @Kakifrucht)
+
+### Changed
+
+* The `java.util.logging` based loggers have been scrapped in favor of SLF4J (contributed by @Kakifrucht)
 
 v2.6.0 (2022-02-16)
 ----------

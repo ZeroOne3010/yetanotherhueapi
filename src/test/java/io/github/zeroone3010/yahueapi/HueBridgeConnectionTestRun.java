@@ -10,7 +10,10 @@ public class HueBridgeConnectionTestRun {
    * @throws Exception
    */
   public static void main(final String... args) throws Exception {
-    final CompletableFuture<String> bridgeConnectionTest = Hue.hueBridgeConnectionBuilder(args[0])
+    final Hue.HueBridgeConnectionBuilder connectionBuilder = Hue.hueBridgeConnectionBuilder(args[0]);
+    System.out.println("Is there a Hue bridge at " + args[0] + "? "
+        + (connectionBuilder.isHueBridgeEndpoint().get() ? "Yes." : "No."));
+    final CompletableFuture<String> bridgeConnectionTest = connectionBuilder
         .initializeApiConnection("testrun");
     bridgeConnectionTest.thenAccept(System.out::println).get();
   }
