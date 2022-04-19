@@ -183,7 +183,7 @@ You can also use this library to read the states of various sensors in the Hue s
 contains methods for getting temperature sensors, presence sensors (i.e. motion sensors and geofence sensors),
 daylight sensors, and ambient light sensors.
 
-### Searching for new lights and adding them into rooms (coming up in version 2.6.0!)
+### Searching for new lights and adding them into rooms
 
 There is a method in the `Hue` class that starts searching for new lights and returns a `Future` that will be
 resolved with the found lights (if any) once the scan is finished. The scan seems to last around 45-60 seconds:
@@ -213,7 +213,7 @@ Add the following dependency to your pom.xml file if you are using Maven:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>2.6.0</version>
+    <version>2.7.0</version>
 </dependency>
 ```
 
@@ -225,7 +225,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.github.zeroone3010:yetanotherhueapi:2.6.0'
+  implementation 'io.github.zeroone3010:yetanotherhueapi:2.7.0'
 }
 ```
 

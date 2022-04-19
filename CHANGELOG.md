@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
+TBA
+
+v2.7.0 (2022-04-19)
+----------
+
 ### Added
 
 * A new method, `HueBridgeConnectionBuilder.isHueBridgeEndpoint()`, to test whether you are indeed
