@@ -13,6 +13,7 @@ Unreleased
 
 * A new method, `HueBridgeConnectionBuilder.isHueBridgeEndpoint()`, to test whether you are indeed
   trying to connect to a Hue bridge and not some other server by accident (contributed by @Kakifrucht)
+* `getId()` method for `Scene` objects, to get the technical ids of scenes.
 
 ### Changed
 

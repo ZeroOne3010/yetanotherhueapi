@@ -14,6 +14,11 @@ final class SceneImpl implements Scene {
   }
 
   @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
   public void activate() {
     stateSetter.apply(State.builder().scene(id).keepCurrentState());
   }

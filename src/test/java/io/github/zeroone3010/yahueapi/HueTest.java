@@ -887,7 +887,10 @@ class HueTest {
 
     final Room livingRoom = hue.getRoomByName("Living room").get();
     assertEquals(2, livingRoom.getScenes().size());
-    livingRoom.getSceneByName("Tropical twilight").get().activate();
+
+    final io.github.zeroone3010.yahueapi.Scene livingRoomTropicalTwilight = livingRoom.getSceneByName("Tropical twilight").get();
+    assertEquals("sjJk3kjKBJkf3kh", livingRoomTropicalTwilight.getId());
+    livingRoomTropicalTwilight.activate();
     wireMockServer.verify(1, putRequestedFor(urlEqualTo(API_BASE_PATH + "groups/1/action"))
         .withRequestBody(new EqualToJsonPattern("{\"scene\":\"sjJk3kjKBJkf3kh\"}", false, false)));
     livingRoom.getSceneByName("Concentrate").get().activate();
