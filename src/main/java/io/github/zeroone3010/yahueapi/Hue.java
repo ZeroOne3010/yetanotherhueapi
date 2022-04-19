@@ -552,7 +552,7 @@ public final class Hue {
    * Tells whether the Bridge supports the CLIP API v2, introduced in November 2021.
    *
    * @return {@code true} if there is a support for API v2, {@code false} if not.
-   * @since 2.7.0
+   * @since 3.0.0
    */
   public boolean bridgeSupportsApiV2() {
     doInitialDataLoadIfRequired();
