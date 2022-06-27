@@ -1,8 +1,5 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import io.github.zeroone3010.yahueapi.Hue;
-import io.github.zeroone3010.yahueapi.LightType;
-import io.github.zeroone3010.yahueapi.State;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 
 import java.util.UUID;

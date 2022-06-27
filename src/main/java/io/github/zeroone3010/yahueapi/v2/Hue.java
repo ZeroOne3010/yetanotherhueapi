@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
+import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
+import io.github.zeroone3010.yahueapi.v2.domain.ButtonResourceRoot;
+import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
+import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResourceRoot;
 
@@ -14,12 +18,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLStreamHandler;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
@@ -30,11 +36,15 @@ public class Hue {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final LightFactory lightFactory;
+  private final SwitchFactory switchFactory;
 
   private final URL url;
   private final String apiKey;
   private LightResourceRoot lightsRoot;
+  private DeviceResourceRoot devicesRoot;
+  private ButtonResourceRoot buttonsRoot;
   private Map<UUID, Light> lights;
+  private Map<UUID, Switch> switches;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -54,6 +64,7 @@ public class Hue {
     TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     lightFactory = new LightFactory(this, objectMapper);
+    switchFactory = new SwitchFactory(this, objectMapper);
     refresh();
   }
 
@@ -64,8 +75,9 @@ public class Hue {
    * @since 3.0.0
    */
   public void refresh() {
-    try (final InputStream inputStream = getUrlConnection().getInputStream()) {
+    try (final InputStream inputStream = getUrlConnection("/light").getInputStream()) {
       lightsRoot = objectMapper.readValue(inputStream, LightResourceRoot.class);
+      System.out.println(lightsRoot);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
@@ -73,10 +85,35 @@ public class Hue {
         .filter(lr -> "light".equals(lr.getType()))
         .map(this::buildLight)
         .collect(toMap(LightImpl::getId, light -> light)));
+
+    try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
+      devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
+      System.out.println(devicesRoot);
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+
+    try (final InputStream inputStream = getUrlConnection("/button").getInputStream()) {
+      buttonsRoot = objectMapper.readValue(inputStream, ButtonResourceRoot.class);
+      System.out.println(buttonsRoot);
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+
+    switches = Collections.unmodifiableMap(Optional.ofNullable(devicesRoot.getData()).orElse(emptyList()).stream()
+        .map(device -> buildSwitch(device, buttonsRoot.getData()))
+        .filter(Objects::nonNull)
+        .collect(toMap(Switch::getId, s -> s)));
+
   }
 
-  URLConnection getUrlConnection() {
-    return getUrlConnection(url);
+  URLConnection getUrlConnection(final String path) {
+    try {
+      final URL url = new URL(this.url.toString() + path);
+      return getUrlConnection(url);
+    } catch (final MalformedURLException e) {
+      throw new HueApiException(e);
+    }
   }
 
   URLConnection getUrlConnection(final URL url) {
@@ -90,13 +127,21 @@ public class Hue {
     return urlConnection;
   }
 
-
-
   private LightImpl buildLight(final LightResource lightResource) {
     return lightFactory.buildLight(lightResource, url);
   }
 
+  private Switch buildSwitch(final DeviceResource deviceResource, final List<ButtonResource> allButtons) {
+    final Map<UUID, ButtonResource> buttons = Optional.ofNullable(allButtons).orElse(emptyList()).stream()
+        .collect(Collectors.toMap(ButtonResource::getId, button -> button));
+    return switchFactory.buildSwitch(deviceResource, buttons);
+  }
+
   public Map<UUID, Light> getLights() {
     return lights;
+  }
+
+  public Map<UUID, Switch> getSwitches() {
+    return switches;
   }
 }

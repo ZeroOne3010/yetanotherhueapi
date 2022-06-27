@@ -1,7 +1,6 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import java.util.Comparator;
-import java.util.UUID;
 
 public class HueTestRun {
   /**
@@ -20,6 +19,16 @@ public class HueTestRun {
         .sorted(Comparator.comparing(Light::getName))
         .forEach(value -> {
           System.out.println(value.getId() + " -> " + value.getName() + ": " + value.isOn());
+        });
+
+    System.out.println("Switches: ");
+    hue.getSwitches().values().stream()
+        .sorted(Comparator.comparing(Switch::getName))
+        .forEach(value -> {
+          System.out.println(value.getId() + " -> " + value.getName() + ": ");
+          value.getButtons().forEach(button -> {
+            System.out.println("\t" + button.getNumber() + ": " + button.getLatestEvent());
+          });
         });
   }
 }
