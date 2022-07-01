@@ -1,7 +1,8 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.launchdarkly.eventsource.EventHandler;
+import com.launchdarkly.eventsource.EventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
@@ -11,6 +12,8 @@ import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResourceRoot;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,27 +21,37 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingHostnameVerifier;
+import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingSocketFactory;
+import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
 public class Hue {
   private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  public static final String HUE_APPLICATION_KEY_HEADER = "hue-application-key";
+  public static final long EVENTS_CONNECTION_TIMEOUT_MINUTES = 1L;
+  public static final Duration EVENTS_READ_TIMEOUT = Duration.ofMillis(Integer.MAX_VALUE);
+
+  private final ObjectMapper objectMapper = HttpUtil.buildObjectMapper();
 
   private final LightFactory lightFactory;
   private final SwitchFactory switchFactory;
 
-  private final URL url;
+  private final URL resourceUrl;
+  private final URL eventUrl;
   private final String apiKey;
   private LightResourceRoot lightsRoot;
   private DeviceResourceRoot devicesRoot;
@@ -56,13 +69,17 @@ public class Hue {
    */
   public Hue(final String bridgeIp, final String apiKey) {
     try {
-      this.url = new URL("https://" + bridgeIp + "/clip/v2/resource");
+      this.resourceUrl = new URL("https://" + bridgeIp + "/clip/v2/resource");
+    } catch (MalformedURLException e) {
+      throw new HueApiException(e);
+    }
+    try {
+      this.eventUrl = new URL("https://" + bridgeIp + "/eventstream/clip/v2");
     } catch (MalformedURLException e) {
       throw new HueApiException(e);
     }
     this.apiKey = apiKey;
     TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
     refresh();
@@ -109,7 +126,7 @@ public class Hue {
 
   URLConnection getUrlConnection(final String path) {
     try {
-      final URL url = new URL(this.url.toString() + path);
+      final URL url = new URL(this.resourceUrl.toString() + path);
       return getUrlConnection(url);
     } catch (final MalformedURLException e) {
       throw new HueApiException(e);
@@ -123,12 +140,12 @@ public class Hue {
     } catch (IOException e) {
       throw new HueApiException(e);
     }
-    urlConnection.setRequestProperty("hue-application-key", apiKey);
+    urlConnection.setRequestProperty(HUE_APPLICATION_KEY_HEADER, apiKey);
     return urlConnection;
   }
 
   private LightImpl buildLight(final LightResource lightResource) {
-    return lightFactory.buildLight(lightResource, url);
+    return lightFactory.buildLight(lightResource, resourceUrl);
   }
 
   private Switch buildSwitch(final DeviceResource deviceResource, final List<ButtonResource> allButtons) {
@@ -143,5 +160,33 @@ public class Hue {
 
   public Map<UUID, Switch> getSwitches() {
     return switches;
+  }
+
+  public void subscribeToEvents(final HueEventListener eventListener) {
+    try {
+
+      final OkHttpClient client = new OkHttpClient.Builder()
+          .sslSocketFactory(
+              getTrustEverythingSocketFactory(),
+              getTrustEverythingTrustManager()
+          )
+          .connectTimeout(Duration.ofMinutes(EVENTS_CONNECTION_TIMEOUT_MINUTES))
+          .readTimeout(EVENTS_READ_TIMEOUT)
+          .hostnameVerifier(getTrustEverythingHostnameVerifier())
+          .build();
+
+      final BasicHueEventHandler eventHandler = new BasicHueEventHandler(eventListener);
+      final EventSource.Builder builder = new EventSource.Builder(eventHandler, eventUrl.toURI())
+          .client(client)
+          .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
+          .reconnectTime(Duration.ofMillis(3000));
+      try (final EventSource eventSource = builder.build()) {
+        eventSource.start();
+        TimeUnit.MINUTES.sleep(10);
+      }
+    } catch (final Exception e) {
+      throw new HueApiException(e);
+    }
+
   }
 }
