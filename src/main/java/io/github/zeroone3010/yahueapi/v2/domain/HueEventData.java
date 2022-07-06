@@ -33,6 +33,9 @@ public class HueEventData {
   @JsonProperty("motion")
   private Motion motion;
 
+  @JsonProperty("temperature")
+  private Temperature temperature;
+
   public UUID getResourceId() {
     return resourceId;
   }
@@ -69,6 +72,10 @@ public class HueEventData {
     return Optional.ofNullable(motion);
   }
 
+  public Optional<Temperature> getTemperature() {
+    return Optional.ofNullable(temperature);
+  }
+
   @Override
   public String toString() {
     return "HueEventData{" +
@@ -81,6 +88,7 @@ public class HueEventData {
         ", on=" + on +
         ", dimming=" + dimming +
         ", motion=" + motion +
+        ", temperature=" + temperature +
         '}';
   }
 }
