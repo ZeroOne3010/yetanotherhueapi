@@ -1,18 +1,10 @@
 package io.github.zeroone3010.yahueapi;
 
 /**
- * An enumeration on what kind of a connection one wants with the Bridge: HTTP or HTTPS.
+ * An enumeration on what kind of a connection one wants with the Bridge. Plain HTTP used to be an option but Philips
+ * announced it will not be supported anymore.
  */
-public enum HueBridgeProtocol {
-
-  /**
-   * A regular, unprotected HTTP connection.
-   *
-   * @deprecated All the bridges will stop supporting plain HTTP connections once they eventually receive
-   * Signify signed certificates.
-   */
-  @Deprecated
-  HTTP("http"),
+enum HueBridgeProtocol {
 
   /**
    * An encrypted HTTPS connection. However, as the Bridge uses a self-signed certificate,

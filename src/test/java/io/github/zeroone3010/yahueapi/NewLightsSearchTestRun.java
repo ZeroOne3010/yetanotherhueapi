@@ -15,7 +15,7 @@ public class NewLightsSearchTestRun {
     final String ip = args[0];
     final String apiKey = args[1];
 
-    final Hue hue = new Hue(HueBridgeProtocol.UNVERIFIED_HTTPS, ip, apiKey);
+    final Hue hue = new Hue(ip, apiKey);
 
     System.out.println("Scanning: " + LocalDateTime.now());
     final Future<Collection<Light>> foundLights = hue.searchForNewLights();

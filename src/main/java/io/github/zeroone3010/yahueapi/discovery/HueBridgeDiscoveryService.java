@@ -43,16 +43,6 @@ public final class HueBridgeDiscoveryService {
     NUPNP(NUPnPDiscoverer::new),
 
     /**
-     * With the UPnP method discovery queries are sent into the local network.
-     * Any Bridges that are present in the network are expected to make themselves known by answering to these queries.
-     *
-     * @deprecated Philips Hue will disable the UPnP discovery method in Q2 2022.
-     * As such, this method will also be eventually removed from this library.
-     */
-    @Deprecated
-    UPNP(UPnPDiscoverer::new),
-
-    /**
      * With the multicast DNS method discovery queries are sent into the local network.
      * Any Bridges that are present in the network are expected to make themselves known by answering to these queries.
      */

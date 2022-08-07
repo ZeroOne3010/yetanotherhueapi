@@ -9,7 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Unreleased
 ----------
 
-TBA
+### Added
+
+* Support for events! Use the new `io.github.zeroone3010.yahueapi.v2.Hue` class
+  and its `subscribeToEvents(HueEventListener)` method to get real time updates from the Bridge
+  when something happens in the system.
+
+### Removed
+
+* Removed UPNP from Bridge discovery methods, as Philips is deprecating it.
+* Removed plain HTTP as a possible Bridge connection protocol, as Philips is deprecating it. With this removal
+  also removed the constructor from the `Hue` class that had `HueBridgeProtocol` as a parameter, as the enum
+  now only has one value. Also changed said enum from public to package private.
 
 v2.7.0 (2022-04-19)
 ----------

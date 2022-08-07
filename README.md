@@ -39,7 +39,7 @@ approximately five seconds for the discovery process to complete. The `HueBridge
 that may be then used to initiate a connection with the Bridge.
 
 Without any parameters besides the consumer the `discoverBridges` method uses all available discovery
-methods simultaneously, namely N-UPnP and UPnP. If you wish to change that, the method accepts a varargs
+methods simultaneously, namely N-UPnP and mDNS. If you wish to change that, the method accepts a varargs
 list of discovery method enum values.
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)

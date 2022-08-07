@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static io.github.zeroone3010.yahueapi.HueBridgeProtocol.UNVERIFIED_HTTPS;
 import static io.github.zeroone3010.yahueapi.RoomFactory.ALL_LIGHTS_GROUP_ID;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
@@ -72,7 +73,13 @@ public final class Hue {
    * @since 1.0.0
    */
   public Hue(final String bridgeIp, final String apiKey) {
-    this(HueBridgeProtocol.UNVERIFIED_HTTPS, bridgeIp, apiKey);
+    final HueBridgeProtocol protocol = UNVERIFIED_HTTPS;
+    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
+    TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.addHandler(new UnauthorizedUserHandler());
+    roomFactory = new RoomFactory(this, objectMapper, uri);
+    lightFactory = new LightFactory(this, objectMapper);
   }
 
   /**
@@ -108,29 +115,6 @@ public final class Hue {
    */
   public boolean isCaching() {
     return caching;
-  }
-
-  /**
-   * A basic constructor for initializing the Hue Bridge connection for this library.
-   * Use the {@code hueBridgeConnectionBuilder} method if you do not have an API key yet.
-   *
-   * @param protocol The desired protocol for the Bridge connection. HTTP or UNVERIFIED_HTTPS,
-   *                 as the certificate that the Bridge uses cannot be verified. Defaults to UNVERIFIED_HTTPS
-   *                 since version 2.4.0 when using the other constructor (used to default to HTTP before that),
-   *                 for Philips will eventually deprecate the plain HTTP connection altogether.
-   * @param bridgeIp The IP address of the Hue Bridge.
-   * @param apiKey   The API key of your application.
-   * @since 1.0.0
-   */
-  public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
-    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
-    if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
-      TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-    }
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    objectMapper.addHandler(new UnauthorizedUserHandler());
-    roomFactory = new RoomFactory(this, objectMapper, uri);
-    lightFactory = new LightFactory(this, objectMapper);
   }
 
   private void doInitialDataLoadIfRequired() {

@@ -3,7 +3,6 @@ package io.github.zeroone3010.yahueapi.v2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.launchdarkly.eventsource.EventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
-import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResourceRoot;
@@ -59,7 +58,8 @@ public class Hue {
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
-   * Sets up an encrypted but unverified HTTPS connection -- see {@link HueBridgeProtocol#UNVERIFIED_HTTPS}.
+   * Sets up an encrypted but unverified HTTPS connection,
+   * as the Bridge uses a self-signed certificate that cannot be verified.
    *
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
