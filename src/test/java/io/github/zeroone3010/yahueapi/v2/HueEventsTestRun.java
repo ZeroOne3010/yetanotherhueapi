@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi.v2;
 import io.github.zeroone3010.yahueapi.v2.domain.HueEvent;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class HueEventsTestRun {
   /**
@@ -23,5 +24,6 @@ public class HueEventsTestRun {
         events.forEach(event -> System.out.println("\t" + event));
       }
     });
+    TimeUnit.MINUTES.sleep(10);
   }
 }

@@ -1,7 +1,6 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -180,10 +178,8 @@ public class Hue {
           .client(client)
           .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
           .reconnectTime(Duration.ofMillis(3000));
-      try (final EventSource eventSource = builder.build()) {
-        eventSource.start();
-        TimeUnit.MINUTES.sleep(10);
-      }
+      final EventSource eventSource = builder.build();
+      eventSource.start();
     } catch (final Exception e) {
       throw new HueApiException(e);
     }
