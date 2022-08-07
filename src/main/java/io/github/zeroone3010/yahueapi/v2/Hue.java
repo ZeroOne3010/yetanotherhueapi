@@ -160,7 +160,7 @@ public class Hue {
     return switches;
   }
 
-  public void subscribeToEvents(final HueEventListener eventListener) {
+  public HueEventSource subscribeToEvents(final HueEventListener eventListener) {
     try {
 
       final OkHttpClient client = new OkHttpClient.Builder()
@@ -180,6 +180,7 @@ public class Hue {
           .reconnectTime(Duration.ofMillis(3000));
       final EventSource eventSource = builder.build();
       eventSource.start();
+      return new LaunchDarklyEventSource(eventSource);
     } catch (final Exception e) {
       throw new HueApiException(e);
     }

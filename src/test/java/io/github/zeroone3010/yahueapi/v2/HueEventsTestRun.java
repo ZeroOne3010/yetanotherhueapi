@@ -17,13 +17,16 @@ public class HueEventsTestRun {
 
     final Hue hue = new Hue(ip, apiKey);
 
-    hue.subscribeToEvents(new HueEventListener() {
+    final HueEventSource hueEventSource = hue.subscribeToEvents(new HueEventListener() {
       @Override
       public void receive(final List<HueEvent> events) {
         System.out.println("Events received:");
         events.forEach(event -> System.out.println("\t" + event));
       }
     });
+    System.out.println(hueEventSource.getState());
+    TimeUnit.SECONDS.sleep(1);
+    System.out.println(hueEventSource.getState());
     TimeUnit.MINUTES.sleep(10);
   }
 }
