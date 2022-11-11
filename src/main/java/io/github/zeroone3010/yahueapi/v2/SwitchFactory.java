@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.BUTTON;
 import static java.util.stream.Collectors.toList;
 
 final class SwitchFactory {
@@ -22,7 +23,7 @@ final class SwitchFactory {
   private final Hue hue;
   private final ObjectMapper objectMapper;
 
-  private static final Predicate<ResourceIdentifier> BUTTON_FILTER = s -> "button".equals(s.getRtype());
+  private static final Predicate<ResourceIdentifier> BUTTON_FILTER = s -> BUTTON == s.getResourceType();
 
   SwitchFactory(final Hue hue, final ObjectMapper objectMapper) {
     this.hue = hue;

@@ -8,7 +8,7 @@ import java.util.UUID;
 public abstract class Resource {
 
   @JsonProperty("type")
-  private String type;
+  private ResourceType type;
 
   @JsonProperty("id")
   private UUID id;
@@ -16,7 +16,7 @@ public abstract class Resource {
   @JsonProperty("id_v1")
   private String idV1;
 
-  public String getType() {
+  public ResourceType getType() {
     return type;
   }
 

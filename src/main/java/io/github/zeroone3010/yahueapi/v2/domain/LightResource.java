@@ -1,12 +1,11 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 public class LightResource extends Resource {
 
   @JsonProperty("owner")
-  private Owner owner;
+  private ResourceIdentifier owner;
 
   @JsonProperty("metadata")
   private Metadata metadata;
@@ -35,7 +34,7 @@ public class LightResource extends Resource {
   @JsonProperty("gradient")
   private Gradient gradient;
 
-  public Owner getOwner() {
+  public ResourceIdentifier getOwner() {
     return owner;
   }
 

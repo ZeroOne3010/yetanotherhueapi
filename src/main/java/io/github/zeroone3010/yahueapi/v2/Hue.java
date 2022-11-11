@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingHostnameVerifier;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingSocketFactory;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
+import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.LIGHT;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
@@ -97,7 +98,7 @@ public class Hue {
       throw new HueApiException(e);
     }
     lights = Collections.unmodifiableMap(Optional.ofNullable(lightsRoot.getData()).orElse(emptyList()).stream()
-        .filter(lr -> "light".equals(lr.getType()))
+        .filter(lr -> LIGHT == lr.getType())
         .map(this::buildLight)
         .collect(toMap(LightImpl::getId, light -> light)));
 

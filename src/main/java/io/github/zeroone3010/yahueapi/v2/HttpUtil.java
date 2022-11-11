@@ -1,7 +1,10 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.zeroone3010.yahueapi.HueApiException;
 
 import java.io.BufferedReader;
@@ -19,9 +22,10 @@ final class HttpUtil {
   }
 
   static ObjectMapper buildObjectMapper() {
-    final ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    return objectMapper;
+    return JsonMapper.builder()
+        .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
   }
 
   static String put(final Hue hue, final URL baseUrl, final String path, final String body) {

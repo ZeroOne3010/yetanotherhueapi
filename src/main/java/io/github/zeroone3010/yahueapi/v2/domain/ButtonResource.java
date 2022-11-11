@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ButtonResource extends Resource {
 
   @JsonProperty("owner")
-  private Owner owner;
+  private ResourceIdentifier owner;
 
   @JsonProperty("metadata")
   private ButtonMetadata metadata;

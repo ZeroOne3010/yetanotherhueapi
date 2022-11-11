@@ -13,7 +13,7 @@ public class HueEventData {
   private String idV1;
 
   @JsonProperty("owner")
-  private Owner owner;
+  private ResourceIdentifier owner;
 
   @JsonProperty("type")
   private String type;
@@ -44,7 +44,7 @@ public class HueEventData {
     return idV1;
   }
 
-  public Owner getOwner() {
+  public ResourceIdentifier getOwner() {
     return owner;
   }
 
