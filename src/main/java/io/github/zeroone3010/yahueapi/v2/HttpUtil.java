@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 final class HttpUtil {
   private HttpUtil() {
     // prevent instantiation
@@ -44,7 +46,7 @@ final class HttpUtil {
       connection.setRequestProperty("Host", connection.getURL().getHost());
       if (body != null) {
         try (final OutputStream outputStream = connection.getOutputStream()) {
-          try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8")) {
+          try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream, UTF_8)) {
             writer.write(body);
             writer.flush();
           }
