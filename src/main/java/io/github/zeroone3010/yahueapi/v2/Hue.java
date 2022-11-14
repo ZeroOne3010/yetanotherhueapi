@@ -10,6 +10,8 @@ import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResourceRoot;
+import io.github.zeroone3010.yahueapi.v2.domain.Resource;
+import io.github.zeroone3010.yahueapi.v2.domain.ResourceRoot;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 
@@ -20,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingHostnameVerifier;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingSocketFactory;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
-import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.LIGHT;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
@@ -51,6 +51,7 @@ public class Hue {
   private final URL resourceUrl;
   private final URL eventUrl;
   private final String apiKey;
+  private Map<UUID, Resource> allResources;
   private LightResourceRoot lightsRoot;
   private DeviceResourceRoot devicesRoot;
   private ButtonResourceRoot buttonsRoot;
@@ -91,16 +92,18 @@ public class Hue {
    * @since 3.0.0
    */
   public void refresh() {
-    try (final InputStream inputStream = getUrlConnection("/light").getInputStream()) {
-      lightsRoot = objectMapper.readValue(inputStream, LightResourceRoot.class);
-      System.out.println(lightsRoot);
+    try (final InputStream inputStream = getUrlConnection("").getInputStream()) {
+      final ResourceRoot resourceRoot = objectMapper.readValue(inputStream, ResourceRoot.class);
+      allResources = resourceRoot.getData().stream().collect(Collectors.toMap(r -> r.getId(), r -> r));
+      System.out.println(resourceRoot);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
-    lights = Collections.unmodifiableMap(Optional.ofNullable(lightsRoot.getData()).orElse(emptyList()).stream()
-        .filter(lr -> LIGHT == lr.getType())
+    lights = allResources.values().stream()
+        .filter(r -> r instanceof LightResource)
+        .map(r -> (LightResource) r)
         .map(this::buildLight)
-        .collect(toMap(LightImpl::getId, light -> light)));
+        .collect(toMap(LightImpl::getId, light -> light));
 
     try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
       devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
@@ -109,18 +112,20 @@ public class Hue {
       throw new HueApiException(e);
     }
 
-    try (final InputStream inputStream = getUrlConnection("/button").getInputStream()) {
-      buttonsRoot = objectMapper.readValue(inputStream, ButtonResourceRoot.class);
-      System.out.println(buttonsRoot);
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
+    final List<DeviceResource> devices = allResources.values().stream()
+        .filter(r -> r instanceof DeviceResource)
+        .map(r -> (DeviceResource) r)
+        .collect(Collectors.toList());
 
-    switches = Collections.unmodifiableMap(Optional.ofNullable(devicesRoot.getData()).orElse(emptyList()).stream()
-        .map(device -> buildSwitch(device, buttonsRoot.getData()))
+    final List<ButtonResource> allButtons = allResources.values().stream()
+        .filter(r -> r instanceof ButtonResource)
+        .map(r -> (ButtonResource) r)
+        .collect(Collectors.toList());
+
+    switches = devices.stream()
+        .map(device -> buildSwitch(device, allButtons))
         .filter(Objects::nonNull)
-        .collect(toMap(Switch::getId, s -> s)));
-
+        .collect(toMap(Switch::getId, s -> s));
   }
 
   URLConnection getUrlConnection(final String path) {

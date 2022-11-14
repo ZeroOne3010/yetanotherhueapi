@@ -1,9 +1,11 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 
+@JsonTypeName("device")
 public class DeviceResource extends Resource {
 
   @JsonProperty("services")

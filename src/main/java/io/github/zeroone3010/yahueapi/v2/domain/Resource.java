@@ -1,11 +1,26 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 import java.util.UUID;
 
-public abstract class Resource {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    defaultImpl = Resource.class,
+    visible = true,
+    property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = ButtonResource.class, name = "button"),
+    @JsonSubTypes.Type(value = DeviceResource.class, name = "device"),
+    @JsonSubTypes.Type(value = LightResource.class, name = "light"),
+    @JsonSubTypes.Type(value = RoomResource.class, name = "room")
+})
+public class Resource {
 
   @JsonProperty("type")
   private ResourceType type;

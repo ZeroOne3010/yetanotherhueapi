@@ -1,7 +1,9 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("button")
 public class ButtonResource extends Resource {
 
   @JsonProperty("owner")
