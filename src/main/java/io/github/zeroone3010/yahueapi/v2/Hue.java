@@ -5,13 +5,16 @@ import com.launchdarkly.eventsource.EventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
-import io.github.zeroone3010.yahueapi.v2.domain.ButtonResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
+import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
+import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
-import io.github.zeroone3010.yahueapi.v2.domain.LightResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.Resource;
 import io.github.zeroone3010.yahueapi.v2.domain.ResourceRoot;
+import io.github.zeroone3010.yahueapi.v2.domain.ResourceType;
+import io.github.zeroone3010.yahueapi.v2.domain.RoomResource;
+import io.github.zeroone3010.yahueapi.v2.domain.ZoneResource;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 
@@ -47,16 +50,17 @@ public class Hue {
 
   private final LightFactory lightFactory;
   private final SwitchFactory switchFactory;
+  private final GroupFactory groupFactory;
 
   private final URL resourceUrl;
   private final URL eventUrl;
   private final String apiKey;
   private Map<UUID, Resource> allResources;
-  private LightResourceRoot lightsRoot;
   private DeviceResourceRoot devicesRoot;
-  private ButtonResourceRoot buttonsRoot;
   private Map<UUID, Light> lights;
   private Map<UUID, Switch> switches;
+  private Map<UUID, Group> groups;
+  private Map<UUID, GroupedLight> groupedLights;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -82,6 +86,7 @@ public class Hue {
     TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
+    groupFactory = new GroupFactory(this);
     refresh();
   }
 
@@ -105,6 +110,12 @@ public class Hue {
         .map(this::buildLight)
         .collect(toMap(LightImpl::getId, light -> light));
 
+    groupedLights = allResources.values().stream()
+        .filter(r -> r instanceof GroupedLightResource)
+        .map(r -> (GroupedLightResource) r)
+        .map(this::buildGroupedLight)
+        .collect(toMap(GroupedLightImpl::getId, light -> light));
+
     try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
       devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
       System.out.println(devicesRoot);
@@ -126,6 +137,12 @@ public class Hue {
         .map(device -> buildSwitch(device, allButtons))
         .filter(Objects::nonNull)
         .collect(toMap(Switch::getId, s -> s));
+
+    groups = allResources.values().stream()
+        .filter(r -> r instanceof RoomResource || r instanceof ZoneResource)
+        .map(r -> (GroupResource) r)
+        .map(this::buildGroup)
+        .collect(toMap(GroupImpl::getId, group -> group));
   }
 
   URLConnection getUrlConnection(final String path) {
@@ -152,6 +169,14 @@ public class Hue {
     return lightFactory.buildLight(lightResource, resourceUrl);
   }
 
+  private GroupedLightImpl buildGroupedLight(final GroupedLightResource groupedLightResource) {
+    return lightFactory.buildGroupedLight(groupedLightResource, resourceUrl);
+  }
+
+  private GroupImpl buildGroup(final GroupResource groupResource) {
+    return groupFactory.buildGroup(groupResource, resourceUrl);
+  }
+
   private Switch buildSwitch(final DeviceResource deviceResource, final List<ButtonResource> allButtons) {
     final Map<UUID, ButtonResource> buttons = Optional.ofNullable(allButtons).orElse(emptyList()).stream()
         .collect(Collectors.toMap(ButtonResource::getId, button -> button));
@@ -164,6 +189,44 @@ public class Hue {
 
   public Map<UUID, Switch> getSwitches() {
     return switches;
+  }
+
+  Resource getResource(final UUID uuid) {
+    return allResources.get(uuid);
+  }
+
+  /**
+   * Returns all the rooms configured into the Bridge.
+   *
+   * @return A Map of rooms.
+   * @since 3.0.0
+   */
+  public Map<UUID, Group> getRooms() {
+    return groups.values().stream()
+        .filter(r -> r.getType() == ResourceType.ROOM)
+        .collect(toMap(Group::getId, r -> r));
+  }
+
+  /**
+   * Returns all the zones configured into the Bridge.
+   *
+   * @return A Map of zones.
+   * @since 3.0.0
+   */
+  public Map<UUID, Group> getZones() {
+    return groups.values().stream()
+        .filter(r -> r.getType() == ResourceType.ZONE)
+        .collect(toMap(Group::getId, r -> r));
+  }
+
+  /**
+   * Returns all the grouped lights configured into the Bridge.
+   *
+   * @return A Map of grouped lights.
+   * @since 3.0.0
+   */
+  public Map<UUID, GroupedLight> getGroupedLights() {
+    return groupedLights;
   }
 
   public HueEventSource subscribeToEvents(final HueEventListener eventListener) {

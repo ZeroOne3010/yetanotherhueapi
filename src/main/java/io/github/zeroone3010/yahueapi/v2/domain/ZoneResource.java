@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 
-@JsonTypeName("room")
-public class RoomResource extends Resource implements GroupResource {
+@JsonTypeName("zone")
+public class ZoneResource extends Resource implements GroupResource {
 
   @JsonProperty("services")
   private List<ResourceIdentifier> services;

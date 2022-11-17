@@ -3,7 +3,6 @@ package io.github.zeroone3010.yahueapi.v2.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 import java.util.UUID;
@@ -18,7 +17,9 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = ButtonResource.class, name = "button"),
     @JsonSubTypes.Type(value = DeviceResource.class, name = "device"),
     @JsonSubTypes.Type(value = LightResource.class, name = "light"),
-    @JsonSubTypes.Type(value = RoomResource.class, name = "room")
+    @JsonSubTypes.Type(value = RoomResource.class, name = "room"),
+    @JsonSubTypes.Type(value = ZoneResource.class, name = "zone"),
+    @JsonSubTypes.Type(value = GroupedLightResource.class, name = "grouped_light")
 })
 public class Resource {
 
