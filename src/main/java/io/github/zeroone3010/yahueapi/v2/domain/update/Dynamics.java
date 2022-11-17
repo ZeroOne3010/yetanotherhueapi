@@ -25,6 +25,11 @@ public class Dynamics {
     return speed;
   }
 
+  /**
+   * Speed of dynamic palette or effect.
+   *
+   * @param speed A value between 0 and 1.
+   */
   public void setSpeed(float speed) {
     this.speed = speed;
   }

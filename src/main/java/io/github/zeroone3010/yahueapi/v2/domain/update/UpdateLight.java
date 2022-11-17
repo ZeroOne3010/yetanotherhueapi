@@ -6,8 +6,6 @@ import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UpdateLight {
-  @JsonProperty("metadata")
-  private Metadata metadata;
 
   @JsonProperty("on")
   private On on;
@@ -20,6 +18,9 @@ public class UpdateLight {
 
   @JsonProperty("color_temperature")
   private ColorTemperature colorTemperature;
+
+  @JsonProperty("color_temperature_delta")
+  private ColorTemperatureDelta colorTemperatureDelta;
 
   @JsonProperty("color")
   private Color color;
@@ -38,14 +39,6 @@ public class UpdateLight {
 
   @JsonProperty("timed_effects")
   private TimedEffects timedEffects;
-
-  public Metadata getMetadata() {
-    return metadata;
-  }
-
-  public void setMetadata(Metadata metadata) {
-    this.metadata = metadata;
-  }
 
   public On getOn() {
     return on;
@@ -81,6 +74,14 @@ public class UpdateLight {
   public UpdateLight setColorTemperature(ColorTemperature colorTemperature) {
     this.colorTemperature = colorTemperature;
     return this;
+  }
+
+  public ColorTemperatureDelta getColorTemperatureDelta() {
+    return colorTemperatureDelta;
+  }
+
+  public void setColorTemperatureDelta(ColorTemperatureDelta colorTemperatureDelta) {
+    this.colorTemperatureDelta = colorTemperatureDelta;
   }
 
   public Color getColor() {

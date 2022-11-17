@@ -8,13 +8,18 @@ import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 public class ColorTemperature {
 
   @JsonProperty("mirek")
-  private int mirek;
+  private Integer mirek;
 
-  public int getMirek() {
+  public Integer getMirek() {
     return mirek;
   }
 
-  public void setMirek(int mirek) {
+  /**
+   * Color temperature in mirek, 153-500.
+   *
+   * @param mirek Color temperature in mirek, or null when the color is not in the color temperature spectrum.
+   */
+  public void setMirek(Integer mirek) {
     this.mirek = mirek;
   }
 

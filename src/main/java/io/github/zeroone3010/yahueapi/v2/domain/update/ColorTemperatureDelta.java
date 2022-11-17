@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DimmingDelta {
+public class ColorTemperatureDelta {
 
   @JsonProperty("action")
   private DeltaAction action;
 
   @JsonProperty("brightness_delta")
-  private int brightnessDelta;
+  private int mirekDelta;
 
   public DeltaAction getAction() {
     return action;
@@ -21,17 +21,17 @@ public class DimmingDelta {
     this.action = action;
   }
 
-  public int getBrightnessDelta() {
-    return brightnessDelta;
+  public int getMirekDelta() {
+    return mirekDelta;
   }
 
   /**
-   * Brightness percentage of full-scale increase delta to current dimlevel. Clips at max-level or min-level.
+   * Mirekk delta to current mirek. Clips at mirek_minimum and mirek_maximum of mirek_schema.
    *
-   * @param brightnessDelta A number, maximum value is 100.
+   * @param mirekDelta A number, maximum value is 347.
    */
-  public void setBrightnessDelta(int brightnessDelta) {
-    this.brightnessDelta = brightnessDelta;
+  public void setMirekDelta(int mirekDelta) {
+    this.mirekDelta = mirekDelta;
   }
 
   @Override
