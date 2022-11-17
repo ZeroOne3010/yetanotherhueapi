@@ -25,12 +25,12 @@ final class GroupFactory {
     final Supplier<Collection<Light>> lightProvider = () ->
         groupResource.getChildren().stream()
             .filter(r -> r.getResourceType() == DEVICE)
-            .map(ResourceIdentifier::getRid)
+            .map(ResourceIdentifier::getResourceId)
             .map(hue::getResource)
             .map(r -> (DeviceResource) r)
             .flatMap(r -> r.getServices().stream())
             .filter(s -> s.getResourceType() == LIGHT)
-            .map(light -> hue.getLights().get(light.getRid()))
+            .map(light -> hue.getLights().get(light.getResourceId()))
             .collect(Collectors.toSet());
     return new GroupImpl(groupResource.getId(),
         groupResource.getType(),

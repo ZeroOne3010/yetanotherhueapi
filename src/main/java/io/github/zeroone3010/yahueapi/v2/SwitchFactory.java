@@ -37,7 +37,7 @@ final class SwitchFactory {
     }
     final List<Button> buttons = resource.getServices().stream()
         .filter(BUTTON_FILTER)
-        .map(ResourceIdentifier::getRid)
+        .map(ResourceIdentifier::getResourceId)
         .map(allButtons::get)
         .map(button -> new ButtonImpl(createButtonStateProvider(button.getId()), button))
         .collect(toList());

@@ -1,7 +1,6 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 import java.util.UUID;
@@ -14,7 +13,8 @@ public class ResourceIdentifier {
   @JsonProperty("rtype")
   private ResourceType rtype;
 
-  public UUID getRid() {
+  @JsonProperty("rid")
+  public UUID getResourceId() {
     return rid;
   }
 
