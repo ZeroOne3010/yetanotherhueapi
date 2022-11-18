@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.zeroone3010.yahueapi.HueApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 final class HttpUtil {
+  private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
+
   private HttpUtil() {
     // prevent instantiation
   }
@@ -39,7 +43,7 @@ final class HttpUtil {
                                   final String body,
                                   final String method) {
     try {
-      System.out.println("body: " + body);
+      logger.trace("Request body: " + body);
       final HttpURLConnection connection = (HttpURLConnection) hue.getUrlConnection(new URL(baseUrl.toString() + path));
       connection.setDoOutput(true);
       connection.setRequestMethod(method);

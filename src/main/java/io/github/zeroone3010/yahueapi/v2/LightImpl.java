@@ -51,7 +51,7 @@ public final class LightImpl implements Light {
   public void turnOff() {
     final UpdateLight newState = new UpdateLight();
     newState.setOn(new On(false));
-    System.out.println(stateSetter.apply(newState));
+    stateSetter.apply(newState);
   }
 
   @Override

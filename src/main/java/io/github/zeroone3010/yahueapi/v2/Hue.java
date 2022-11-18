@@ -101,7 +101,7 @@ public class Hue {
     try (final InputStream inputStream = getUrlConnection("").getInputStream()) {
       final ResourceRoot resourceRoot = objectMapper.readValue(inputStream, ResourceRoot.class);
       allResources = resourceRoot.getData().stream().collect(Collectors.toMap(r -> r.getId(), r -> r));
-      System.out.println(resourceRoot);
+      logger.trace("Resource root: " + resourceRoot);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
@@ -119,7 +119,6 @@ public class Hue {
 
     try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
       devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
-      System.out.println(devicesRoot);
     } catch (final IOException e) {
       throw new HueApiException(e);
     }
