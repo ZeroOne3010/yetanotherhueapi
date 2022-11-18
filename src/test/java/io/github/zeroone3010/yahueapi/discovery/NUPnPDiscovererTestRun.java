@@ -1,10 +1,12 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 class NUPnPDiscovererTestRun {
-  private static final Logger logger = Logger.getLogger("NUPnPDiscovererTestRun");
+  private static final Logger logger = LoggerFactory.getLogger("NUPnPDiscovererTestRun");
 
   /**
    * Runs the NUPnPDiscoverer and prints the discovered bridges.

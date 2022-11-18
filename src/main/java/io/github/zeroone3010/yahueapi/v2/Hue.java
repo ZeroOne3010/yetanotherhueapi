@@ -17,6 +17,8 @@ import io.github.zeroone3010.yahueapi.v2.domain.RoomResource;
 import io.github.zeroone3010.yahueapi.v2.domain.ZoneResource;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +32,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingHostnameVerifier;
@@ -40,7 +41,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
 public class Hue {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   public static final String HUE_APPLICATION_KEY_HEADER = "hue-application-key";
   public static final long EVENTS_CONNECTION_TIMEOUT_MINUTES = 1L;

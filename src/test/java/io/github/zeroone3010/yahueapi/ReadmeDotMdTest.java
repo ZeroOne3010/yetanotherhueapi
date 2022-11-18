@@ -2,6 +2,8 @@ package io.github.zeroone3010.yahueapi;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -16,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +36,7 @@ class ReadmeDotMdTest {
 
   @Test
   void verifyExamplesOnReadmeDotMdCanBeCompiled() throws IOException {
-    final Logger logger = Logger.getAnonymousLogger();
+    final Logger logger = LoggerFactory.getLogger(getClass());
 
     final URL readmeDotMdLocation = ClassLoader.getSystemResource("README.md");
     Assumptions.assumeTrue(readmeDotMdLocation != null, "README.md not found.");

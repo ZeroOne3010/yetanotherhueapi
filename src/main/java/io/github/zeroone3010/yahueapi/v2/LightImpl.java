@@ -4,14 +4,15 @@ import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.update.On;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 public final class LightImpl implements Light {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   private final UUID id;
   private final String name;
@@ -60,7 +61,7 @@ public final class LightImpl implements Light {
 
   private LightResource getLightState() {
     final LightResource state = stateProvider.get();
-    logger.fine(state.toString());
+    logger.trace(state.toString());
     return state;
   }
 
@@ -72,7 +73,7 @@ public final class LightImpl implements Light {
   @Override
   public void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
-    logger.fine(result);
+    logger.trace(result);
   }
 
   @Override

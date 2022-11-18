@@ -2,17 +2,17 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
-import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.update.On;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 public final class GroupedLightImpl implements GroupedLight {
-  private static final Logger logger = Logger.getLogger("io.github.zeroone3010.yahueapi");
+  private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   private final UUID id;
   private final Supplier<GroupedLightResource> stateProvider;
@@ -56,7 +56,7 @@ public final class GroupedLightImpl implements GroupedLight {
 
   private GroupedLightResource getLightState() {
     final GroupedLightResource state = stateProvider.get();
-    logger.fine(state.toString());
+    logger.trace(state.toString());
     return state;
   }
 
@@ -68,7 +68,7 @@ public final class GroupedLightImpl implements GroupedLight {
   @Override
   public void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
-    logger.fine(result);
+    logger.trace(result);
   }
 
   @Override
