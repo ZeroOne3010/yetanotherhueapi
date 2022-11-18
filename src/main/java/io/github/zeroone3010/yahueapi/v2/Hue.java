@@ -188,6 +188,13 @@ public class Hue {
     return lights;
   }
 
+  /**
+   * Returns all the switches configured into the Bridge.
+   * Different kinds of switches include, for example, the Philips Hue dimmer switch and the Philips Hue Tap switch.
+   *
+   * @return A Map of switches, the keys being the IDs of the switches.
+   * @since 3.0.0
+   */
   public Map<UUID, Switch> getSwitches() {
     return switches;
   }
@@ -199,7 +206,7 @@ public class Hue {
   /**
    * Returns all the rooms configured into the Bridge.
    *
-   * @return A Map of rooms.
+   * @return A Map of rooms, the keys being the IDs of the rooms.
    * @since 3.0.0
    */
   public Map<UUID, Group> getRooms() {
@@ -211,7 +218,7 @@ public class Hue {
   /**
    * Returns all the zones configured into the Bridge.
    *
-   * @return A Map of zones.
+   * @return A Map of zones, the keys being the IDs of the zones.
    * @since 3.0.0
    */
   public Map<UUID, Group> getZones() {
@@ -223,11 +230,33 @@ public class Hue {
   /**
    * Returns all the grouped lights configured into the Bridge.
    *
-   * @return A Map of grouped lights.
+   * @return A Map of grouped lights, the keys being the IDs of the grouped lights.
    * @since 3.0.0
    */
   public Map<UUID, GroupedLight> getGroupedLights() {
     return groupedLights;
+  }
+
+  /**
+   * Returns a specific room by its name.
+   *
+   * @param roomName The name of a room
+   * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
+   * @since 3.0.0
+   */
+  public Optional<Group> getRoomByName(final String roomName) {
+    return getRooms().values().stream().filter(group -> Objects.equals(group.getName(), roomName)).findFirst();
+  }
+
+  /**
+   * Returns a specific zone by its name.
+   *
+   * @param zoneName The name of a zone
+   * @return A zone or {@code Optional.empty()} if a zone with the given name does not exist.
+   * @since 3.0.0
+   */
+  public Optional<Group> getZoneByName(final String zoneName) {
+    return getZones().values().stream().filter(group -> Objects.equals(group.getName(), zoneName)).findFirst();
   }
 
   public HueEventSource subscribeToEvents(final HueEventListener eventListener) {
