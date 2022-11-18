@@ -15,8 +15,15 @@ public class Color {
     return xy;
   }
 
-  public void setXy(Xy xy) {
+  /**
+   * Sets the color for this object and returns self.
+   *
+   * @param xy X and Y coordinates of the color to be set.
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
+  public Color setXy(Xy xy) {
     this.xy = xy;
+    return this;
   }
 
   @Override

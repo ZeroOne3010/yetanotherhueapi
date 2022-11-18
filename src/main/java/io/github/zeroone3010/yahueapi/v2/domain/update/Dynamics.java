@@ -17,8 +17,15 @@ public class Dynamics {
     return duration;
   }
 
-  public void setDuration(int duration) {
-    this.duration = duration;
+  /**
+   * Sets the durationInMilliseconds of a light transition or timed effects in milliseconds.
+   *
+   * @param durationInMilliseconds Number of milliseconds.
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
+  public Dynamics setDuration(int durationInMilliseconds) {
+    this.duration = durationInMilliseconds;
+    return this;
   }
 
   public float getSpeed() {
@@ -29,9 +36,11 @@ public class Dynamics {
    * Speed of dynamic palette or effect.
    *
    * @param speed A value between 0 and 1.
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setSpeed(float speed) {
+  public Dynamics setSpeed(float speed) {
     this.speed = speed;
+    return this;
   }
 
   @Override

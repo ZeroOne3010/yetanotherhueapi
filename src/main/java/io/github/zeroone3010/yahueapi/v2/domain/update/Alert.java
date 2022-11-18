@@ -16,8 +16,9 @@ public class Alert {
     return action;
   }
 
-  public void setAction(String action) {
+  public Alert setAction(String action) {
     this.action = action;
+    return this;
   }
 
   @Override

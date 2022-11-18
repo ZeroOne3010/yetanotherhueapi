@@ -17,8 +17,15 @@ public class ColorTemperatureDelta {
     return action;
   }
 
-  public void setAction(DeltaAction action) {
+  /**
+   * Sets the delta action for this object and returns self.
+   *
+   * @param action Delta action
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
+  public ColorTemperatureDelta setAction(DeltaAction action) {
     this.action = action;
+    return this;
   }
 
   public int getMirekDelta() {
@@ -26,12 +33,14 @@ public class ColorTemperatureDelta {
   }
 
   /**
-   * Mirekk delta to current mirek. Clips at mirek_minimum and mirek_maximum of mirek_schema.
+   * Mirek delta to current mirek. Clips at mirek_minimum and mirek_maximum of mirek_schema.
    *
    * @param mirekDelta A number, maximum value is 347.
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setMirekDelta(int mirekDelta) {
+  public ColorTemperatureDelta setMirekDelta(int mirekDelta) {
     this.mirekDelta = mirekDelta;
+    return this;
   }
 
   @Override

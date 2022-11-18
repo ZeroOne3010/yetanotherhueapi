@@ -18,9 +18,11 @@ public class ColorTemperature {
    * Color temperature in mirek, 153-500.
    *
    * @param mirek Color temperature in mirek, or null when the color is not in the color temperature spectrum.
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setMirek(Integer mirek) {
+  public ColorTemperature setMirek(Integer mirek) {
     this.mirek = mirek;
+    return this;
   }
 
   @Override

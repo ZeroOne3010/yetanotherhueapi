@@ -24,9 +24,11 @@ public class TimedEffects {
    * One of sunrise, no_effect
    *
    * @param effect "sunrise" or "no_effect"
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setEffect(String effect) {
+  public TimedEffects setEffect(String effect) {
     this.effect = effect;
+    return this;
   }
 
   public long getDuration() {
@@ -41,9 +43,11 @@ public class TimedEffects {
    * will be rounded to a resolution of 5 minutes.
    *
    * @param duration Duration until the timed effect should be applied.
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setDuration(Duration duration) {
+  public TimedEffects setDuration(Duration duration) {
     this.duration = Optional.ofNullable(duration).map(Duration::toMillis).orElse(0L);
+    return this;
   }
 
   @Override

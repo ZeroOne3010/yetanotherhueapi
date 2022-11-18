@@ -16,6 +16,11 @@ public class GradientPoint {
     return points;
   }
 
+  /**
+   *
+   * @param points
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
   public void setPoints(List<Color> points) {
     this.points = points;
   }

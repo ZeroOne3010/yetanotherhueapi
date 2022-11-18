@@ -17,9 +17,11 @@ public class Effects {
    * One of fire, candle, no_effect
    *
    * @param effect "fire", "candle", or "no_effect"
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setEffect(String effect) {
+  public Effects setEffect(String effect) {
     this.effect = effect;
+    return this;
   }
 
   @Override

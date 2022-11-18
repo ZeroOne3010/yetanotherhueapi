@@ -18,8 +18,15 @@ public class On {
     return on;
   }
 
-  public void setOn(boolean on) {
+  /**
+   * Toggles the light on or off.
+   *
+   * @param on True for on, false for off.
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
+  public On setOn(boolean on) {
     this.on = on;
+    return this;
   }
 
   @Override

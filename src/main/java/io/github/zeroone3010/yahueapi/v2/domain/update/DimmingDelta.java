@@ -17,8 +17,15 @@ public class DimmingDelta {
     return action;
   }
 
-  public void setAction(DeltaAction action) {
+  /**
+   * Sets the dimming delta action and returns self.
+   *
+   * @param action Delta action
+   * @return Self, so that one can also use this method like a fluent builder.
+   */
+  public DimmingDelta setAction(DeltaAction action) {
     this.action = action;
+    return this;
   }
 
   public int getBrightnessDelta() {
@@ -26,12 +33,15 @@ public class DimmingDelta {
   }
 
   /**
-   * Brightness percentage of full-scale increase delta to current dimlevel. Clips at max-level or min-level.
+   * Brightness percentage of full-scale increase delta to current dimlevel.
+   * Clips at max-level or min-level.
    *
    * @param brightnessDelta A number, maximum value is 100.
+   * @return Self, so that one can also use this method like a fluent builder.
    */
-  public void setBrightnessDelta(int brightnessDelta) {
+  public DimmingDelta setBrightnessDelta(int brightnessDelta) {
     this.brightnessDelta = brightnessDelta;
+    return this;
   }
 
   @Override
