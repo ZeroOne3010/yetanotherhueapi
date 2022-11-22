@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.DEVICE;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.LIGHT;
 
-final class GroupFactory {
+public class GroupFactory {
 
   private final Hue hue;
 
-  GroupFactory(final Hue hue) {
+  public GroupFactory(final Hue hue) {
     this.hue = hue;
   }
 

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;
 
-public final class LightImpl implements Light {
+public class LightImpl implements Light {
   private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   private final UUID id;

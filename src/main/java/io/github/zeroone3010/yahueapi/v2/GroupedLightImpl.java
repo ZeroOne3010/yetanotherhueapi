@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class GroupedLightImpl implements GroupedLight {
+public class GroupedLightImpl implements GroupedLight {
   private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   private final UUID id;

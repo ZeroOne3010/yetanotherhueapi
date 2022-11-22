@@ -17,17 +17,17 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-final class LightFactory {
+public class LightFactory {
 
   private final Hue hue;
   private final ObjectMapper objectMapper;
 
-  LightFactory(final Hue hue, final ObjectMapper objectMapper) {
+  public LightFactory(final Hue hue, final ObjectMapper objectMapper) {
     this.hue = hue;
     this.objectMapper = objectMapper;
   }
 
-  LightImpl buildLight(final LightResource resource, final URL bridgeUrl) {
+  public LightImpl buildLight(final LightResource resource, final URL bridgeUrl) {
     try {
       final UUID id = resource.getId();
       final URL url = new URL(bridgeUrl, "/clip/v2/resource/light/" + id);
@@ -42,7 +42,7 @@ final class LightFactory {
     }
   }
 
-  GroupedLightImpl buildGroupedLight(final GroupedLightResource resource, final URL bridgeUrl) {
+  public GroupedLightImpl buildGroupedLight(final GroupedLightResource resource, final URL bridgeUrl) {
     try {
       final UUID id = resource.getId();
       final URL url = new URL(bridgeUrl, "/clip/v2/resource/grouped_light/" + id);

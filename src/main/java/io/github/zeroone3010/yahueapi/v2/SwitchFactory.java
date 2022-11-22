@@ -18,19 +18,19 @@ import java.util.function.Supplier;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.BUTTON;
 import static java.util.stream.Collectors.toList;
 
-final class SwitchFactory {
+public class SwitchFactory {
 
   private final Hue hue;
   private final ObjectMapper objectMapper;
 
   private static final Predicate<ResourceIdentifier> BUTTON_FILTER = s -> BUTTON == s.getResourceType();
 
-  SwitchFactory(final Hue hue, final ObjectMapper objectMapper) {
+  public SwitchFactory(final Hue hue, final ObjectMapper objectMapper) {
     this.hue = hue;
     this.objectMapper = objectMapper;
   }
 
-  SwitchImpl buildSwitch(final DeviceResource resource,
+  public SwitchImpl buildSwitch(final DeviceResource resource,
                          final Map<UUID, ButtonResource> allButtons) {
     if (resource.getServices().stream().noneMatch(BUTTON_FILTER)) {
       return null;
