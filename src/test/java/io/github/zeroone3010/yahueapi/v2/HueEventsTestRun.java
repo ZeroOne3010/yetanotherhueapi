@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HueEventsTestRun {
   /**
-   * Displays a stream of events from the given Bridge.
+   * Displays a stream of events from the given Bridge for ten minutes.
    *
    * @param args IP address of the Bridge, API key
    */

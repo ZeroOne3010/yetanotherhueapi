@@ -38,8 +38,7 @@ public interface Light {
   void turnOff();
 
   /**
-   * Queries the light state -- or returns the cached state if caching
-   * has been enabled with {@link io.github.zeroone3010.yahueapi.Hue#setCaching(boolean)}.
+   * Queries the light state.
    *
    * @return True if the light is on, false if it is off.
    */

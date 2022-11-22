@@ -7,6 +7,8 @@ import java.util.UUID;
 /**
  * A group of lights as defined in the Bridge. This might, for example, be a ceiling fixture that
  * has multiple bulbs in it. Grouped lights unfortunately do not have human-readable names.
+ *
+ * @since 3.0.0
  */
 public interface GroupedLight {
 
@@ -14,7 +16,6 @@ public interface GroupedLight {
    * <p>Returns the technical id of the grouped light, as assigned by the Bridge.</p>
    *
    * @return Id of the light.
-   * @since 3.0.0
    */
   UUID getId();
 

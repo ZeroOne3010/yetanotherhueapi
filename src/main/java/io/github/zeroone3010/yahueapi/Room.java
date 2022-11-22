@@ -5,6 +5,8 @@ import java.util.Optional;
 
 /**
  * A room, a zone, or another type of group that has been configured into the Hue Bridge.
+ *
+ * @deprecated Use the {@link io.github.zeroone3010.yahueapi.v2.Group} class instead.
  */
 public interface Room {
 
