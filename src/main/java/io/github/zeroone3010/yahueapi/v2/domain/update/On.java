@@ -7,6 +7,9 @@ import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class On {
 
+  public static final On ON = new On(true);
+  public static final On OFF = new On(false);
+
   @JsonProperty("on")
   private boolean on;
 

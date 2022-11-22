@@ -3,7 +3,6 @@ package io.github.zeroone3010.yahueapi.v2;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
-import io.github.zeroone3010.yahueapi.v2.domain.update.On;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
+import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;
 
 public final class LightImpl implements Light {
   private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
@@ -43,16 +45,12 @@ public final class LightImpl implements Light {
 
   @Override
   public void turnOn() {
-    final UpdateLight newState = new UpdateLight();
-    newState.setOn(new On(true));
-    stateSetter.apply(newState);
+    stateSetter.apply(new UpdateLight().setOn(ON));
   }
 
   @Override
   public void turnOff() {
-    final UpdateLight newState = new UpdateLight();
-    newState.setOn(new On(false));
-    stateSetter.apply(newState);
+    stateSetter.apply(new UpdateLight().setOn(OFF));
   }
 
   @Override
