@@ -2,6 +2,7 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
+import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
 import io.github.zeroone3010.yahueapi.v2.domain.update.On;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 import org.slf4j.Logger;
@@ -67,13 +68,13 @@ public final class LightImpl implements Light {
 
   @Override
   public void setBrightness(final int brightness) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    setState(new UpdateLight().setDimming(new Dimming().setBrightness(brightness)));
   }
 
   @Override
   public void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
-    logger.trace(result);
+    logger.info(result);
   }
 
   @Override

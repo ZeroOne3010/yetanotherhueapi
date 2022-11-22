@@ -7,6 +7,8 @@ import java.util.UUID;
 /**
  * A single Philips Hue -compatible light. Could be a bulb, a ceiling fixture, a LED strip, or anything in between.
  * Even remote controlled wall sockets are considered as "lights" by the Hue Bridge.
+ *
+ * @since 3.0.0
  */
 public interface Light {
 
@@ -15,7 +17,6 @@ public interface Light {
    * is changed by the user.</p>
    *
    * @return Id of the light.
-   * @since 3.0.0
    */
   UUID getId();
 
@@ -47,7 +48,7 @@ public interface Light {
   /**
    * Sets the brightness of the light. If the light is off, does not turn it on, nor does {@code 0} turn it off.
    *
-   * @param brightness A value from {@code 0} (minimum brightness) to {@code 254} (maximum brightness).
+   * @param brightness A value from {@code 1} (minimum brightness) to {@code 100} (maximum brightness).
    */
   void setBrightness(int brightness);
 
