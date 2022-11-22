@@ -31,7 +31,7 @@ public class SwitchFactory {
   }
 
   public SwitchImpl buildSwitch(final DeviceResource resource,
-                         final Map<UUID, ButtonResource> allButtons) {
+                                final Map<UUID, ButtonResource> allButtons) {
     if (resource.getServices().stream().noneMatch(BUTTON_FILTER)) {
       return null;
     }
@@ -41,11 +41,13 @@ public class SwitchFactory {
         .map(allButtons::get)
         .map(button -> new ButtonImpl(createButtonStateProvider(button.getId()), button))
         .collect(toList());
-    return new SwitchImpl(
+    final SwitchImpl result = new SwitchImpl(
         resource.getId(),
         buttons,
         resource.getMetadata().getName()
     );
+    buttons.forEach(button -> ((ButtonImpl) button).setOwner(result));
+    return result;
   }
 
   private Supplier<ButtonResource> createButtonStateProvider(final UUID buttonId) {

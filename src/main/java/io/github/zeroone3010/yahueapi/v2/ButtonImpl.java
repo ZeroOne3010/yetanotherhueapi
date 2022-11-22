@@ -12,6 +12,8 @@ public class ButtonImpl implements Button {
   private final UUID id;
   private int number;
 
+  private Switch owner;
+
   public ButtonImpl(final Supplier<ButtonResource> stateProvider, final ButtonResource buttonResource) {
     this.stateProvider = stateProvider;
     this.id = buttonResource.getId();
@@ -26,6 +28,15 @@ public class ButtonImpl implements Button {
   @Override
   public int getNumber() {
     return number;
+  }
+
+  @Override
+  public Switch getOwner() {
+    return owner;
+  }
+
+  void setOwner(final Switch owner) {
+    this.owner = owner;
   }
 
   @Override

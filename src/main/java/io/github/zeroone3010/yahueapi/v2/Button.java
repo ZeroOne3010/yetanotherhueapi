@@ -25,6 +25,13 @@ public interface Button {
   int getNumber();
 
   /**
+   * Returns the {@link Switch} that this {@code Button} belongs to.
+   *
+   * @return The {@code Switch} that owns this button.
+   */
+  Switch getOwner();
+
+  /**
    * <p>The latest event that this button as emitted.</p>
    *
    * @return An enumeration describing the latest event from this particular button. May be empty if this
