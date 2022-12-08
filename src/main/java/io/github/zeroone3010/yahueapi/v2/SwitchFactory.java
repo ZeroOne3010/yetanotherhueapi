@@ -9,14 +9,13 @@ import io.github.zeroone3010.yahueapi.v2.domain.ResourceIdentifier;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.BUTTON;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class SwitchFactory {
 
@@ -35,18 +34,18 @@ public class SwitchFactory {
     if (resource.getServices().stream().noneMatch(BUTTON_FILTER)) {
       return null;
     }
-    final List<Button> buttons = resource.getServices().stream()
+    final Map<UUID, Button> buttons = resource.getServices().stream()
         .filter(BUTTON_FILTER)
         .map(ResourceIdentifier::getResourceId)
         .map(allButtons::get)
         .map(button -> new ButtonImpl(createButtonStateProvider(button.getId()), button))
-        .collect(toList());
+        .collect(toMap(ButtonImpl::getId, button -> button));
     final SwitchImpl result = new SwitchImpl(
         resource.getId(),
         buttons,
         resource.getMetadata().getName()
     );
-    buttons.forEach(button -> ((ButtonImpl) button).setOwner(result));
+    buttons.values().forEach(button -> ((ButtonImpl) button).setOwner(result));
     return result;
   }
 

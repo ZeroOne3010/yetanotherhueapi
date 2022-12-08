@@ -32,7 +32,7 @@ public interface Button {
   Switch getOwner();
 
   /**
-   * <p>The latest event that this button as emitted.</p>
+   * <p>The latest event that this button has emitted.</p>
    *
    * @return An enumeration describing the latest event from this particular button. May be empty if this
    * was not the last button to be pressed in its switch.

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.HueEvent;
+import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +17,11 @@ public class BasicHueEventHandler implements EventHandler {
   };
 
   private final ObjectMapper objectMapper = HttpUtil.buildObjectMapper();
+  private final Hue hue;
   private final HueEventListener eventListener;
 
-  public BasicHueEventHandler(final HueEventListener eventListener) {
+  public BasicHueEventHandler(final Hue hue, final HueEventListener eventListener) {
+    this.hue = hue;
     this.eventListener = eventListener;
   }
 
@@ -39,10 +42,26 @@ public class BasicHueEventHandler implements EventHandler {
     logger.debug("Message: " + messageEvent.getData());
     final List<HueEvent> hueEvents = objectMapper.readValue(messageEvent.getData(), EVENT_LIST_TYPE_REF);
     eventListener.receive(hueEvents);
+    parseAndAnnounceButtonEvents(hueEvents);
+  }
+
+  private void parseAndAnnounceButtonEvents(final List<HueEvent> hueEvents) {
+    hueEvents.stream().flatMap(eventsItem ->
+        eventsItem.getData().stream()
+            .filter(data -> data.getButton().isPresent())
+            .map(data -> {
+              final Switch theSwitch = hue.getSwitches().get(data.getOwner().getResourceId());
+              return new ButtonEvent(eventsItem.getCreationTime(),
+                  theSwitch,
+                  theSwitch.getButtons().get(data.getResourceId()),
+                  ButtonEventType.parseFromButtonEventType(data.getButton().get().getLastEvent()),
+                  eventsItem.getId());
+            })
+    ).forEach(eventListener::receiveButtonEvent);
   }
 
   @Override
-  public void onComment(final String comment) throws Exception {
+  public void onComment(final String comment) {
     logger.trace("Comment received: " + comment);
   }
 

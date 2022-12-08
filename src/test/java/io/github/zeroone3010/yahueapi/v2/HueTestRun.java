@@ -26,7 +26,7 @@ public class HueTestRun {
         .sorted(Comparator.comparing(Switch::getName))
         .forEach(value -> {
           System.out.println(value.getId() + " -> " + value.getName() + ": ");
-          value.getButtons().forEach(button -> {
+          value.getButtons().values().forEach(button -> {
             System.out.println("\t" + button.getNumber() + ": " + button.getLatestEvent());
           });
         });

@@ -271,7 +271,7 @@ public class Hue {
           .hostnameVerifier(getTrustEverythingHostnameVerifier())
           .build();
 
-      final BasicHueEventHandler eventHandler = new BasicHueEventHandler(eventListener);
+      final BasicHueEventHandler eventHandler = new BasicHueEventHandler(this, eventListener);
       final EventSource.Builder builder = new EventSource.Builder(eventHandler, eventUrl.toURI())
           .client(client)
           .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))

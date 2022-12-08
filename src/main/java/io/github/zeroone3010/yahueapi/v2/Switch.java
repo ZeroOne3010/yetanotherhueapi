@@ -1,6 +1,8 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -20,9 +22,9 @@ public interface Switch {
   /**
    * Lists the buttons of this switch.
    *
-   * @return A list of buttons on this switch.
+   * @return A map of buttons on this switch, keys being the UUIDs of the buttons.
    */
-  List<Button> getButtons();
+  Map<UUID, Button> getButtons();
 
   /**
    * Returns the name of the switch, as set by the user.
@@ -30,4 +32,13 @@ public interface Switch {
    * @return Name of the switch.
    */
   String getName();
+
+  /**
+   * <p>The latest button that was pressed. Use {@link Button#getLatestEvent()} for the exact event then.
+   * The resulting {@code Optional<ButtonEventType>} is guaranteed to have a value if this {@code Optional<Button>}
+   * has a value.</p>
+   *
+   * @return May be empty if no button has been pressed on this switch.
+   */
+  Optional<Button> getLatestPressedButton();
 }
