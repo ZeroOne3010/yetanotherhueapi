@@ -22,6 +22,12 @@ Unreleased
   also removed the constructor from the `Hue` class that had `HueBridgeProtocol` as a parameter, as the enum
   now only has one value. Also changed said enum from public to package private.
 
+### Deprecated
+
+* `getRooms()`, `getZones()`,  `getRoomByName()`, and `getZoneByName()` methods from the
+  `io.github.zeroone3010.yahueapi.Hue` class in favor of the methods with the same names (if not the same signatures)
+  in the `io.github.zeroone3010.yahueapi.v2.Hue` class.
+
 v2.7.0 (2022-04-19)
 ----------
 

@@ -201,7 +201,9 @@ public final class Hue {
    *
    * @return A Collection of rooms.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getRooms()} instead.
    */
+  @Deprecated
   public Collection<Room> getRooms() {
     return getGroupsOfType(GroupType.ROOM);
   }
@@ -212,7 +214,9 @@ public final class Hue {
    *
    * @return A Collection of zones as Room objects.
    * @since 1.1.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getZones()} instead.
    */
+  @Deprecated
   public Collection<Room> getZones() {
     return getGroupsOfType(GroupType.ZONE);
   }
@@ -223,7 +227,9 @@ public final class Hue {
    * @param roomName The name of a room
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getRoomByName(String)} instead.
    */
+  @Deprecated
   public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.groups.get(roomName)).filter(g -> g.getType() == GroupType.ROOM);
@@ -235,7 +241,9 @@ public final class Hue {
    * @param zoneName The name of a zone
    * @return A zone or {@code Optional.empty()} if a zone with the given name does not exist.
    * @since 1.1.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getZoneByName(String)} instead.
    */
+  @Deprecated
   public Optional<Room> getZoneByName(final String zoneName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.groups.get(zoneName)).filter(g -> g.getType() == GroupType.ZONE);
