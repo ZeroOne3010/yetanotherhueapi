@@ -42,36 +42,10 @@ public class LightFactory {
     }
   }
 
-  public GroupedLightImpl buildGroupedLight(final GroupedLightResource resource, final URL bridgeUrl) {
-    try {
-      final UUID id = resource.getId();
-      final URL url = new URL(bridgeUrl, "/clip/v2/resource/grouped_light/" + id);
-      return new GroupedLightImpl(
-          id,
-          resource,
-          createGroupedLightStateProvider(url),
-          stateSetter(url)
-      );
-    } catch (final MalformedURLException e) {
-      throw new HueApiException(e);
-    }
-  }
-
   private Supplier<LightResource> createStateProvider(final URL url) {
     return () -> {
       try (final InputStream inputStream = hue.getUrlConnection(url).getInputStream()) {
         final LightResource lightResource = objectMapper.readValue(inputStream, LightResourceRoot.class).getData().get(0);
-        return lightResource;
-      } catch (final IOException e) {
-        throw new HueApiException(e);
-      }
-    };
-  }
-
-  private Supplier<GroupedLightResource> createGroupedLightStateProvider(final URL url) {
-    return () -> {
-      try (final InputStream inputStream = hue.getUrlConnection(url).getInputStream()) {
-        final GroupedLightResource lightResource = objectMapper.readValue(inputStream, GroupedLightResourceRoot.class).getData().get(0);
         return lightResource;
       } catch (final IOException e) {
         throw new HueApiException(e);

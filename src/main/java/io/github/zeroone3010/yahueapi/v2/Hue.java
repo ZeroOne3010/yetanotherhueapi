@@ -8,7 +8,6 @@ import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
-import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.Resource;
 import io.github.zeroone3010.yahueapi.v2.domain.ResourceRoot;
@@ -61,7 +60,6 @@ public class Hue {
   private Map<UUID, Light> lights;
   private Map<UUID, Switch> switches;
   private Map<UUID, Group> groups;
-  private Map<UUID, GroupedLight> groupedLights;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -110,12 +108,6 @@ public class Hue {
         .map(r -> (LightResource) r)
         .map(this::buildLight)
         .collect(toMap(LightImpl::getId, light -> light));
-
-    groupedLights = allResources.values().stream()
-        .filter(r -> r instanceof GroupedLightResource)
-        .map(r -> (GroupedLightResource) r)
-        .map(this::buildGroupedLight)
-        .collect(toMap(GroupedLightImpl::getId, light -> light));
 
     try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
       devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
@@ -169,10 +161,6 @@ public class Hue {
     return lightFactory.buildLight(lightResource, resourceUrl);
   }
 
-  private GroupedLightImpl buildGroupedLight(final GroupedLightResource groupedLightResource) {
-    return lightFactory.buildGroupedLight(groupedLightResource, resourceUrl);
-  }
-
   private GroupImpl buildGroup(final GroupResource groupResource) {
     return groupFactory.buildGroup(groupResource, resourceUrl);
   }
@@ -224,16 +212,6 @@ public class Hue {
     return groups.values().stream()
         .filter(r -> r.getType() == ResourceType.ZONE)
         .collect(toMap(Group::getId, r -> r));
-  }
-
-  /**
-   * Returns all the grouped lights configured into the Bridge.
-   *
-   * @return A Map of grouped lights, the keys being the IDs of the grouped lights.
-   * @since 3.0.0
-   */
-  public Map<UUID, GroupedLight> getGroupedLights() {
-    return groupedLights;
   }
 
   /**
