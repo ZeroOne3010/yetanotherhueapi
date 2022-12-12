@@ -49,4 +49,11 @@ public interface Group {
    * @return The type of this group of lights.
    */
   ResourceType getType();
+
+  /**
+   * Queries the state of the group of lights.
+   *
+   * @return True if any light is on in this group, false if not.
+   */
+  boolean isAnyOn();
 }

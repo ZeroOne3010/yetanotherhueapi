@@ -35,7 +35,8 @@ public class HueTestRun {
     hue.getRooms().values().stream()
         .sorted(Comparator.comparing(Group::getName))
         .forEach(value -> {
-          System.out.println(value.getId() + " -> " + value.getName() + ": " + value.getLights().size() + " lights");
+          System.out.println(value.getId() + " -> " + value.getName() + ": " + value.getLights().size() + " lights"
+              + "; any on: " + value.isAnyOn());
         });
 
     System.out.println("\nZones:");
@@ -43,13 +44,6 @@ public class HueTestRun {
         .sorted(Comparator.comparing(Group::getName))
         .forEach(value -> {
           System.out.println(value.getId() + " -> " + value.getName() + ": " + value.getLights().size() + " lights");
-        });
-
-    System.out.println("\nGrouped lights:");
-    hue.getGroupedLights().values().stream()
-        .sorted(Comparator.comparing(GroupedLight::getId))
-        .forEach(value -> {
-          System.out.println(value.getId() + " -> " + value.isOn());
         });
   }
 }

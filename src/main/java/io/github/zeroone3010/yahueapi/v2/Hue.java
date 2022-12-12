@@ -85,7 +85,7 @@ public class Hue {
     TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
-    groupFactory = new GroupFactory(this);
+    groupFactory = new GroupFactory(this, objectMapper);
     refresh();
   }
 
@@ -162,7 +162,7 @@ public class Hue {
   }
 
   private GroupImpl buildGroup(final GroupResource groupResource) {
-    return groupFactory.buildGroup(groupResource, resourceUrl);
+    return groupFactory.buildGroup(groupResource);
   }
 
   private Switch buildSwitch(final DeviceResource deviceResource, final List<ButtonResource> allButtons) {
