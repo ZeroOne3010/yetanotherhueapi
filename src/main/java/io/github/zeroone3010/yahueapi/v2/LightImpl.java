@@ -70,9 +70,14 @@ public class LightImpl implements Light {
   }
 
   @Override
+  public void setState(final UpdateState state) {
+    setState((UpdateLight) state);
+  }
+
+  @Override
   public void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
-    logger.info(result);
+    logger.info("Update result: {}", result);
   }
 
   @Override

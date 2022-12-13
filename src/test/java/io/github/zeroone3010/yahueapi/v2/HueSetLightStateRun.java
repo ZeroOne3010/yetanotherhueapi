@@ -1,5 +1,9 @@
 package io.github.zeroone3010.yahueapi.v2;
 
+import io.github.zeroone3010.yahueapi.Color;
+import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
+import io.github.zeroone3010.yahueapi.v2.domain.update.On;
+
 public class HueSetLightStateRun {
 
   public static final String ROOM_NAME = "My Room";
@@ -20,9 +24,13 @@ public class HueSetLightStateRun {
     hue.getRoomByName(ROOM_NAME).get().getLights()
         .forEach(light -> System.out.println(light.getName()));
 
+    final Color sunflowerIsland = Color.of("#ffcc00");
     hue.getRoomByName(ROOM_NAME).get()
         .getLightByName(LIGHT_NAME).get()
-        .turnOn();
+        .setState(new UpdateState()
+            .setColor(sunflowerIsland)
+            .setDimming(new Dimming().setBrightness(100))
+            .setOn(On.ON));
 
   }
 }

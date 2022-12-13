@@ -56,5 +56,6 @@ public interface Light {
    *
    * @param state A state to be set for this light.
    */
+  void setState(UpdateState state);
   void setState(UpdateLight state);
 }

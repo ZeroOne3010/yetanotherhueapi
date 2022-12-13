@@ -15,8 +15,18 @@ public class Xy {
     return x;
   }
 
+  public Xy setX(float x) {
+    this.x = x;
+    return this;
+  }
+
   public float getY() {
     return y;
+  }
+
+  public Xy setY(float y) {
+    this.y = y;
+    return this;
   }
 
   @Override
