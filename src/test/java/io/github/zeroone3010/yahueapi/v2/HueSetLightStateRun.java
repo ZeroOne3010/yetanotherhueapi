@@ -1,8 +1,6 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.Color;
-import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
-import io.github.zeroone3010.yahueapi.v2.domain.update.On;
 
 public class HueSetLightStateRun {
 
@@ -28,9 +26,9 @@ public class HueSetLightStateRun {
     hue.getRoomByName(ROOM_NAME).get()
         .getLightByName(LIGHT_NAME).get()
         .setState(new UpdateState()
-            .setColor(sunflowerIsland)
-            .setDimming(new Dimming().setBrightness(100))
-            .setOn(On.ON));
+            .color(sunflowerIsland)
+            .brightness(100)
+            .on());
 
   }
 }
