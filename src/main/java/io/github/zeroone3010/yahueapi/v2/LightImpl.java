@@ -66,16 +66,15 @@ public class LightImpl implements Light {
 
   @Override
   public void setBrightness(final int brightness) {
-    setState(new UpdateLight().setDimming(new Dimming().setBrightness(brightness)));
+    setState(new UpdateState().brightness(brightness).getUpdateLight());
   }
 
   @Override
   public void setState(final UpdateState state) {
-    setState((UpdateLight) state);
+    setState(state.getUpdateLight());
   }
 
-  @Override
-  public void setState(final UpdateLight state) {
+  private void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
     logger.info("Update result: {}", result);
   }
