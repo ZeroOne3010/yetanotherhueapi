@@ -56,7 +56,6 @@ public class Hue {
   private final URL eventUrl;
   private final String apiKey;
   private Map<UUID, Resource> allResources;
-  private DeviceResourceRoot devicesRoot;
   private Map<UUID, Light> lights;
   private Map<UUID, Switch> switches;
   private Map<UUID, Group> groups;
@@ -112,12 +111,6 @@ public class Hue {
         .map(r -> (LightResource) r)
         .map(this::buildLight)
         .collect(toMap(LightImpl::getId, light -> light));
-
-    try (final InputStream inputStream = getUrlConnection("/device").getInputStream()) {
-      devicesRoot = objectMapper.readValue(inputStream, DeviceResourceRoot.class);
-    } catch (final IOException e) {
-      throw new HueApiException(e);
-    }
 
     final List<DeviceResource> devices = allResources.values().stream()
         .filter(r -> r instanceof DeviceResource)
