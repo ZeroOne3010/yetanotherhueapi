@@ -8,7 +8,11 @@ import io.github.zeroone3010.yahueapi.v2.domain.update.AlertType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
 import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Effects;
+import io.github.zeroone3010.yahueapi.v2.domain.update.TimedEffectType;
+import io.github.zeroone3010.yahueapi.v2.domain.update.TimedEffects;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
+
+import java.time.Duration;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;
@@ -118,6 +122,51 @@ public class UpdateState {
    */
   public UpdateState alert() {
     updateLight.setAlert(new Alert().setAction(AlertType.BREATHE));
+    return this;
+  }
+
+  /**
+   * <p>Starts the timed sunrise effect. The maximum duration is six hours.
+   * The timed effect may be stopped with the {@link #clearTimedEffect()} method.</p>
+   *
+   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   *
+   * @param duration Duration of the sunrise effect.
+   * @return This state, for easy chaining of different methods.
+   * @see {@link #clearTimedEffect()}
+   */
+  public UpdateState sunrise(final Duration duration) {
+    timedEffect(TimedEffectType.SUNRISE, duration);
+    return this;
+  }
+
+  /**
+   * <p>Stops the timed effect.</p>
+   *
+   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   *
+   * @return This state, for easy chaining of different methods.
+   * @see {@link #sunrise(Duration)}
+   */
+  public UpdateState clearTimedEffect() {
+    timedEffect(TimedEffectType.NO_EFFECT, null);
+    return this;
+  }
+
+  /**
+   * <p>Starts a timed effect. As of December 2022, "sunrise" and "no effect" are the only two options
+   * that the Bridge offers. There are helper methods for both of those in this class, but this method
+   * exists here for extra convenience so that you can start and stop the effect with the same method,
+   * just changing the parameters.</p>
+   *
+   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   *
+   * @return This state, for easy chaining of different methods.
+   * @see {@link #sunrise(Duration)}
+   * @see {@link #clearTimedEffect()}
+   */
+  public UpdateState timedEffect(final TimedEffectType effect, final Duration duration) {
+    updateLight.setTimedEffects(new TimedEffects().setDuration(duration).setEffect(effect));
     return this;
   }
 
