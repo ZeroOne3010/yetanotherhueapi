@@ -4,6 +4,8 @@ import io.github.zeroone3010.yahueapi.Color;
 import io.github.zeroone3010.yahueapi.XAndYAndBrightness;
 import io.github.zeroone3010.yahueapi.v2.domain.Xy;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
+import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
+import io.github.zeroone3010.yahueapi.v2.domain.update.Effects;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
@@ -95,7 +97,19 @@ public class UpdateState {
     return this;
   }
 
-  public UpdateLight getUpdateLight() {
+  /**
+   * Starts an effect, or stops it with the {@link EffectType#NO_EFFECT}.
+   * Note that not all lights, not even all the color ones, support effects.
+   *
+   * @param effectType Type of effect.
+   * @return This state, for easy chaining of different methods.
+   */
+  public UpdateState effect(final EffectType effectType) {
+    updateLight.setEffects(new Effects().setEffect(effectType));
+    return this;
+  }
+
+  UpdateLight getUpdateLight() {
     return updateLight;
   }
 }
