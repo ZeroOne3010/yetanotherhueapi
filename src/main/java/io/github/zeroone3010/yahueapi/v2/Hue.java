@@ -89,6 +89,10 @@ public class Hue {
     refresh();
   }
 
+  URL getResourceUrl() {
+    return resourceUrl;
+  }
+
   /**
    * Refreshes the room, lamp, etc. data from the Hue Bridge, in case
    * it has been updated since the application was started.

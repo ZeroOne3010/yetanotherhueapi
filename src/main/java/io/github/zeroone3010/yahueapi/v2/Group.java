@@ -56,4 +56,28 @@ public interface Group {
    * @return True if any light is on in this group, false if not.
    */
   boolean isAnyOn();
+
+  /**
+   * Turns the lights on.
+   */
+  void turnOn();
+
+  /**
+   * Turns the lights off.
+   */
+  void turnOff();
+
+  /**
+   * Sets the brightness of the lights. If the lights are off, does not turn them on, nor does {@code 0} turn them off.
+   *
+   * @param brightness A value from {@code 1} (minimum brightness) to {@code 100} (maximum brightness).
+   */
+  void setBrightness(int brightness);
+
+  /**
+   * Sets a state for the light.
+   *
+   * @param state A state to be set for this light.
+   */
+  void setState(UpdateState state);
 }

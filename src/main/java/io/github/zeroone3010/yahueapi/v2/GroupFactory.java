@@ -7,14 +7,14 @@ import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.ResourceIdentifier;
+import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -56,23 +56,41 @@ public class GroupFactory {
         groupResource.getType(),
         groupResource.getMetadata().getName(),
         lightProvider,
-        createStateProvider(groupResource));
+        createStateProvider(groupResource),
+        stateSetter(groupResource)
+    );
   }
 
   private Supplier<GroupedLightResource> createStateProvider(final GroupResource groupResource) {
-    final UUID lightGroupId = groupResource.getServices()
-        .stream()
-        .filter(service -> service.getResourceType() == GROUPED_LIGHT)
-        .map(ResourceIdentifier::getResourceId)
-        .findFirst()
-        .orElse(null);
     return () -> {
-      final String urlPath = "/grouped_light/" + lightGroupId;
+      final String urlPath = resolveUrlPath(groupResource);
       try (final InputStream inputStream = hue.getUrlConnection(urlPath).getInputStream()) {
         return objectMapper.readValue(inputStream, GroupedLightResourceRoot.class).getData().get(0);
       } catch (final IOException e) {
         throw new HueApiException(e);
       }
     };
+  }
+
+  private Function<UpdateLight, String> stateSetter(final GroupResource groupResource) {
+    return state -> {
+      final String urlPath = resolveUrlPath(groupResource);
+      try {
+        final String body = objectMapper.writeValueAsString(state);
+        return HttpUtil.put(hue, hue.getResourceUrl(), urlPath, body);
+      } catch (final Exception e) {
+        throw new HueApiException(e);
+      }
+    };
+  }
+
+  private static String resolveUrlPath(final GroupResource groupResource) {
+    return groupResource.getServices()
+        .stream()
+        .filter(service -> service.getResourceType() == GROUPED_LIGHT)
+        .map(ResourceIdentifier::getResourceId)
+        .findFirst()
+        .map(uuid -> "/grouped_light/" + uuid)
+        .orElse(null);
   }
 }

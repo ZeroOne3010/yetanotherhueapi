@@ -106,6 +106,7 @@ public class UpdateState {
   /**
    * Starts an effect, or stops it with the {@link EffectType#NO_EFFECT}.
    * Note that not all lights, not even all the color ones, support effects.
+   * Also note that rooms and zones do not support effects.
    *
    * @param effectType Type of effect.
    * @return This state, for easy chaining of different methods.
@@ -129,7 +130,8 @@ public class UpdateState {
    * <p>Starts the timed sunrise effect. The maximum duration is six hours.
    * The timed effect may be stopped with the {@link #clearTimedEffect()} method.</p>
    *
-   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   * <p>Note that not all lights, not even all the color ones, support timed effects.
+   * Also note that rooms and zones do not support timed effects.</p>
    *
    * @param duration Duration of the sunrise effect.
    * @return This state, for easy chaining of different methods.
@@ -143,7 +145,8 @@ public class UpdateState {
   /**
    * <p>Stops the timed effect.</p>
    *
-   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   * <p>Note that not all lights, not even all the color ones, support timed effects.
+   * Also note that rooms and zones do not support timed effects.</p>
    *
    * @return This state, for easy chaining of different methods.
    * @see {@link #sunrise(Duration)}
@@ -159,7 +162,8 @@ public class UpdateState {
    * exists here for extra convenience so that you can start and stop the effect with the same method,
    * just changing the parameters.</p>
    *
-   * <p>Note that not all lights, not even all the color ones, support timed effects.</p>
+   * <p>Note that not all lights, not even all the color ones, support timed effects.
+   * Also note that rooms and zones do not support timed effects.</p>
    *
    * @return This state, for easy chaining of different methods.
    * @see {@link #sunrise(Duration)}
