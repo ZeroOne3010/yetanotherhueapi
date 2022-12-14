@@ -36,6 +36,9 @@ public class LightResource extends Resource {
   @JsonProperty("gradient")
   private Gradient gradient;
 
+  @JsonProperty("effects")
+  private Effects effects;
+
   public ResourceIdentifier getOwner() {
     return owner;
   }
@@ -74,5 +77,9 @@ public class LightResource extends Resource {
 
   public Gradient getGradient() {
     return gradient;
+  }
+
+  public Effects getEffects() {
+    return effects;
   }
 }

@@ -1,12 +1,16 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.HueApiException;
+import io.github.zeroone3010.yahueapi.v2.domain.Effects;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
-import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
+import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -72,6 +76,12 @@ public class LightImpl implements Light {
   @Override
   public void setState(final UpdateState state) {
     setState(state.getUpdateLight());
+  }
+
+  @Override
+  public Collection<EffectType> getSupportedEffects() {
+    return Optional.ofNullable(stateProvider.get().getEffects())
+        .map(Effects::getEffectValues).orElse(Collections.emptyList());
   }
 
   private void setState(final UpdateLight state) {

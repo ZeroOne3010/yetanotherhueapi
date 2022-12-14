@@ -1,7 +1,8 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
+import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
 
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -57,4 +58,11 @@ public interface Light {
    * @param state A state to be set for this light.
    */
   void setState(UpdateState state);
+
+  /**
+   * The effects that this light supports. May be empty but never null.
+   *
+   * @return A collection of supported effect types.
+   */
+  Collection<EffectType> getSupportedEffects();
 }

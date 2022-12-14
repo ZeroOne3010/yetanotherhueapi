@@ -106,6 +106,7 @@ public class UpdateState {
   /**
    * Starts an effect, or stops it with the {@link EffectType#NO_EFFECT}.
    * Note that not all lights, not even all the color ones, support effects.
+   * You may check the supported effects with the {@link Light#getSupportedEffects()} method.
    * Also note that rooms and zones do not support effects.
    *
    * @param effectType Type of effect.

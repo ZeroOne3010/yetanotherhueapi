@@ -18,7 +18,7 @@ public class HueTestRun {
     hue.getLights().values().stream()
         .sorted(Comparator.comparing(Light::getName))
         .forEach(value -> {
-          System.out.println(value.getId() + " -> " + value.getName() + ": " + value.isOn() + ". owner: ");
+          System.out.println(value.getId() + " -> " + value.getName() + ": " + value.isOn() + ". effects: " + value.getSupportedEffects());
         });
 
     System.out.println("Switches: ");
