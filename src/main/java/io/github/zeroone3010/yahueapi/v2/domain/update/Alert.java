@@ -4,19 +4,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Alert {
 
   @JsonProperty("action")
-  private String action;
+  private AlertType action;
 
-  public String getAction() {
+  public AlertType getAction() {
     return action;
   }
 
-  public Alert setAction(String action) {
+  public Alert setAction(AlertType action) {
     this.action = action;
     return this;
   }

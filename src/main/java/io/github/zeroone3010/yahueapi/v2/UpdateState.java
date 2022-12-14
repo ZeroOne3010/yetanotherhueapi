@@ -3,6 +3,8 @@ package io.github.zeroone3010.yahueapi.v2;
 import io.github.zeroone3010.yahueapi.Color;
 import io.github.zeroone3010.yahueapi.XAndYAndBrightness;
 import io.github.zeroone3010.yahueapi.v2.domain.Xy;
+import io.github.zeroone3010.yahueapi.v2.domain.update.Alert;
+import io.github.zeroone3010.yahueapi.v2.domain.update.AlertType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
 import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Effects;
@@ -106,6 +108,16 @@ public class UpdateState {
    */
   public UpdateState effect(final EffectType effectType) {
     updateLight.setEffects(new Effects().setEffect(effectType));
+    return this;
+  }
+
+  /**
+   * Alerts, i.e. flashes the light a few times.
+   *
+   * @return This state, for easy chaining of different methods.
+   */
+  public UpdateState alert() {
+    updateLight.setAlert(new Alert().setAction(AlertType.BREATHE));
     return this;
   }
 
