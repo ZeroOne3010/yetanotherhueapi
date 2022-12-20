@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * @since 3.0.0
  */
-public interface Light {
+public interface Light extends Device {
 
   /**
    * <p>Returns the technical id of the light, as assigned by the Bridge. The id stays the same even if the light name
@@ -19,6 +19,7 @@ public interface Light {
    *
    * @return Id of the light.
    */
+  @Override
   UUID getId();
 
   /**
@@ -26,6 +27,7 @@ public interface Light {
    *
    * @return Name of the light.
    */
+  @Override
   String getName();
 
   /**

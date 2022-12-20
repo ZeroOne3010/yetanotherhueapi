@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingHostnameVerifier;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingSocketFactory;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
+import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.MOTION;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
@@ -58,6 +59,7 @@ public class Hue {
   private Map<UUID, Light> lights;
   private Map<UUID, Switch> switches;
   private Map<UUID, Group> groups;
+  private Map<UUID, Device> motionSensors;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -126,6 +128,11 @@ public class Hue {
         .filter(Objects::nonNull)
         .collect(toMap(Switch::getId, s -> s));
 
+    motionSensors = devices.stream()
+        .filter(device -> device.getServices().stream().anyMatch(service -> MOTION == service.getResourceType()))
+        .map(device -> new MotionSensorImpl(device.getId(), device.getMetadata().getName()))
+        .collect(Collectors.toMap(Device::getId, d -> d));
+
     groups = allResources.values().stream()
         .filter(r -> r instanceof RoomResource || r instanceof ZoneResource)
         .map(r -> (GroupResource) r)
@@ -180,6 +187,16 @@ public class Hue {
    */
   public Map<UUID, Switch> getSwitches() {
     return switches;
+  }
+
+  /**
+   * Returns all the motion sensors configured into the Bridge.
+   *
+   * @return A Map of motion sensors, the keys being the IDs of the sensors.
+   * @since 3.0.0
+   */
+  public Map<UUID, Device> getMotionSensors() {
+    return motionSensors;
   }
 
   Resource getResource(final UUID uuid) {

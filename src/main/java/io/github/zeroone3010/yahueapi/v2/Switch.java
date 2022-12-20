@@ -9,13 +9,14 @@ import java.util.UUID;
  *
  * @since 3.0.0
  */
-public interface Switch {
+public interface Switch extends Device {
   /**
    * <p>Returns the technical id of the switch, as assigned by the Bridge. The id stays the same even if the switch name
    * is changed by the user.</p>
    *
    * @return Id of the switch.
    */
+  @Override
   UUID getId();
 
   /**
@@ -30,6 +31,7 @@ public interface Switch {
    *
    * @return Name of the switch.
    */
+  @Override
   String getName();
 
   /**

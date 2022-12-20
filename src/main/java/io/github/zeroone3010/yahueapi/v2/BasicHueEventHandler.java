@@ -6,6 +6,7 @@ import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.HueEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
+import io.github.zeroone3010.yahueapi.v2.domain.event.MotionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,19 @@ public class BasicHueEventHandler implements EventHandler {
                   eventsItem.getId());
             })
     ).forEach(eventListener::receiveButtonEvent);
+    hueEvents.stream().flatMap(eventsItem ->
+        eventsItem.getData().stream()
+            .filter(data -> data.getMotion().isPresent())
+            .map(motion -> {
+              final Device device = hue.getMotionSensors().get(motion.getOwner().getResourceId());
+              return new MotionEvent(eventsItem.getCreationTime(),
+                  eventsItem.getId(),
+                  device,
+                  motion.getMotion().get().isMotion(),
+                  motion.getMotion().get().isMotionValid()
+              );
+            })
+    ).forEach(eventListener::receiveMotionEvent);
   }
 
   @Override

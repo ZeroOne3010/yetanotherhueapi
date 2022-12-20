@@ -1,7 +1,8 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.HueEvent;
+import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
+import io.github.zeroone3010.yahueapi.v2.domain.event.MotionEvent;
 
 import java.util.List;
 
@@ -20,6 +21,17 @@ public interface HueEventListener {
    * @param event A button event as received from the Bridge.
    */
   default void receiveButtonEvent(ButtonEvent event) {
+  }
+
+  /**
+   * This method will be called when motion events are received.
+   * These events are a more specific subset of what the {@link #receive(List)} method will receive.
+   * Should you choose to implement both, ensure that you do not handle motion events in the other method
+   * as well, or you will end up handling them as duplicates.
+   *
+   * @param event A motion event as received from the Bridge.
+   */
+  default void receiveMotionEvent(MotionEvent event) {
   }
 
   /**

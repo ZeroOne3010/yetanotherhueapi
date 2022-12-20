@@ -45,5 +45,12 @@ public class HueTestRun {
         .forEach(value -> {
           System.out.println(value.getId() + " -> " + value.getName() + ": " + value.getLights().size() + " lights");
         });
+
+    System.out.println("\nMotion sensors:");
+    hue.getMotionSensors().values().stream()
+        .sorted(Comparator.comparing(Device::getName))
+        .forEach(value -> {
+          System.out.println(value.getId() + " -> " + value.getName());
+        });
   }
 }

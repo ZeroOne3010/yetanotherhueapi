@@ -1,6 +1,7 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
+import io.github.zeroone3010.yahueapi.v2.domain.event.MotionEvent;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,11 @@ public class HueEventsTestRun {
       @Override
       public void receiveButtonEvent(final ButtonEvent event) {
         System.out.println("Switch event received: " + event);
+      }
+
+      @Override
+      public void receiveMotionEvent(final MotionEvent event) {
+        System.out.println("Motion event received: " + event);
       }
     });
     System.out.println(hueEventSource.getState());
