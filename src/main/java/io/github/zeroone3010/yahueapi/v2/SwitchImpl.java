@@ -1,6 +1,5 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;

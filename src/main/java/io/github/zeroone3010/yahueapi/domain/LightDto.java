@@ -1,7 +1,6 @@
 package io.github.zeroone3010.yahueapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.zeroone3010.yahueapi.State;
 
 import java.util.Map;
 

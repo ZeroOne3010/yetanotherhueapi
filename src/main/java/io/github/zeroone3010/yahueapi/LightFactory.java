@@ -10,12 +10,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static java.util.Collections.emptyMap;
 
 final class LightFactory {
   private static final String ACTION_PATH = "/state";

@@ -6,7 +6,6 @@ import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
-import io.github.zeroone3010.yahueapi.v2.domain.DeviceResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.Resource;

@@ -3,8 +3,6 @@ package io.github.zeroone3010.yahueapi.v2;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueApiException;
-import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
-import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.LightResourceRoot;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
