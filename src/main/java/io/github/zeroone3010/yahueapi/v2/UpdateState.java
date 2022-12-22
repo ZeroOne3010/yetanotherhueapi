@@ -8,11 +8,15 @@ import io.github.zeroone3010.yahueapi.v2.domain.update.AlertType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Dimming;
 import io.github.zeroone3010.yahueapi.v2.domain.update.EffectType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.Effects;
+import io.github.zeroone3010.yahueapi.v2.domain.update.Gradient;
+import io.github.zeroone3010.yahueapi.v2.domain.update.GradientPoint;
 import io.github.zeroone3010.yahueapi.v2.domain.update.TimedEffectType;
 import io.github.zeroone3010.yahueapi.v2.domain.update.TimedEffects;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;
@@ -172,6 +176,27 @@ public class UpdateState {
    */
   public UpdateState timedEffect(final TimedEffectType effect, final Duration duration) {
     updateLight.setTimedEffects(new TimedEffects().setDuration(duration).setEffect(effect));
+    return this;
+  }
+
+  /**
+   * Gradient color setting, for lights that support gradients.
+   * There must be exactly two, three, four, or five colors in the list.
+   *
+   * @param colors A List of {@link Color} objects to specify the colors.
+   *               List length must be between 2 and 5, inclusive.
+   * @return This state, for easy chaining of different methods.
+   */
+  public UpdateState gradient(final List<Color> colors) {
+    final List<GradientPoint> gradientPoints = colors.stream()
+        .map(color -> {
+          final XAndYAndBrightness xy = XAndYAndBrightness.rgbToXy(color);
+          return new io.github.zeroone3010.yahueapi.v2.domain.update.Color()
+              .setXy(new Xy().setX(xy.getX()).setY(xy.getY()));
+        })
+        .map(color -> new GradientPoint().setColor(color))
+        .collect(Collectors.toList());
+    updateLight.setGradient(new Gradient().setPoints(gradientPoints));
     return this;
   }
 

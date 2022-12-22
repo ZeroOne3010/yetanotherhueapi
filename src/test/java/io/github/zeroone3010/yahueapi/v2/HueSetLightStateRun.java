@@ -2,10 +2,13 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import io.github.zeroone3010.yahueapi.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HueSetLightStateRun {
 
   public static final String ROOM_NAME = "My Room";
-  public static final String LIGHT_NAME = "Hue white lamp 1";
+  public static final String LIGHT_NAME = "Lightstrip";
 
   /**
    * @param args IP address of the Bridge, API key
@@ -22,12 +25,15 @@ public class HueSetLightStateRun {
     hue.getRoomByName(ROOM_NAME).get().getLights()
         .forEach(light -> System.out.println(light.getName()));
 
-    final Color sunflowerIsland = Color.of("#ffcc00");
+    final List<Color> colors = new ArrayList<>();
+    colors.add(Color.of(255, 0, 0));
+    colors.add(Color.of(0, 255, 0));
+    colors.add(Color.of(0, 0, 255));
     hue.getRoomByName(ROOM_NAME).get()
         .getLightByName(LIGHT_NAME).get()
         .setState(new UpdateState()
-            .color(sunflowerIsland)
-            .brightness(100)
+            .gradient(colors)
+            .brightness(50)
             .on());
 
   }
