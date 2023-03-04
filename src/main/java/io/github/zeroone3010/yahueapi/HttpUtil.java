@@ -24,10 +24,18 @@ final class HttpUtil {
 
   private static String getString(final URL baseUrl, final String path, final String body, final String method) {
     try {
-      final HttpURLConnection connection = (HttpURLConnection) new URL(baseUrl.toString() + path).openConnection();
+      URL url = new URL(baseUrl.toString() + path);
+      HttpURLConnection connection;
+      if (url.getProtocol().equals("https")) {
+        connection = TrustEverythingManager.createAllTrustedConnection(url);
+      } else {
+        connection = (HttpURLConnection) url.openConnection();
+      }
+
       connection.setDoOutput(true);
       connection.setRequestMethod(method);
       connection.setRequestProperty("Host", connection.getURL().getHost());
+
       if (body != null) {
         try (final OutputStream outputStream = connection.getOutputStream()) {
           try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8")) {
