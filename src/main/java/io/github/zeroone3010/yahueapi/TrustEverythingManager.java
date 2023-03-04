@@ -51,7 +51,6 @@ public class TrustEverythingManager implements X509TrustManager {
       HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
       connection.setHostnameVerifier((hostname, session) -> true);
       connection.setSSLSocketFactory(sslContext.getSocketFactory());
-      connection.connect();
       return connection;
     } catch (GeneralSecurityException exception) {
       throw new HueApiException(exception);
