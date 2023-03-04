@@ -46,9 +46,9 @@ public final class Hue {
 
   private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper;
 
-  private final SensorFactory sensorFactory = new SensorFactory(this, objectMapper);
+  private final SensorFactory sensorFactory;
   private final RoomFactory roomFactory;
   private final LightFactory lightFactory;
 
@@ -122,11 +122,20 @@ public final class Hue {
    */
   public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
     this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
-    if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
+    if (HueBridgeProtocol.UNVERIFIED_TRUST_EVERYTHING_HTTPS.equals(protocol)) {
       TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
     }
+
+    if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
+      SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp);
+      objectMapper = secureJsonFactory.getCodec();
+    } else {
+      objectMapper = new ObjectMapper();
+    }
+
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     objectMapper.addHandler(new UnauthorizedUserHandler());
+    sensorFactory = new SensorFactory(this, objectMapper);
     roomFactory = new RoomFactory(this, objectMapper, uri);
     lightFactory = new LightFactory(this, objectMapper);
   }
