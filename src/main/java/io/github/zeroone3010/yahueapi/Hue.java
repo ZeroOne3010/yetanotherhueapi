@@ -1,10 +1,8 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.Scene;
@@ -12,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -560,83 +556,9 @@ public final class Hue {
    * @param bridgeIp The IP address of the Bridge.
    * @return A connection builder that initializes the application for the Bridge.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#hueBridgeConnectionBuilder(String)} instead.
    */
   public static HueBridgeConnectionBuilder hueBridgeConnectionBuilder(final String bridgeIp) {
     return new HueBridgeConnectionBuilder(bridgeIp);
-  }
-
-  public static class HueBridgeConnectionBuilder {
-    private static final int MAX_TRIES = 30;
-    private String urlString;
-
-    private HueBridgeConnectionBuilder(final String bridgeIp) {
-      this.urlString = "https://" + bridgeIp;
-    }
-
-    /**
-     * Returns a {@code CompletableFuture} that calls the /api/config path of given Hue Bridge to verify
-     * that you are connecting to a Hue bridge.
-     *
-     * @return A {@code CompletableFuture} with a boolean that is true when the call to the bridge was successful.
-     * @since 2.7.0
-     */
-    public CompletableFuture<Boolean> isHueBridgeEndpoint() {
-      final Supplier<Boolean> isBridgeSupplier = () -> {
-        try {
-          TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-          HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString + "/api/config").openConnection();
-          int responseCode = urlConnection.getResponseCode();
-          return HttpURLConnection.HTTP_OK == responseCode;
-        } catch (IOException e) {
-          return false;
-        }
-      };
-      return CompletableFuture.supplyAsync(isBridgeSupplier);
-    }
-
-    /**
-     * Returns a {@code CompletableFuture} that completes once you push the button on the Hue Bridge. Returns an API
-     * key that you should use for any subsequent calls to the Bridge API.
-     *
-     * @param appName The name of your application.
-     * @return A {@code CompletableFuture} with an API key for your application. You should store this key for future usage.
-     * @since 1.0.0
-     */
-    public CompletableFuture<String> initializeApiConnection(final String appName) {
-      final Supplier<String> apiKeySupplier = () -> {
-        final String body = "{\"devicetype\":\"yetanotherhueapi#" + appName + "\"}";
-        final URL baseUrl;
-        try {
-          TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-          baseUrl = new URL(urlString + "/api");
-        } catch (final MalformedURLException e) {
-          throw new HueApiException(e);
-        }
-
-        String latestError = null;
-        for (int triesLeft = MAX_TRIES; triesLeft > 0; triesLeft--) {
-          try {
-            logger.info("Please push the button on the Hue Bridge now (" + triesLeft + " seconds left).");
-
-            final String result = HttpUtil.post(baseUrl, "", body);
-            logger.info(result);
-            final ApiInitializationStatus status = new ObjectMapper().<ArrayList<ApiInitializationStatus>>readValue(result,
-                new TypeReference<ArrayList<ApiInitializationStatus>>() {
-                }).get(0);
-
-            if (status.getSuccess() != null) {
-              return status.getSuccess().getUsername();
-            }
-            latestError = status.getError().getDescription();
-            TimeUnit.SECONDS.sleep(1L);
-
-          } catch (final Exception e) {
-            throw new HueApiException(e);
-          }
-        }
-        throw new HueApiException(latestError);
-      };
-      return CompletableFuture.supplyAsync(apiKeySupplier);
-    }
   }
 }

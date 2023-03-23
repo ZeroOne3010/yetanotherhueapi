@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi.v2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.launchdarkly.eventsource.EventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
+import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
@@ -274,5 +275,19 @@ public class Hue {
       throw new HueApiException(e);
     }
 
+  }
+
+  /**
+   * The method to be used if you do not have an API key for your application yet.
+   * Returns a {@code HueBridgeConnectionBuilder} that initializes the process of
+   * adding a new application to the Bridge. You can test if you are connecting to
+   * a Hue Bridge endpoint before initializing the connection.
+   *
+   * @param bridgeIp The IP address of the Bridge.
+   * @return A connection builder that initializes the application for the Bridge.
+   * @since 3.0.0
+   */
+  public static HueBridgeConnectionBuilder hueBridgeConnectionBuilder(final String bridgeIp) {
+    return new HueBridgeConnectionBuilder(bridgeIp);
   }
 }
