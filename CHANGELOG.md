@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-Unreleased
-----------
+3.0.0-alpha (Unreleased)
+------------------------
 
 ### Added
 
@@ -26,7 +26,10 @@ Unreleased
 
 * `getRooms()`, `getZones()`,  `getRoomByName()`, and `getZoneByName()` methods from the
   `io.github.zeroone3010.yahueapi.Hue` class in favor of the methods with the same names (if not the same signatures)
-  in the `io.github.zeroone3010.yahueapi.v2.Hue` class.
+  in the `io.github.zeroone3010.yahueapi.v2.Hue` class. Note that the deprecated methods return `Collection`s
+  of objects, whereas the new methods return `Map`s, where the key is the unique id of the
+  entity, and the value is the entity itself. Just call the `.values()` method of such a `Map` if you still want
+  to iterate through all the values like before.
 
 v2.7.0 (2022-04-19)
 ----------

@@ -26,6 +26,7 @@
                 <directory>${project.basedir}</directory>
                 <includes>
                     <include>README.md</include>
+                    <include>README_v2.md</include>
                 </includes>
             </testResource>
             <testResource>

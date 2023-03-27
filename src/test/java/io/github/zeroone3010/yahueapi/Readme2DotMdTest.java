@@ -1,8 +1,8 @@
 package io.github.zeroone3010.yahueapi;
 
-class ReadmeDotMdTest extends AbstractMarkdownFileTester {
+class Readme2DotMdTest extends AbstractMarkdownFileTester {
   @Override
   String getMarkdownFileName() {
-    return "README.md";
+    return "README_v2.md";
   }
 }
