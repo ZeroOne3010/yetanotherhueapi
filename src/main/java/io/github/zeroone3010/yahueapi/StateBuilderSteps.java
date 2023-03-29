@@ -38,7 +38,7 @@ public final class StateBuilderSteps {
      * @param brightness A value from {@code 1} (minimum brightness) to {@code 254} (maximum brightness).
      * @return The next step of this state builder
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#brightness(int)}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#brightness(int)
      */
     BuildStep brightness(int brightness);
   }
@@ -50,7 +50,7 @@ public final class StateBuilderSteps {
      * @param xy The x and y coordinates of the C.I.E. chromaticity diagram. Exactly two values between 0 and 1 required.
      * @return The next step of this state builder
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#xy(float, float)}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#xy(float, float)
      */
     BrightnessStep xy(List<Float> xy);
   }
@@ -62,7 +62,7 @@ public final class StateBuilderSteps {
      * @param color The color as a {@link Color} object.
      * @return The next step of this state builder
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#color(Color)}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#color(Color)
      */
     BuildStep color(Color color);
   }
@@ -105,7 +105,7 @@ public final class StateBuilderSteps {
      * @param alertType Type of the alert to be activated, or {@code AlertType.NONE} to stop the long alert.
      * @return A new {@code State}.
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#alert()}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#alert()
      */
     State alert(AlertType alertType);
   }
@@ -118,7 +118,7 @@ public final class StateBuilderSteps {
      * @param effect Type of the effect to be activated, or {@code EffectType.NONE} to stop the long effect.
      * @return A new {@code State}.
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#effect(io.github.zeroone3010.yahueapi.v2.domain.update.EffectType)}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#effect(io.github.zeroone3010.yahueapi.v2.domain.update.EffectType)
      */
     State effect(EffectType effect);
   }
@@ -132,7 +132,7 @@ public final class StateBuilderSteps {
      * @param on Toggles the light on ({@code true}) or off ({@code false}).
      * @return A new {@code State}.
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#on(boolean)}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#on(boolean)
      */
     State on(Boolean on);
 
@@ -142,7 +142,7 @@ public final class StateBuilderSteps {
      *
      * @return A new {@code State}.
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#on()}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#on()
      */
     default State on() {
       return on(true);
@@ -154,7 +154,7 @@ public final class StateBuilderSteps {
      *
      * @return A new {@code State}.
      * @deprecated
-     * @see {@link io.github.zeroone3010.yahueapi.v2.UpdateState#off()}
+     * @see io.github.zeroone3010.yahueapi.v2.UpdateState#off()
      */
     default State off() {
       return on(false);

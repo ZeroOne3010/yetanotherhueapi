@@ -15,7 +15,7 @@ public class GradientPoint {
   }
 
   /**
-   * @param color
+   * @param color Color of this gradient point.
    * @return Self, so that one can also use this method like a fluent builder.
    */
   public GradientPoint setColor(Color color) {

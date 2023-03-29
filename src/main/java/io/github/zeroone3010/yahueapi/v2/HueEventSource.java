@@ -12,6 +12,7 @@ public interface HueEventSource extends AutoCloseable {
 
   /**
    * Returns the state of this event stream.
+   * @return State of this event stream. Should be {@code ACTIVE} for this to work properly.
    */
   HueEventStreamState getState();
 }

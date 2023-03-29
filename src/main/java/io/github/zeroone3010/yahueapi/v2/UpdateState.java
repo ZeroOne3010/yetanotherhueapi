@@ -59,10 +59,10 @@ public class UpdateState {
   /**
    * Toggles the on/off status of the light(s).
    *
+   * @param on {@code true} to turn on, {@code false} to turn off.
    * @return This state, for easy chaining of different methods.
    * @see #on()
    * @see #off()
-   * @see #on(boolean)
    */
   public UpdateState on(final boolean on) {
     updateLight.setOn(on ? ON : OFF);
@@ -140,7 +140,7 @@ public class UpdateState {
    *
    * @param duration Duration of the sunrise effect.
    * @return This state, for easy chaining of different methods.
-   * @see {@link #clearTimedEffect()}
+   * @see #clearTimedEffect()
    */
   public UpdateState sunrise(final Duration duration) {
     timedEffect(TimedEffectType.SUNRISE, duration);
@@ -154,7 +154,7 @@ public class UpdateState {
    * Also note that rooms and zones do not support timed effects.</p>
    *
    * @return This state, for easy chaining of different methods.
-   * @see {@link #sunrise(Duration)}
+   * @see #sunrise(Duration)
    */
   public UpdateState clearTimedEffect() {
     timedEffect(TimedEffectType.NO_EFFECT, null);
@@ -170,9 +170,11 @@ public class UpdateState {
    * <p>Note that not all lights, not even all the color ones, support timed effects.
    * Also note that rooms and zones do not support timed effects.</p>
    *
+   * @param effect Type of the effect.
+   * @param duration How long should the effect last.
    * @return This state, for easy chaining of different methods.
-   * @see {@link #sunrise(Duration)}
-   * @see {@link #clearTimedEffect()}
+   * @see #sunrise(Duration)
+   * @see #clearTimedEffect()
    */
   public UpdateState timedEffect(final TimedEffectType effect, final Duration duration) {
     updateLight.setTimedEffects(new TimedEffects().setDuration(duration).setEffect(effect));
