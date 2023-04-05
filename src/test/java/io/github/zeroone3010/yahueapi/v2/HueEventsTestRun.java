@@ -29,7 +29,7 @@ public class HueEventsTestRun {
     final HueEventSource hueEventSource = hue.subscribeToEvents(new HueEventListener() {
       @Override
       public void receiveButtonEvent(final ButtonEvent event) {
-        System.out.println("Switch event received: " + event);
+        System.out.println("Button event received: " + event);
       }
 
       @Override
@@ -40,6 +40,8 @@ public class HueEventsTestRun {
     System.out.println(hueEventSource.getState());
     TimeUnit.SECONDS.sleep(1);
     System.out.println(hueEventSource.getState());
+
+    // Don't do this in real projects, this is only good for preventing this test-app from closing immediately:
     TimeUnit.MINUTES.sleep(10);
   }
 }
