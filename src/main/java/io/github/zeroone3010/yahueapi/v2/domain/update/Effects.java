@@ -14,7 +14,7 @@ public class Effects {
   }
 
   /**
-   * One of fire, candle, no_effect
+   * Sets the effect.
    *
    * @param effect The desired effect.
    * @return Self, so that one can also use this method like a fluent builder.
