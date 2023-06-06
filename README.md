@@ -6,7 +6,7 @@ Yet Another Hue API
 This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official Hue SDK but instead accesses
 the REST API of the Philips Hue Bridge directly. This library should also work with Android projects using
 [API level 24 or higher](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels). This library
-has last been confirmed to work with the Philips Hue Bridge API in November 2021.
+has last been confirmed to work with the Philips Hue Bridge API in June 2023.
 
 ----
 
@@ -19,12 +19,20 @@ Make sure your dependency version is up to date.**
 Usage
 -----
 
-First, import the classes from this library:
+First, import the classes from this library (and some others too):
 
 [//]: # (imports)
 ```java
-import io.github.zeroone3010.yahueapi.*;
+import io.github.zeroone3010.yahueapi.Color;
+import io.github.zeroone3010.yahueapi.HueBridge;
+import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
+import io.github.zeroone3010.yahueapi.v2.*;
 import io.github.zeroone3010.yahueapi.discovery.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Future;
 ```
 
 ### Initializing the API with a connection to the Bridge
@@ -43,8 +51,6 @@ methods simultaneously, namely N-UPnP and mDNS. If you wish to change that, the 
 list of discovery method enum values.
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
-[//]: # (import java.util.List;)
-[//]: # (import java.util.concurrent.Future;)
 ```java
 Future<List<HueBridge>> bridgesFuture = new HueBridgeDiscoveryService()
         .discoverBridges(bridge -> System.out.println("Bridge found: " + bridge));
@@ -74,7 +80,7 @@ If you don't have an API key for your bridge:
 ```java
 final String bridgeIp = "192.168.1.99"; // Fill in the IP address of your Bridge
 final String appName = "MyFirstHueApp"; // Fill in the name of your application
-final CompletableFuture<String> apiKey = Hue.hueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
+final CompletableFuture<String> apiKey = new HueBridgeConnectionBuilder(bridgeIp).initializeApiConnection(appName);
 // Push the button on your Hue Bridge to resolve the apiKey future:
 final String key = apiKey.get();
 System.out.println("Store this API key for future use: " + key);
@@ -102,16 +108,18 @@ This was all nice and fine, except for the fact that Android environments do not
 
 ### Lights that belong to a room or a zone
 
+Note that in the context of this library both rooms and zones are collectively called _groups_:
+
 [//]: # (requires-init)
 [//]: # (import java.util.Optional;)
 ```java
 // Get a room or a zone -- returns Optional.empty() if the room does not exist, but
 // let's assume we know for a fact it exists and can do the .get() right away:
-final Room room = hue.getRoomByName("Basement").get();
-final Room zone = hue.getZoneByName("Route to the basement").get();
+final Group room = hue.getRoomByName("Basement").get();
+final Group zone = hue.getZoneByName("Route to the basement").get();
 
 // Turn the lights on, make them pink:
-room.setState(State.builder().color(Color.of(java.awt.Color.PINK)).on());
+room.setState(new UpdateState().color(Color.of(java.awt.Color.PINK)).on());
 
 // Make the entire room dimly lit:
 room.setBrightness(10);
@@ -121,7 +129,7 @@ room.getLightByName("Corner").get().turnOff();
 
 // Turn one of the lights green. This also demonstrates the proper use of Optionals:
 final Optional<Light> light = room.getLightByName("Ceiling 1");
-light.ifPresent(l -> l.setState(State.builder().color(Color.of(java.awt.Color.GREEN.getRGB())).keepCurrentState()));
+light.ifPresent(l -> l.setState(new UpdateState().color(Color.of(java.awt.Color.GREEN.getRGB())).on()));
 
 // Activate a scene:
 room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
@@ -129,15 +137,14 @@ room.getSceneByName("Tropical twilight").ifPresent(Scene::activate);
 
 #### Lights that do not belong to a room or a zone
 
-The lights that have not been assigned to any room or zone can be accessed with the `getUnassignedLights()`
-and `getUnassignedLightByName(String)` methods
-of the `Hue` object. For example, in order to turn on all the unassigned lights, one would do it like this:
+All the lights are available with the `getLights()` method of the `Hue` object, regardless of whether or not
+they have been added to a room or zone. For example, in order to turn on all the lights, one would do it like this:
 
 [//]: # (requires-init)
 [//]: # (import java.util.Collection;)
 ```java
-final Collection<Light> lights = hue.getUnassignedLights();
-lights.forEach(Light::turnOn);
+final Map<UUID, Light> lights = hue.getLights();
+lights.values().forEach(Light::turnOn);
 ```
 
 ### Caching
@@ -158,11 +165,11 @@ Switches include, for example, Philips Hue dimmer switchers, Philips Hue Tap swi
 
 [//]: # (requires-init)
 ```java
-hue.getSwitches().forEach(s -> System.out.println(String.format("Switch: %s; last pressed button: #%d (%s) at %s",
+hue.getSwitches().values().forEach(s -> System.out.println(String.format("Switch: %s; last pressed button: #%d (%s)",
     s.getName(),
-    s.getLatestEvent().getAction().getEventType(),
-    s.getLatestEvent().getButton().getNumber(),
-    s.getLastUpdated())));
+    s.getLatestPressedButton().map(Button::getLatestEvent),
+    s.getLatestPressedButton().map(Button::getNumber)
+    )));
 ```
 
 Depending on your setup, the above snippet will print something along the following lines:
@@ -185,14 +192,14 @@ daylight sensors, and ambient light sensors.
 
 ### Searching for new lights and adding them into rooms
 
-There is a method in the `Hue` class that starts searching for new lights and returns a `Future` that will be
+There is a method in the old `Hue` class that starts searching for new lights and returns a `Future` that will be
 resolved with the found lights (if any) once the scan is finished. The scan seems to last around 45-60 seconds:
 
-[//]: # (requires-init)
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 ```java
-Future<Collection<Light>> lightSearch = hue.searchForNewLights();
-Collection<Light> foundLights = lightSearch.get();
+io.github.zeroone3010.yahueapi.Hue hue = new io.github.zeroone3010.yahueapi.Hue("bridge IP","API key");
+Future<Collection<io.github.zeroone3010.yahueapi.Light>> lightSearch = hue.searchForNewLights();
+Collection<io.github.zeroone3010.yahueapi.Light> foundLights = lightSearch.get();
 System.out.println("Lights found: " + foundLights);
 
 // If new lights have been found, you can add them into a room:
@@ -200,9 +207,8 @@ System.out.println("Lights found: " + foundLights);
 hue.getRoomByName("Living Room").ifPresent(room -> foundLights.forEach(room::addLight));
 ```
 
-If you do not wish to add the new lights into a room, they will be accessible with the `hue.getUnassignedLights()`
-and `hue.getUnassignedLightByName(String)` methods.
-It is also possible to remove lights from a room with the `room.removeLight(Light)` method.
+If you do not wish to add the new lights into a room, they will still be accessible with the `hue.getLights()` method
+(along with all those lights that _are_ assigned into rooms).
 
 Including the library using Maven or Gradle
 --------------------------------

@@ -6,7 +6,7 @@ Yet Another Hue API
 This is a Java 8 API for the Philips Hue lights.<sup>1</sup> It does not use the official Hue SDK but instead accesses
 the REST API of the Philips Hue Bridge directly. This library should also work with Android projects using
 [API level 24 or higher](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels). This library
-has last been confirmed to work with the Philips Hue Bridge API in November 2021.
+has last been confirmed to work with the Philips Hue Bridge API in June 2023.
 
 ----
 
