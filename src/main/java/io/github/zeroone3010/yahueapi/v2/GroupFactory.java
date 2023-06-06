@@ -6,14 +6,21 @@ import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupedLightResourceRoot;
+import io.github.zeroone3010.yahueapi.v2.domain.Resource;
 import io.github.zeroone3010.yahueapi.v2.domain.ResourceIdentifier;
+import io.github.zeroone3010.yahueapi.v2.domain.SceneResource;
+import io.github.zeroone3010.yahueapi.v2.domain.update.SceneActivation;
 import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -21,6 +28,8 @@ import java.util.stream.Collectors;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.DEVICE;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.GROUPED_LIGHT;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.LIGHT;
+import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.SCENE;
+import static java.util.stream.Collectors.toList;
 
 public class GroupFactory {
 
@@ -32,7 +41,8 @@ public class GroupFactory {
     this.objectMapper = objectMapper;
   }
 
-  public GroupImpl buildGroup(final GroupResource groupResource) {
+  public GroupImpl buildGroup(final GroupResource groupResource,
+                              final Map<UUID, Resource> allResources) {
     final Supplier<Collection<Light>> lightProvider = () -> {
       final Set<Light> deviceLights = groupResource.getChildren().stream()
           .filter(r -> r.getResourceType() == DEVICE)
@@ -52,13 +62,39 @@ public class GroupFactory {
       result.addAll(childLights);
       return result;
     };
+    final List<Scene> scenes = allResources.values().stream()
+        .filter(r -> r.getType() == SCENE)
+        .map(r -> (SceneResource) r)
+        .filter(sceneResource -> Objects.equals(
+            groupResource.getId(),
+            sceneResource.getGroup().getResourceId()
+        ))
+        .map(sceneResource -> new SceneImpl(
+            sceneResource.getId(),
+            sceneResource.getMetadata().getName(),
+            sceneStateSetter(sceneResource.getId())
+        ))
+        .collect(toList());
     return new GroupImpl(groupResource.getId(),
         groupResource.getType(),
         groupResource.getMetadata().getName(),
+        scenes,
         lightProvider,
         createStateProvider(groupResource),
         stateSetter(groupResource)
     );
+  }
+
+  private Supplier<String> sceneStateSetter(final UUID sceneId) {
+    return () -> {
+      try {
+        final String urlPath = resolveUrlPath(sceneId);
+        final String body = objectMapper.writeValueAsString(new SceneActivation());
+        return HttpUtil.put(hue, hue.getResourceUrl(), urlPath, body);
+      } catch (final Exception e) {
+        throw new HueApiException(e);
+      }
+    };
   }
 
   private Supplier<GroupedLightResource> createStateProvider(final GroupResource groupResource) {
@@ -92,5 +128,9 @@ public class GroupFactory {
         .findFirst()
         .map(uuid -> "/grouped_light/" + uuid)
         .orElse(null);
+  }
+
+  private static String resolveUrlPath(final UUID sceneId) {
+    return "/scene/" + sceneId;
   }
 }

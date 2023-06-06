@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class GroupImpl implements Group {
   private UUID id;
   private ResourceType type;
   private String name;
+  private List<Scene> scenes;
   private Supplier<Collection<Light>> lights;
   private Supplier<GroupedLightResource> stateProvider;
   private final Function<UpdateLight, String> stateSetter;
@@ -30,12 +32,14 @@ public class GroupImpl implements Group {
   public GroupImpl(final UUID id,
                    final ResourceType type,
                    final String name,
+                   final List<Scene> scenes,
                    final Supplier<Collection<Light>> lights,
                    final Supplier<GroupedLightResource> stateProvider,
                    final Function<UpdateLight, String> stateSetter) {
     this.id = id;
     this.type = type;
     this.name = name;
+    this.scenes = scenes;
     this.lights = lights;
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
@@ -49,6 +53,16 @@ public class GroupImpl implements Group {
   @Override
   public String getName() {
     return name;
+  }
+
+  @Override
+  public List<Scene> getScenes() {
+    return scenes;
+  }
+
+  @Override
+  public Optional<Scene> getSceneByName(String sceneName) {
+    return scenes.stream().filter(scene -> Objects.equals(scene.getName(), sceneName)).findFirst();
   }
 
   @Override

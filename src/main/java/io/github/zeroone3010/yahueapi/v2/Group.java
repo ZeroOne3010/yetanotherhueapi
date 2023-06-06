@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi.v2;
 import io.github.zeroone3010.yahueapi.v2.domain.ResourceType;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +28,19 @@ public interface Group {
    * @return Name of the room or zone.
    */
   String getName();
+
+  /**
+   * Lists all scenes that can be used with this group.
+   * @return List of scenes.
+   */
+  List<Scene> getScenes() ;
+
+  /**
+   * Returns the scene matching the given human-readable name, if one exists.
+   * @param sceneName The human-readable name of the scene
+   * @return Optional Scene
+   */
+  Optional<Scene> getSceneByName(String sceneName);
 
   /**
    * Returns all the lights that have been assigned to this group.

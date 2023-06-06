@@ -2,6 +2,8 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import java.util.Comparator;
 
+import static java.util.stream.Collectors.toList;
+
 public class HueTestRun {
   /**
    * Displays data of the given Bridge.
@@ -36,7 +38,8 @@ public class HueTestRun {
         .sorted(Comparator.comparing(Group::getName))
         .forEach(value -> {
           System.out.println(value.getId() + " -> " + value.getName() + ": " + value.getLights().size() + " lights"
-              + "; any on: " + value.isAnyOn());
+              + "; any on: " + value.isAnyOn()
+              + "; scenes: " + value.getScenes().stream().map(Scene::getName).collect(toList()));
         });
 
     System.out.println("\nZones:");

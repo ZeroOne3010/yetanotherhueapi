@@ -166,7 +166,7 @@ public class Hue {
   }
 
   private GroupImpl buildGroup(final GroupResource groupResource) {
-    return groupFactory.buildGroup(groupResource);
+    return groupFactory.buildGroup(groupResource, allResources);
   }
 
   private Switch buildSwitch(final DeviceResource deviceResource, final List<ButtonResource> allButtons) {
@@ -175,6 +175,11 @@ public class Hue {
     return switchFactory.buildSwitch(deviceResource, buttons);
   }
 
+  /**
+   * Returns all the lights configured into the Bridge.
+   *
+   * @return A Map of lights, the keys being their ids.
+   */
   public Map<UUID, Light> getLights() {
     return lights;
   }
