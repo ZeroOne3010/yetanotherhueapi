@@ -180,9 +180,11 @@ Switch: Kitcher dimmer; last pressed button: #2 (LONG_RELEASED) at 2021-01-05T06
 Switch: Hue tap switch 1; last pressed button: #4 (INITIAL_PRESS) at 2021-01-05T20:58:10Z[UTC]
 ```
 
-Unfortunately the Hue Bridge does not allow applications to "listen" for button press events, so the Bridge will not "push"
-any events to the library. Instead, one must unfortunately always just poll the statuses of the switches to find
-out whether any button is pressed. This is a limitation of the Philips Hue system itself.
+### Events
+
+The library supports listening for events from the Bridge!
+See the [HueEventsTestRun.java](src/test/java/io/github/zeroone3010/yahueapi/v2/HueEventsTestRun.java)
+class for an example.
 
 ### Sensors
 
