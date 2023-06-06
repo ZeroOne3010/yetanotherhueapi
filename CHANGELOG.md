@@ -6,6 +6,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+3.0.0-beta
+----------
+
+### Added
+
+* Support for scenes. Use the `getScenes()` and `getSceneByName(String)` methods in the `Group` objects.
+  Call the `activate()` method of a `Scene` to activate it.
+* Support for the `prism` effect.
+* Documentation for version 3.0.0 into the [README.md](README.md) file.
+  Docs for version 2 of the library can still be found from [README_v2.md](README_v2.md).
+
+### Fixed
+
+* Added default enum values to be used in case new effects or some such variables are introduced into the API. (Fixes #59)
+
 3.0.0-alpha
 -----------
 
