@@ -27,9 +27,17 @@ import java.security.cert.X509Certificate;
 public class SecureJsonFactory extends MappingJsonFactory {
   private final HostnameVerifier hostnameVerifier;
   private final SSLSocketFactory socketFactory;
-  public SecureJsonFactory(String bridgeIp) {
+
+  public SecureJsonFactory(String bridgeIp, HueBridgeProtocol protocol) {
     try {
-      this.socketFactory = createHueSSLContext().getSocketFactory();
+      if (protocol == HueBridgeProtocol.HTTPS) {
+        this.socketFactory = createHueSSLContext().getSocketFactory();
+      } else if (protocol == HueBridgeProtocol.UNVERIFIED_HTTPS) {
+        this.socketFactory = TrustEverythingManager.createSSLSocketFactory();
+      } else {
+        throw new IllegalStateException("Unsupported protocol");
+      }
+
       this.hostnameVerifier = (hostname, session) -> bridgeIp == null || hostname.equals(bridgeIp);
     } catch (IOException | GeneralSecurityException exception) {
       throw new HueApiException(exception);

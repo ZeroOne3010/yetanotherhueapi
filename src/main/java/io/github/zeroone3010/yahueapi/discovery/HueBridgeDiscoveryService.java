@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi.discovery;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
+import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.SecureJsonFactory;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public final class HueBridgeDiscoveryService {
    */
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
-    SecureJsonFactory factory = new SecureJsonFactory(null);
+    SecureJsonFactory factory = new SecureJsonFactory(null, HueBridgeProtocol.HTTPS);
     ObjectMapper objectMapper = factory.getCodec();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

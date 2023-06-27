@@ -123,12 +123,9 @@ public final class Hue {
    */
   public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
     this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
-    if (HueBridgeProtocol.UNVERIFIED_TRUST_EVERYTHING_HTTPS.equals(protocol)) {
-      TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-    }
 
-    if (HueBridgeProtocol.UNVERIFIED_HTTPS.equals(protocol)) {
-      SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp);
+    if (protocol == HueBridgeProtocol.HTTPS || protocol == HueBridgeProtocol.UNVERIFIED_HTTPS) {
+      SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp, protocol);
       objectMapper = secureJsonFactory.getCodec();
     } else {
       objectMapper = new ObjectMapper();
