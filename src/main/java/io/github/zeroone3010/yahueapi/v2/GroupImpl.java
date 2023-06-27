@@ -6,13 +6,18 @@ import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;
@@ -27,6 +32,7 @@ public class GroupImpl implements Group {
   private Supplier<Collection<Light>> lights;
   private Supplier<GroupedLightResource> stateProvider;
   private final Function<UpdateLight, String> stateSetter;
+  private final Function<Collection<Light>, String> lightsSetter;
 
 
   public GroupImpl(final UUID id,
@@ -35,7 +41,8 @@ public class GroupImpl implements Group {
                    final List<Scene> scenes,
                    final Supplier<Collection<Light>> lights,
                    final Supplier<GroupedLightResource> stateProvider,
-                   final Function<UpdateLight, String> stateSetter) {
+                   final Function<UpdateLight, String> stateSetter,
+                   final Function<Collection<Light>, String> lightsSetter) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -43,6 +50,7 @@ public class GroupImpl implements Group {
     this.lights = lights;
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
+    this.lightsSetter = lightsSetter;
   }
 
   @Override
@@ -108,5 +116,33 @@ public class GroupImpl implements Group {
   private void setState(final UpdateLight state) {
     final String result = stateSetter.apply(state);
     logger.info("Group update result: {}", result);
+  }
+
+  @Override
+  public Collection<Light> addLight(final Light newLight) {
+    final Set<Light> lights = new HashSet<>();
+    lights.addAll(getLights());
+    if (lights.add(newLight)) {
+      lightsSetter.apply(lights);
+    }
+    return getLights();
+  }
+
+  @Override
+  public Collection<Light> removeLight(final Light lightToBeRemoved) {
+    final Set<Light> lights = new HashSet<>(getLights());
+    if (lights.removeIf(light -> Objects.equals(lightToBeRemoved.getId(), light.getId()))) {
+      lightsSetter.apply(lights);
+    }
+    return getLights();
+  }
+
+  @Override
+  public String toString() {
+    return "GroupImpl{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", lights=" + lights.get() +
+        '}';
   }
 }

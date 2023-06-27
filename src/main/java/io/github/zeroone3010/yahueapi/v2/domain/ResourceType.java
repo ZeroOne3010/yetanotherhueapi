@@ -1,6 +1,7 @@
 package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ResourceType {
   DEVICE,
@@ -29,5 +30,10 @@ public enum ResourceType {
   GEOFENCE,
   GEOFENCE_CLIENT,
   GEOLOCATION,
-  @JsonEnumDefaultValue UNKNOWN
+  @JsonEnumDefaultValue UNKNOWN;
+
+  @JsonValue
+  String jsonValue() {
+    return name().toLowerCase();
+  }
 }

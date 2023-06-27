@@ -31,4 +31,8 @@ public class RoomResource extends Resource implements GroupResource {
   public List<ResourceIdentifier> getChildren() {
     return children;
   }
+
+  public void setChildren(final List<ResourceIdentifier> children) {
+    this.children = children;
+  }
 }

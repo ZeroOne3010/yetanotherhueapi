@@ -94,4 +94,21 @@ public interface Group {
    * @param state A state to be set for this light.
    */
   void setState(UpdateState state);
+
+  /**
+   * Adds the given light into this group. Note that if the light already belongs to a room,
+   * you must remove it from there first, or this operation will fail!
+   *
+   * @param newLight The light to be added
+   * @return A Collection of Lights in this group after the operation.
+   */
+  Collection<Light> addLight(Light newLight);
+
+  /**
+   * Removes the given light from this group.
+   *
+   * @param lightToBeRemoved The light to be removed
+   * @return A Collection of Lights in this group after the operation.
+   */
+  Collection<Light> removeLight(Light lightToBeRemoved);
 }

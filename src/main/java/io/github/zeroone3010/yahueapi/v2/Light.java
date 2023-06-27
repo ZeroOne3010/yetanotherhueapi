@@ -67,4 +67,12 @@ public interface Light extends Device {
    * @return A collection of supported effect types.
    */
   Collection<EffectType> getSupportedEffects();
+
+  /**
+   * <p>Returns the technical id of the device that "owns" this light, as assigned by the Bridge.</p>
+   *
+   * @return Id of the owner device of the light.
+   */
+  UUID getOwnerId();
+
 }

@@ -38,6 +38,7 @@ import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEver
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.MOTION;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Hue {
@@ -117,12 +118,12 @@ public class Hue {
     final List<DeviceResource> devices = allResources.values().stream()
         .filter(r -> r instanceof DeviceResource)
         .map(r -> (DeviceResource) r)
-        .collect(Collectors.toList());
+        .collect(toList());
 
     final List<ButtonResource> allButtons = allResources.values().stream()
         .filter(r -> r instanceof ButtonResource)
         .map(r -> (ButtonResource) r)
-        .collect(Collectors.toList());
+        .collect(toList());
 
     switches = devices.stream()
         .map(device -> buildSwitch(device, allButtons))
@@ -207,6 +208,13 @@ public class Hue {
 
   Resource getResource(final UUID uuid) {
     return allResources.get(uuid);
+  }
+
+  List<DeviceResource> getDevices() {
+    return allResources.values().stream()
+        .filter(resource -> resource.getType() == ResourceType.DEVICE)
+        .map(resource -> (DeviceResource) resource)
+        .collect(toList());
   }
 
   /**

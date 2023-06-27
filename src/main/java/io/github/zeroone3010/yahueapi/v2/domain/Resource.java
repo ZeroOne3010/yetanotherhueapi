@@ -45,6 +45,13 @@ public class Resource {
     return idV1;
   }
 
+  public ResourceIdentifier identifier() {
+    final ResourceIdentifier identifier = new ResourceIdentifier();
+    identifier.setResourceId(id);
+    identifier.setResourceType(type);
+    return identifier;
+  }
+
   @Override
   public String toString() {
     return JsonStringUtil.toJsonString(this);

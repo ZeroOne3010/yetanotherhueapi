@@ -7,10 +7,8 @@ import java.util.UUID;
 
 public class ResourceIdentifier {
 
-  @JsonProperty("rid")
   private UUID rid;
 
-  @JsonProperty("rtype")
   private ResourceType rtype;
 
   @JsonProperty("rid")
@@ -18,9 +16,19 @@ public class ResourceIdentifier {
     return rid;
   }
 
+  @JsonProperty("rid")
+  public void setResourceId(final UUID rid) {
+    this.rid = rid;
+  }
+
   @JsonProperty("rtype")
   public ResourceType getResourceType() {
     return rtype;
+  }
+
+  @JsonProperty("rtype")
+  public void setResourceType(final ResourceType rtype) {
+    this.rtype = rtype;
   }
 
   @Override
