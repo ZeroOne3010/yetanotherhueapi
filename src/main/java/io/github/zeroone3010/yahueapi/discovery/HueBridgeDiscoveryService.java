@@ -3,7 +3,7 @@ package io.github.zeroone3010.yahueapi.discovery;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
-import io.github.zeroone3010.yahueapi.TrustEverythingManager;
+import io.github.zeroone3010.yahueapi.SecureJsonFactory;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +90,8 @@ public final class HueBridgeDiscoveryService {
    */
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
-
-    final ObjectMapper objectMapper = new ObjectMapper();
+    SecureJsonFactory factory = new SecureJsonFactory(null);
+    ObjectMapper objectMapper = factory.getCodec();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     final Collection<HueBridge> bridges = new HashSet<>();
@@ -114,7 +114,7 @@ public final class HueBridgeDiscoveryService {
       }
     };
     final List<DiscoveryMethod> methods = parseMethods(discoveryMethods);
-    final CompletableFuture[] futures = methods.stream()
+    final CompletableFuture<?>[] futures = methods.stream()
         .map(DiscoveryMethod::getDiscovererCreator)
         .map(creator -> creator.apply(commonConsumer))
         .map(HueBridgeDiscoverer::discoverBridges)
@@ -125,7 +125,6 @@ public final class HueBridgeDiscoveryService {
 
   private BridgeConfig fetchBridgeConfiguration(final ObjectMapper objectMapper, final String ip) {
     try {
-      TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
       return objectMapper.readValue(new URL("https://" + ip + "/api/config"), BridgeConfig.class);
     } catch (final IOException e) {
       logger.error("Unable to connect to a found Bridge at " + ip + ": " + e);
