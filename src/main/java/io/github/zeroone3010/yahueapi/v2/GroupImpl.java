@@ -6,9 +6,7 @@ import io.github.zeroone3010.yahueapi.v2.domain.update.UpdateLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.OFF;
 import static io.github.zeroone3010.yahueapi.v2.domain.update.On.ON;

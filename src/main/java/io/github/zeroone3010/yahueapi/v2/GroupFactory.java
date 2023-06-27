@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,6 @@ import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.GROUPED_LIGH
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.LIGHT;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.SCENE;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 public class GroupFactory {
   private static final Logger logger = LoggerFactory.getLogger(GroupFactory.class);
