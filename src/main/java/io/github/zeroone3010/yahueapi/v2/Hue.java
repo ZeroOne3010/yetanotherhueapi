@@ -53,6 +53,7 @@ public class Hue {
   private final LightFactory lightFactory;
   private final SwitchFactory switchFactory;
   private final GroupFactory groupFactory;
+  private final MotionSensorFactory motionSensorFactory;
 
   private final URL resourceUrl;
   private final URL eventUrl;
@@ -61,7 +62,7 @@ public class Hue {
   private Map<UUID, Light> lights;
   private Map<UUID, Switch> switches;
   private Map<UUID, Group> groups;
-  private Map<UUID, Device> motionSensors;
+  private Map<UUID, MotionSensor> motionSensors;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -88,6 +89,7 @@ public class Hue {
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
     groupFactory = new GroupFactory(this, objectMapper);
+    motionSensorFactory = new MotionSensorFactory(this, objectMapper);
     refresh();
   }
 
@@ -132,8 +134,8 @@ public class Hue {
 
     motionSensors = devices.stream()
         .filter(device -> device.getServices().stream().anyMatch(service -> MOTION == service.getResourceType()))
-        .map(device -> new MotionSensorImpl(device.getId(), device.getMetadata().getName()))
-        .collect(Collectors.toMap(Device::getId, d -> d));
+        .map(device -> buildMotionSensor(device))
+        .collect(Collectors.toMap(MotionSensor::getId, d -> d));
 
     groups = allResources.values().stream()
         .filter(r -> r instanceof RoomResource || r instanceof ZoneResource)
@@ -176,6 +178,10 @@ public class Hue {
     return switchFactory.buildSwitch(deviceResource, buttons);
   }
 
+  private MotionSensorImpl buildMotionSensor(final DeviceResource device) {
+    return motionSensorFactory.buildMotionSensor(device, resourceUrl);
+  }
+
   /**
    * Returns all the lights configured into the Bridge.
    *
@@ -202,7 +208,7 @@ public class Hue {
    * @return A Map of motion sensors, the keys being the IDs of the sensors.
    * @since 3.0.0
    */
-  public Map<UUID, Device> getMotionSensors() {
+  public Map<UUID, MotionSensor> getMotionSensors() {
     return motionSensors;
   }
 

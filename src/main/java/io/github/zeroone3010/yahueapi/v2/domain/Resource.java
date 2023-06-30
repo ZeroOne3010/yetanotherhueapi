@@ -20,7 +20,8 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = RoomResource.class, name = "room"),
     @JsonSubTypes.Type(value = ZoneResource.class, name = "zone"),
     @JsonSubTypes.Type(value = GroupedLightResource.class, name = "grouped_light"),
-    @JsonSubTypes.Type(value = SceneResource.class, name = "scene")
+    @JsonSubTypes.Type(value = SceneResource.class, name = "scene"),
+    @JsonSubTypes.Type(value = MotionResource.class, name = "motion"),
 })
 public class Resource {
 

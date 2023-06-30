@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 * `addLight(Light)` and `removeLight(Light)` methods for the `Group` class.
+* Proper support for motion sensors into the new API version: they are now represented with a new `MotionSensor`
+  interface that has an `isMotion()` method for checking for motion, and a `getLastChanged()` method
+  for getting the last time the status was updated.
 
 3.0.0-beta
 ----------

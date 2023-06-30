@@ -53,7 +53,8 @@ public class HueTestRun {
     hue.getMotionSensors().values().stream()
         .sorted(Comparator.comparing(Device::getName))
         .forEach(value -> {
-          System.out.println(value.getId() + " -> " + value.getName());
+          System.out.println(value.getId() + " -> " + value.getName()
+              + ": motion detected: " + value.isMotion() + "; last changed at " + value.getLastChanged());
         });
   }
 }
