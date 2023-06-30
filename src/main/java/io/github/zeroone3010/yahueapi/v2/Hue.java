@@ -37,6 +37,7 @@ import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEver
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingSocketFactory;
 import static io.github.zeroone3010.yahueapi.TrustEverythingManager.getTrustEverythingTrustManager;
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.MOTION;
+import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.TEMPERATURE;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -54,6 +55,7 @@ public class Hue {
   private final SwitchFactory switchFactory;
   private final GroupFactory groupFactory;
   private final MotionSensorFactory motionSensorFactory;
+  private final TemperatureSensorFactory temperatureSensorFactory;
 
   private final URL resourceUrl;
   private final URL eventUrl;
@@ -63,6 +65,7 @@ public class Hue {
   private Map<UUID, Switch> switches;
   private Map<UUID, Group> groups;
   private Map<UUID, MotionSensor> motionSensors;
+  private Map<UUID, TemperatureSensor> temperatureSensors;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -90,6 +93,7 @@ public class Hue {
     switchFactory = new SwitchFactory(this, objectMapper);
     groupFactory = new GroupFactory(this, objectMapper);
     motionSensorFactory = new MotionSensorFactory(this, objectMapper);
+    temperatureSensorFactory = new TemperatureSensorFactory(this, objectMapper);
     refresh();
   }
 
@@ -137,6 +141,11 @@ public class Hue {
         .map(device -> buildMotionSensor(device))
         .collect(Collectors.toMap(MotionSensor::getId, d -> d));
 
+    temperatureSensors = devices.stream()
+        .filter(device -> device.getServices().stream().anyMatch(service -> TEMPERATURE == service.getResourceType()))
+        .map(device -> buildTemperatureSensor(device))
+        .collect(Collectors.toMap(TemperatureSensor::getId, d -> d));
+
     groups = allResources.values().stream()
         .filter(r -> r instanceof RoomResource || r instanceof ZoneResource)
         .map(r -> (GroupResource) r)
@@ -182,6 +191,10 @@ public class Hue {
     return motionSensorFactory.buildMotionSensor(device, resourceUrl);
   }
 
+  private TemperatureSensorImpl buildTemperatureSensor(final DeviceResource device) {
+    return temperatureSensorFactory.buildTemperatureSensor(device, resourceUrl);
+  }
+
   /**
    * Returns all the lights configured into the Bridge.
    *
@@ -210,6 +223,16 @@ public class Hue {
    */
   public Map<UUID, MotionSensor> getMotionSensors() {
     return motionSensors;
+  }
+
+  /**
+   * Returns all the temperature sensors configured into the Bridge.
+   *
+   * @return A Map of motion sensors, the keys being the IDs of the sensors.
+   * @since 3.0.0
+   */
+  public Map<UUID, TemperatureSensor> getTemperatureSensors() {
+    return temperatureSensors;
   }
 
   Resource getResource(final UUID uuid) {

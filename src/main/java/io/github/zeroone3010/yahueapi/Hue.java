@@ -288,7 +288,9 @@ public final class Hue {
    * Returns all the temperature sensors configured into the Bridge.
    *
    * @return A Collection of temperature sensors.
+   * @see io.github.zeroone3010.yahueapi.v2.Hue#getTemperatureSensors()
    * @since 1.0.0
+   * @deprecated
    */
   public Collection<TemperatureSensor> getTemperatureSensors() {
     return getSensorsByType(SensorType.TEMPERATURE, TemperatureSensor.class);
@@ -299,7 +301,9 @@ public final class Hue {
    * Different kinds of switches include, for example, the Philips Hue dimmer switch and the Philips Hue Tap switch.
    *
    * @return A Collection of switches.
+   * @see io.github.zeroone3010.yahueapi.v2.Hue#getSwitches()
    * @since 2.0.0
+   * @deprecated
    */
   public Collection<Switch> getSwitches() {
     return getSensorsByType(SensorType.SWITCH, Switch.class);

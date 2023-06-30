@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 /**
  * A sensor measuring the room temperature. Most often found as an additional feature in a Philips Hue motion detector.
+ * @deprecated
+ * @see io.github.zeroone3010.yahueapi.v2.TemperatureSensor
  */
 public interface TemperatureSensor extends Sensor {
   /**

@@ -56,5 +56,15 @@ public class HueTestRun {
           System.out.println(value.getId() + " -> " + value.getName()
               + ": motion detected: " + value.isMotion() + "; last changed at " + value.getLastChanged());
         });
+
+    System.out.println("\nTemperature sensors:");
+    hue.getTemperatureSensors().values().stream()
+        .sorted(Comparator.comparing(Device::getName))
+        .forEach(value -> {
+          System.out.println(value.getId() + " -> " + value.getName()
+              + ": temperature: " + value.getDegreesCelsius() + " °C (" +
+              value.getDegreesFahrenheit() +
+              " °F); last changed at " + value.getLastChanged());
+        });
   }
 }

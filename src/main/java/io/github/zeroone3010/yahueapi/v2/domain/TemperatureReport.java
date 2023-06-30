@@ -5,26 +5,19 @@ import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 import java.math.BigDecimal;
 
-public class Temperature {
+public class TemperatureReport {
+  @JsonProperty("changed")
+  private String changed;
+
   @JsonProperty("temperature")
   private BigDecimal temperature;
 
-  @JsonProperty("temperature_valid")
-  private boolean temperatureValid;
-
-  @JsonProperty("temperature_report")
-  private TemperatureReport temperatureReport;
+  public String getChanged() {
+    return changed;
+  }
 
   public BigDecimal getTemperature() {
     return temperature;
-  }
-
-  public boolean isTemperatureValid() {
-    return temperatureValid;
-  }
-
-  public TemperatureReport getTemperatureReport() {
-    return temperatureReport;
   }
 
   public String toString() {
