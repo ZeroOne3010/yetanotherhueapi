@@ -6,10 +6,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-Unreleased
+3.0.0-RC1 (unpublished)
+-----------------------
+
+### Added
+
+* `addLight(Light)` and `removeLight(Light)` methods for the `Group` class.
+* Proper support for motion sensors into the new API version: they are now represented with a new `MotionSensor`
+  interface that has an `isMotion()` method for checking for motion, and a `getLastChanged()` method
+  for getting the last time the status was updated.
+
+3.0.0-beta
 ----------
 
-TBA
+### Added
+
+* Support for scenes. Use the `getScenes()` and `getSceneByName(String)` methods in the `Group` objects.
+  Call the `activate()` method of a `Scene` to activate it.
+* Support for the `prism` effect.
+* Documentation for version 3.0.0 into the [README.md](README.md) file.
+  Docs for version 2 of the library can still be found from [README_v2.md](README_v2.md).
+
+### Fixed
+
+* Added default enum values to be used in case new effects or some such variables are introduced into the API. (Fixes #59)
+
+3.0.0-alpha
+-----------
+
+### Added
+
+* Support for events! Use the new `io.github.zeroone3010.yahueapi.v2.Hue` class
+  and its `subscribeToEvents(HueEventListener)` method to get real time updates from the Bridge
+  when something happens in the system.
+
+### Removed
+
+* Removed UPNP from Bridge discovery methods, as Philips is deprecating it.
+* Removed plain HTTP as a possible Bridge connection protocol, as Philips is deprecating it. With this removal
+  also removed the constructor from the `Hue` class that had `HueBridgeProtocol` as a parameter, as the enum
+  now only has one value. Also changed said enum from public to package private.
+
+### Deprecated
+
+* `getRooms()`, `getZones()`,  `getRoomByName()`, and `getZoneByName()` methods from the
+  `io.github.zeroone3010.yahueapi.Hue` class in favor of the methods with the same names (if not the same signatures)
+  in the `io.github.zeroone3010.yahueapi.v2.Hue` class. Note that the deprecated methods return `Collection`s
+  of objects, whereas the new methods return `Map`s, where the key is the unique id of the
+  entity, and the value is the entity itself. Just call the `.values()` method of such a `Map` if you still want
+  to iterate through all the values like before.
 
 v2.7.0 (2022-04-19)
 ----------

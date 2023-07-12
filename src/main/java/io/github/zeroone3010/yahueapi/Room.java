@@ -5,6 +5,8 @@ import java.util.Optional;
 
 /**
  * A room, a zone, or another type of group that has been configured into the Hue Bridge.
+ *
+ * @deprecated Use the {@link io.github.zeroone3010.yahueapi.v2.Group} class instead.
  */
 public interface Room {
 
@@ -112,6 +114,7 @@ public interface Room {
    * @param newLight The light to be added
    * @return A Collection of Lights in this room after the operation.
    * @since 2.6.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Group#addLight(io.github.zeroone3010.yahueapi.v2.Light)} instead.
    */
   Collection<Light> addLight(Light newLight);
 
@@ -121,6 +124,7 @@ public interface Room {
    * @param lightToBeRemoved The light to be removed
    * @return A Collection of Lights in this room after the operation
    * @since 2.6.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Group#removeLight(io.github.zeroone3010.yahueapi.v2.Light)} instead.
    */
   Collection<Light> removeLight(Light lightToBeRemoved);
 }

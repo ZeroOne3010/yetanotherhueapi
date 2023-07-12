@@ -15,7 +15,7 @@ public class HueTestRun {
     final String ip = args[0];
     final String apiKey = args[1];
 
-    final Hue hue = new Hue(HueBridgeProtocol.UNVERIFIED_HTTPS, ip, apiKey);
+    final Hue hue = new Hue(ip, apiKey);
 
     if (args.length > 4) {
       final String fromRoom = args[2];

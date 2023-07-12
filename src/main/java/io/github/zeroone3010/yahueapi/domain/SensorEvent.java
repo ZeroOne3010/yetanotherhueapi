@@ -2,8 +2,6 @@ package io.github.zeroone3010.yahueapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 public class SensorEvent {
   @JsonProperty("buttonevent")
   private Integer buttonEvent;

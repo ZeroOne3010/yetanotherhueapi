@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * A button of a {@link Switch}.
+ *
+ * @deprecated Use the {@link io.github.zeroone3010.yahueapi.v2.Button} class instead.
  */
 public interface Button {
 

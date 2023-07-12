@@ -1,10 +1,8 @@
 package io.github.zeroone3010.yahueapi;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import io.github.zeroone3010.yahueapi.domain.Group;
 import io.github.zeroone3010.yahueapi.domain.Root;
 import io.github.zeroone3010.yahueapi.domain.Scene;
@@ -13,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -31,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static io.github.zeroone3010.yahueapi.HueBridgeProtocol.UNVERIFIED_HTTPS;
 import static io.github.zeroone3010.yahueapi.RoomFactory.ALL_LIGHTS_GROUP_ID;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
@@ -48,6 +45,7 @@ public final class Hue {
   private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
 
   private final ObjectMapper objectMapper;
+  private static final long MIN_API_V2_VERSION = 1948086000L;
 
   private final SensorFactory sensorFactory;
   private final RoomFactory roomFactory;
@@ -71,7 +69,13 @@ public final class Hue {
    * @since 1.0.0
    */
   public Hue(final String bridgeIp, final String apiKey) {
-    this(HueBridgeProtocol.UNVERIFIED_HTTPS, bridgeIp, apiKey);
+    final HueBridgeProtocol protocol = UNVERIFIED_HTTPS;
+    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
+    TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.addHandler(new UnauthorizedUserHandler());
+    roomFactory = new RoomFactory(this, objectMapper, uri);
+    lightFactory = new LightFactory(this, objectMapper);
   }
 
   /**
@@ -222,7 +226,9 @@ public final class Hue {
    *
    * @return A Collection of rooms.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getRooms()} instead.
    */
+  @Deprecated
   public Collection<Room> getRooms() {
     return getGroupsOfType(GroupType.ROOM);
   }
@@ -233,7 +239,9 @@ public final class Hue {
    *
    * @return A Collection of zones as Room objects.
    * @since 1.1.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getZones()} instead.
    */
+  @Deprecated
   public Collection<Room> getZones() {
     return getGroupsOfType(GroupType.ZONE);
   }
@@ -244,7 +252,9 @@ public final class Hue {
    * @param roomName The name of a room
    * @return A room or {@code Optional.empty()} if a room with the given name does not exist.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getRoomByName(String)} instead.
    */
+  @Deprecated
   public Optional<Room> getRoomByName(final String roomName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.groups.get(roomName)).filter(g -> g.getType() == GroupType.ROOM);
@@ -256,7 +266,9 @@ public final class Hue {
    * @param zoneName The name of a zone
    * @return A zone or {@code Optional.empty()} if a zone with the given name does not exist.
    * @since 1.1.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#getZoneByName(String)} instead.
    */
+  @Deprecated
   public Optional<Room> getZoneByName(final String zoneName) {
     doInitialDataLoadIfRequired();
     return Optional.ofNullable(this.groups.get(zoneName)).filter(g -> g.getType() == GroupType.ZONE);
@@ -305,7 +317,9 @@ public final class Hue {
    * Returns all the temperature sensors configured into the Bridge.
    *
    * @return A Collection of temperature sensors.
+   * @see io.github.zeroone3010.yahueapi.v2.Hue#getTemperatureSensors()
    * @since 1.0.0
+   * @deprecated
    */
   public Collection<TemperatureSensor> getTemperatureSensors() {
     return getSensorsByType(SensorType.TEMPERATURE, TemperatureSensor.class);
@@ -316,7 +330,9 @@ public final class Hue {
    * Different kinds of switches include, for example, the Philips Hue dimmer switch and the Philips Hue Tap switch.
    *
    * @return A Collection of switches.
+   * @see io.github.zeroone3010.yahueapi.v2.Hue#getSwitches()
    * @since 2.0.0
+   * @deprecated
    */
   public Collection<Switch> getSwitches() {
     return getSensorsByType(SensorType.SWITCH, Switch.class);
@@ -554,6 +570,17 @@ public final class Hue {
   }
 
   /**
+   * Tells whether the Bridge supports the CLIP API v2, introduced in November 2021.
+   *
+   * @return {@code true} if there is a support for API v2, {@code false} if not.
+   * @since 3.0.0
+   */
+  public boolean bridgeSupportsApiV2() {
+    doInitialDataLoadIfRequired();
+    return Long.parseLong(root.getConfig().getSoftwareVersion()) >= MIN_API_V2_VERSION;
+  }
+
+  /**
    * The method to be used if you do not have an API key for your application yet.
    * Returns a {@code HueBridgeConnectionBuilder} that initializes the process of
    * adding a new application to the Bridge. You can test if you are connecting to
@@ -562,6 +589,7 @@ public final class Hue {
    * @param bridgeIp The IP address of the Bridge.
    * @return A connection builder that initializes the application for the Bridge.
    * @since 1.0.0
+   * @deprecated Use {@link io.github.zeroone3010.yahueapi.v2.Hue#hueBridgeConnectionBuilder(String)} instead.
    */
   public static HueBridgeConnectionBuilder hueBridgeConnectionBuilder(final String bridgeIp) {
     return new HueBridgeConnectionBuilder(bridgeIp);

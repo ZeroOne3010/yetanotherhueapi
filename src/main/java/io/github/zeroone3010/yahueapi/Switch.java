@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * Any switch with one or more buttons, such as a Philips Hue dimmer switch or a Philips Hue Tap switch.
+ *
+ * @deprecated Use the {@link io.github.zeroone3010.yahueapi.v2.Switch} class instead.
  */
 public interface Switch extends Sensor {
   /**

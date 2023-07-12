@@ -3,6 +3,8 @@ package io.github.zeroone3010.yahueapi;
 /**
  * A single Philips Hue -compatible light. Could be a bulb, a ceiling fixture, a LED strip, or anything in between.
  * Even remote controlled wall sockets are considered as "lights" by the Hue Bridge.
+ *
+ * @deprecated Use the {@link io.github.zeroone3010.yahueapi.v2.Light} class instead.
  */
 public interface Light {
 

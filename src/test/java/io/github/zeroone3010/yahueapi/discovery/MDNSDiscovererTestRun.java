@@ -1,10 +1,12 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 class MDNSDiscovererTestRun {
-  private static final Logger logger = Logger.getLogger("MDNSDiscovererTestRun");
+  private static final Logger logger = LoggerFactory.getLogger("MDNSDiscovererTestRun");
 
   /**
    * Runs the MDNSDiscoverer and prints the discovered bridges.

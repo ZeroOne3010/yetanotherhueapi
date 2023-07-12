@@ -79,7 +79,7 @@ class HueTest {
 
   final WireMockServer wireMockServer = new WireMockServer(wireMockConfig()
       .notifier(new ConsoleNotifier(true))
-      .dynamicPort());
+      .dynamicHttpsPort());
 
   @BeforeEach
   void startServer() {
@@ -92,6 +92,10 @@ class HueTest {
   }
 
   private Hue createHueAndInitializeMockServer() {
+    return createHueAndInitializeMockServer(readFile("hueRoot.json"));
+  }
+
+  private Hue createHueAndInitializeMockServer(final String hueRootJsonString) {
     final String hueRoot = readFile("hueRoot.json");
     final String hueRootWithLight900 = readFile("hueRootWithLight900.json");
 
@@ -133,7 +137,7 @@ class HueTest {
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    return new Hue(HueBridgeProtocol.HTTP, "localhost:" + wireMockServer.port(), API_KEY);
+    return new Hue("localhost:" + wireMockServer.httpsPort(), API_KEY);
   }
 
   private void mockIndividualGetResponse(final JsonNode hueRoot, final String itemClass, final String id) throws JsonProcessingException {
@@ -213,6 +217,19 @@ class HueTest {
     assertTrue(hue.getRoomByName("Living room").get().getLightByName("LR 1").get().isReachable());
     assertFalse(hue.getRoomByName("Bedroom").get().getLightByName("Pendant").get().isReachable());
     wireMockServer.verify(1, getRequestedFor(urlEqualTo(API_BASE_PATH)));
+  }
+
+  @Test
+  void testBridgeDoesNotSupportApiV2() {
+    final Hue hue = createHueAndInitializeMockServer();
+    assertFalse(hue.bridgeSupportsApiV2());
+  }
+
+  @Test
+  void testBridgeSupportsApiV2() {
+    final Hue hue = createHueAndInitializeMockServer(
+        readFile("hueRoot.json").replace("1806051111", "1948086000L"));
+    assertFalse(hue.bridgeSupportsApiV2());
   }
 
   @Test
@@ -1128,7 +1145,7 @@ class HueTest {
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    final Hue hue = new Hue(HueBridgeProtocol.HTTP, "localhost:" + wireMockServer.port(), API_KEY);
+    final Hue hue = new Hue("localhost:" + wireMockServer.httpsPort(), API_KEY);
     assertTrue(hue.getRooms().isEmpty());
     assertTrue(hue.getAmbientLightSensors().isEmpty());
     assertTrue(hue.getDaylightSensors().isEmpty());

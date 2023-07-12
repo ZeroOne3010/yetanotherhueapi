@@ -1,14 +1,15 @@
 package io.github.zeroone3010.yahueapi.discovery;
 
 import io.github.zeroone3010.yahueapi.HueBridge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 class HueBridgeDiscoveryServiceTestRun {
-  private static final Logger logger = Logger.getLogger("HueBridgeDiscoveryServiceTestRun");
+  private static final Logger logger = LoggerFactory.getLogger("HueBridgeDiscoveryServiceTestRun");
 
   /**
    * Runs the discovery service and prints the discovered bridges.
