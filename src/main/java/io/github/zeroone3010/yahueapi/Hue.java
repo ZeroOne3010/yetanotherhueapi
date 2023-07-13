@@ -9,7 +9,6 @@ import io.github.zeroone3010.yahueapi.domain.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
@@ -71,11 +70,15 @@ public final class Hue {
   public Hue(final String bridgeIp, final String apiKey) {
     final HueBridgeProtocol protocol = UNVERIFIED_HTTPS;
     this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
-    TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
+
+    SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp, protocol);
+    objectMapper = secureJsonFactory.getCodec();
+
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     objectMapper.addHandler(new UnauthorizedUserHandler());
     roomFactory = new RoomFactory(this, objectMapper, uri);
     lightFactory = new LightFactory(this, objectMapper);
+    sensorFactory = new SensorFactory(this, objectMapper);
   }
 
   /**
@@ -115,9 +118,9 @@ public final class Hue {
 
   /**
    * A basic constructor for initializing the Hue Bridge connection for this library.
-   * Use the {@code hueBridgeConnectionBuilder} method if you do not have an API key yet.
+   * Use the {@code Hue} method if you do not have an API key yet.
    *
-   * @param protocol The desired protocol for the Bridge connection. HTTP or UNVERIFIED_HTTPS,
+   * @param protocol The desired protocol for the Bridge connection. Older Bridges require HTTP or UNVERIFIED_HTTPS,
    *                 as the certificate that the Bridge uses cannot be verified. Defaults to UNVERIFIED_HTTPS
    *                 since version 2.4.0 when using the other constructor (used to default to HTTP before that),
    *                 for Philips will eventually deprecate the plain HTTP connection altogether.
@@ -593,80 +596,5 @@ public final class Hue {
    */
   public static HueBridgeConnectionBuilder hueBridgeConnectionBuilder(final String bridgeIp) {
     return new HueBridgeConnectionBuilder(bridgeIp);
-  }
-
-  public static class HueBridgeConnectionBuilder {
-    private static final int MAX_TRIES = 30;
-    private String urlString;
-
-    private HueBridgeConnectionBuilder(final String bridgeIp) {
-      this.urlString = "https://" + bridgeIp;
-    }
-
-    /**
-     * Returns a {@code CompletableFuture} that calls the /api/config path of given Hue Bridge to verify
-     * that you are connecting to a Hue bridge.
-     *
-     * @return A {@code CompletableFuture} with a boolean that is true when the call to the bridge was successful.
-     * @since 2.7.0
-     */
-    public CompletableFuture<Boolean> isHueBridgeEndpoint() {
-      final Supplier<Boolean> isBridgeSupplier = () -> {
-        try {
-          URL url = new URL(urlString + "/api/config");
-          HttpsURLConnection connection = TrustEverythingManager.createAllTrustedConnection(url);
-          int responseCode = connection.getResponseCode();
-          connection.disconnect();
-          return HttpURLConnection.HTTP_OK == responseCode;
-        } catch (IOException exception) {
-          return false;
-        }
-      };
-      return CompletableFuture.supplyAsync(isBridgeSupplier);
-    }
-
-    /**
-     * Returns a {@code CompletableFuture} that completes once you push the button on the Hue Bridge. Returns an API
-     * key that you should use for any subsequent calls to the Bridge API.
-     *
-     * @param appName The name of your application.
-     * @return A {@code CompletableFuture} with an API key for your application. You should store this key for future usage.
-     * @since 1.0.0
-     */
-    public CompletableFuture<String> initializeApiConnection(final String appName) {
-      final Supplier<String> apiKeySupplier = () -> {
-        final String body = "{\"devicetype\":\"yetanotherhueapi#" + appName + "\"}";
-        final URL baseUrl;
-        try {
-          baseUrl = new URL(urlString + "/api");
-        } catch (final MalformedURLException e) {
-          throw new HueApiException(e);
-        }
-
-        String latestError = null;
-        for (int triesLeft = MAX_TRIES; triesLeft > 0; triesLeft--) {
-          try {
-            logger.info("Please push the button on the Hue Bridge now (" + triesLeft + " seconds left).");
-
-            final String result = HttpUtil.post(baseUrl, "", body);
-            logger.info(result);
-            final ApiInitializationStatus status = new ObjectMapper().<ArrayList<ApiInitializationStatus>>readValue(result,
-                new TypeReference<ArrayList<ApiInitializationStatus>>() {
-                }).get(0);
-
-            if (status.getSuccess() != null) {
-              return status.getSuccess().getUsername();
-            }
-            latestError = status.getError().getDescription();
-            TimeUnit.SECONDS.sleep(1L);
-
-          } catch (final Exception e) {
-            throw new HueApiException(e);
-          }
-        }
-        throw new HueApiException(latestError);
-      };
-      return CompletableFuture.supplyAsync(apiKeySupplier);
-    }
   }
 }

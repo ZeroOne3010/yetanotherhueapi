@@ -4,7 +4,7 @@ package io.github.zeroone3010.yahueapi;
  * An enumeration on what kind of a connection one wants with the Bridge. Plain HTTP used to be an option but Philips
  * announced it will not be supported anymore.
  */
-enum HueBridgeProtocol {
+public enum HueBridgeProtocol {
 
   /**
    * <b>Recommended</b>

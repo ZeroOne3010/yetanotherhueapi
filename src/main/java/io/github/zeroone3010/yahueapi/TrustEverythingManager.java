@@ -1,5 +1,6 @@
 package io.github.zeroone3010.yahueapi;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -30,10 +31,18 @@ public class TrustEverythingManager implements X509TrustManager {
     return sslContext.getSocketFactory();
   }
 
+  public static HostnameVerifier createHostnameVerifier(String bridgeIp) {
+    return (hostname, session) -> bridgeIp == null || hostname.equals(bridgeIp);
+  }
+
+  public static X509TrustManager getTrustEverythingTrustManager() {
+    return new TrustEverythingManager();
+  }
+
   public static HttpsURLConnection createAllTrustedConnection(URL url) throws IOException {
     try {
       HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-      connection.setHostnameVerifier((hostname, session) -> true);
+      connection.setHostnameVerifier(createHostnameVerifier(null));
       connection.setSSLSocketFactory(createSSLSocketFactory());
       return connection;
     } catch (GeneralSecurityException exception) {

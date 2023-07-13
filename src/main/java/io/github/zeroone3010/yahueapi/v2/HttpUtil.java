@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.zeroone3010.yahueapi.HueApiException;
+import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
+import io.github.zeroone3010.yahueapi.SecureJsonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +28,8 @@ final class HttpUtil {
     // prevent instantiation
   }
 
-  static ObjectMapper buildObjectMapper() {
-    return JsonMapper.builder()
+  static ObjectMapper buildObjectMapper(final String bridgeIp, final HueBridgeProtocol protocol) {
+    return JsonMapper.builder(new SecureJsonFactory(bridgeIp, protocol))
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
