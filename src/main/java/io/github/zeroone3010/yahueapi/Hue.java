@@ -118,7 +118,7 @@ public final class Hue {
 
   /**
    * A basic constructor for initializing the Hue Bridge connection for this library.
-   * Use the {@code Hue} method if you do not have an API key yet.
+   * Use the {@link #hueBridgeConnectionBuilder(String)} method if you do not have an API key yet.
    *
    * @param protocol The desired protocol for the Bridge connection. Older Bridges require HTTP or UNVERIFIED_HTTPS,
    *                 as the certificate that the Bridge uses cannot be verified. Defaults to UNVERIFIED_HTTPS
