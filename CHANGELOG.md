@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 * `addLight(Light)` and `removeLight(Light)` methods for the `Group` class.
-* Proper support for motion sensors into the new API version: they are now represented with a new `MotionSensor`
+* Proper support for motion sensors in the new API version: they are now represented with a new `MotionSensor`
   interface that has an `isMotion()` method for checking for motion, and a `getLastChanged()` method
   for getting the last time the status was updated.
+* Support for temperature sensors in the new API version: the v2 `Hue` object now has a `getTemperatureSensors()`
+  method. The `TemperatureSensor` can return the temperature both in degrees Celsius and Fahrenheit.
 
 3.0.0-beta
 ----------
