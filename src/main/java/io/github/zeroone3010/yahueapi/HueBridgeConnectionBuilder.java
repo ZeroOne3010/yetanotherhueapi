@@ -6,6 +6,7 @@ import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,9 +39,9 @@ public class HueBridgeConnectionBuilder {
   public CompletableFuture<Boolean> isHueBridgeEndpoint() {
     final Supplier<Boolean> isBridgeSupplier = () -> {
       try {
-        TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
-        final HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString + "/api/config").openConnection();
-        final int responseCode = urlConnection.getResponseCode();
+        URL url = new URL(urlString + "/api/config");
+        HttpsURLConnection connection = TrustEverythingManager.createAllTrustedConnection(url);
+        final int responseCode = connection.getResponseCode();
         return HttpURLConnection.HTTP_OK == responseCode;
       } catch (final IOException e) {
         return false;
@@ -62,7 +63,6 @@ public class HueBridgeConnectionBuilder {
       final String body = "{\"devicetype\":\"yetanotherhueapi#" + appName + "\"}";
       final URL baseUrl;
       try {
-        TrustEverythingManager.trustAllSslConnectionsByDisablingCertificateVerification();
         baseUrl = new URL(urlString + "/api");
       } catch (final MalformedURLException e) {
         throw new HueApiException(e);

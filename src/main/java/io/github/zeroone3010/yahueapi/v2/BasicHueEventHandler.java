@@ -17,11 +17,12 @@ public class BasicHueEventHandler implements EventHandler {
   public static final TypeReference<List<HueEvent>> EVENT_LIST_TYPE_REF = new TypeReference<List<HueEvent>>() {
   };
 
-  private final ObjectMapper objectMapper = HttpUtil.buildObjectMapper();
+  private final ObjectMapper objectMapper;
   private final Hue hue;
   private final HueEventListener eventListener;
 
   public BasicHueEventHandler(final Hue hue, final HueEventListener eventListener) {
+    this.objectMapper = hue.objectMapper;
     this.hue = hue;
     this.eventListener = eventListener;
   }
