@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.MOTION;
@@ -349,7 +350,7 @@ public class Hue {
       final EventSource.Builder builder = new EventSource.Builder(eventHandler, eventUrl.toURI())
           .client(client)
           .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
-          .reconnectTime(Duration.ofMillis(3000));
+          .reconnectTime(3000, TimeUnit.MILLISECONDS);
       final EventSource eventSource = builder.build();
       eventSource.start();
       return new LaunchDarklyEventSource(eventSource);
