@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+3.0.0-RC (unpublished)
+----------------------
+
+### Changed
+
+* Updated dependencies, most importantly okhttp-eventsource from 2.x.x to 4.x.x.
+
 3.0.0-beta-2
 ------------
 

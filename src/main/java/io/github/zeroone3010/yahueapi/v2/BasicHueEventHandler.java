@@ -2,8 +2,8 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
+import com.launchdarkly.eventsource.background.BackgroundEventHandler;
 import io.github.zeroone3010.yahueapi.v2.domain.HueEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.event.ButtonEvent;
 import io.github.zeroone3010.yahueapi.v2.domain.event.MotionEvent;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class BasicHueEventHandler implements EventHandler {
+public class BasicHueEventHandler implements BackgroundEventHandler {
   private static final Logger logger = LoggerFactory.getLogger(BasicHueEventHandler.class);
   public static final TypeReference<List<HueEvent>> EVENT_LIST_TYPE_REF = new TypeReference<List<HueEvent>>() {
   };

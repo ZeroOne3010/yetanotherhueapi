@@ -2,7 +2,9 @@ package io.github.zeroone3010.yahueapi.v2;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.launchdarkly.eventsource.ConnectStrategy;
 import com.launchdarkly.eventsource.EventSource;
+import com.launchdarkly.eventsource.background.BackgroundEventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
 import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
@@ -347,11 +349,16 @@ public class Hue {
           .build();
 
       final BasicHueEventHandler eventHandler = new BasicHueEventHandler(this, eventListener);
-      final EventSource.Builder builder = new EventSource.Builder(eventHandler, eventUrl.toURI())
-          .client(client)
-          .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
-          .reconnectTime(3000, TimeUnit.MILLISECONDS);
-      final EventSource eventSource = builder.build();
+
+      final BackgroundEventSource.Builder builder = new BackgroundEventSource.Builder(eventHandler,
+          new EventSource.Builder(ConnectStrategy.http(eventUrl.toURI())
+              .httpClient(client)
+              .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
+              .connectTimeout(5000, TimeUnit.MILLISECONDS)
+          ).retryDelay(3000, TimeUnit.MILLISECONDS)
+      );
+
+      final BackgroundEventSource eventSource = builder.build();
       eventSource.start();
       return new LaunchDarklyEventSource(eventSource);
     } catch (final Exception e) {

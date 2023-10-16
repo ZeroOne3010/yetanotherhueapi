@@ -1,11 +1,11 @@
 package io.github.zeroone3010.yahueapi.v2;
 
-import com.launchdarkly.eventsource.EventSource;
+import com.launchdarkly.eventsource.background.BackgroundEventSource;
 
 class LaunchDarklyEventSource implements HueEventSource {
-  private EventSource eventSource;
+  private BackgroundEventSource eventSource;
 
-  public LaunchDarklyEventSource(final EventSource eventSource) {
+  public LaunchDarklyEventSource(final BackgroundEventSource eventSource) {
     this.eventSource = eventSource;
   }
 
@@ -16,7 +16,7 @@ class LaunchDarklyEventSource implements HueEventSource {
 
   @Override
   public HueEventStreamState getState() {
-    switch (eventSource.getState()) {
+    switch (eventSource.getEventSource().getState()) {
       case OPEN:
         return HueEventStreamState.ACTIVE;
       case CLOSED:
