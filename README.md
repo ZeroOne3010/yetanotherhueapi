@@ -234,7 +234,7 @@ Add the following dependency to your pom.xml file if you are using Maven:
 <dependency>
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>3.0.0-beta</version>
+    <version>3.0.0-beta-2</version>
 </dependency>
 ```
 
@@ -246,7 +246,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.github.zeroone3010:yetanotherhueapi:3.0.0-beta'
+  implementation 'io.github.zeroone3010:yetanotherhueapi:3.0.0-beta-2'
 }
 ```
 
