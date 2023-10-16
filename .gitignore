@@ -122,3 +122,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Output of "mvn dependency:tree > deps.tree"
+deps.tree
