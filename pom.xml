@@ -4,7 +4,7 @@
 
     <groupId>io.github.zeroone3010</groupId>
     <artifactId>yetanotherhueapi</artifactId>
-    <version>3.0.0-FORK</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>YetAnotherHueApi</name>
