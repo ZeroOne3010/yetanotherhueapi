@@ -76,6 +76,12 @@ public final class HueBridgeDiscoveryService {
    * of this method (List of HueBridge objects) can actually be discarded completely.
    * </p>
    *
+   * <p>
+   * This is different from the {@link #discoverBridges(Consumer bridgeDiscoverer, HueBridgeProtocol, DiscoveryMethod...)}
+   * method in that the default protocol used for Bridge discovery is set, and the default value is {@link HueBridgeProtocol#UNVERIFIED_HTTPS}.
+   * This allows discovering older Bridges that are still using self-signed certificates.
+   * </p>
+   *
    * @param bridgeDiscoverer A Consumer that is called whenever a new Bridge is encountered during
    *                         the discovery process. Even if multiple discovery methods are used the Consumer will only
    *                         be called once per Bridge, even if all the different methods would actually discover
@@ -91,7 +97,7 @@ public final class HueBridgeDiscoveryService {
    */
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
-    return discoverBridges(bridgeDiscoverer, HueBridgeProtocol.HTTPS, discoveryMethods);
+    return discoverBridges(bridgeDiscoverer, HueBridgeProtocol.UNVERIFIED_HTTPS, discoveryMethods);
   }
 
   /**

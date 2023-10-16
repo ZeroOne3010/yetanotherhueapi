@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-3.0.0-RC1 (unpublished)
+3.0.0-beta-2 (unpublished)
 -----------------------
 
 ### Added
@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   for getting the last time the status was updated.
 * Support for temperature sensors in the new API version: the v2 `Hue` object now has a `getTemperatureSensors()`
   method. The `TemperatureSensor` can return the temperature both in degrees Celsius and Fahrenheit.
+* Support for Bridge certificates signed by the Signify CA. This may still cause issues with older Bridges that are
+  still using self-signed certificates, so please check everything! The default setting in this library should be to use
+  the "unverified HTTPS" option everywhere, as that works with the older self-signed certificates too.
 
 3.0.0-beta
 ----------
