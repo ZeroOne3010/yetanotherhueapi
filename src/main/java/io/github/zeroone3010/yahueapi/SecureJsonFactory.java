@@ -40,7 +40,13 @@ public class SecureJsonFactory extends MappingJsonFactory {
         throw new IllegalStateException("Unsupported protocol");
       }
 
-      this.hostnameVerifier = (hostname, session) -> bridgeIp == null || hostname.equals(bridgeIp);
+      this.hostnameVerifier = (hostname, session) -> {
+        if (bridgeIp == null) {
+          return true;
+        }
+        final String bridgeHost = bridgeIp.contains(":") ? bridgeIp.split(":")[0] : bridgeIp;
+        return hostname.equals(bridgeHost);
+      };
     } catch (IOException | GeneralSecurityException exception) {
       throw new HueApiException(exception);
     }
