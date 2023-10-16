@@ -22,11 +22,11 @@ import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -68,6 +68,8 @@ public class Hue {
   private Map<UUID, Group> groups;
   private Map<UUID, MotionSensor> motionSensors;
   private Map<UUID, TemperatureSensor> temperatureSensors;
+  private final String bridgeIp;
+  private final HueBridgeProtocol protocol;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -81,19 +83,21 @@ public class Hue {
    * @since 3.0.0
    */
   public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
+    this.protocol = protocol;
+    this.bridgeIp = bridgeIp;
     try {
-      this.resourceUrl = new URL("https://" + bridgeIp + "/clip/v2/resource");
+      this.resourceUrl = new URL("https://" + this.bridgeIp + "/clip/v2/resource");
     } catch (MalformedURLException e) {
       throw new HueApiException(e);
     }
     try {
-      this.eventUrl = new URL("https://" + bridgeIp + "/eventstream/clip/v2");
+      this.eventUrl = new URL("https://" + this.bridgeIp + "/eventstream/clip/v2");
     } catch (MalformedURLException e) {
       throw new HueApiException(e);
     }
 
     this.apiKey = apiKey;
-    this.objectMapper = HttpUtil.buildObjectMapper(bridgeIp, protocol);
+    this.objectMapper = HttpUtil.buildObjectMapper(this.bridgeIp, this.protocol);
 
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
@@ -182,14 +186,22 @@ public class Hue {
   }
 
   URLConnection getUrlConnection(final URL url) {
-    final HttpURLConnection urlConnection;
     try {
-      urlConnection = (HttpURLConnection) url.openConnection();
+      final HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+      if (this.protocol == HueBridgeProtocol.UNVERIFIED_HTTPS
+          && objectMapper.getFactory() instanceof SecureJsonFactory) {
+
+        final SecureJsonFactory factory = (SecureJsonFactory) objectMapper.getFactory();
+        urlConnection.setSSLSocketFactory(factory.getSocketFactory());
+        urlConnection.setHostnameVerifier(factory.getHostnameVerifier());
+      }
+
+      urlConnection.setRequestProperty(HUE_APPLICATION_KEY_HEADER, apiKey);
+      return urlConnection;
     } catch (IOException e) {
       throw new HueApiException(e);
     }
-    urlConnection.setRequestProperty(HUE_APPLICATION_KEY_HEADER, apiKey);
-    return urlConnection;
   }
 
   private LightImpl buildLight(final LightResource lightResource) {

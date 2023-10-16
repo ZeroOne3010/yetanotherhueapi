@@ -69,14 +69,15 @@ public class SecureJsonFactory extends MappingJsonFactory {
   }
 
   /**
-   * Creates an SSL Context that only contains the self-signed certificate of Hue bridges
-   * @see <a href="https://developers.meethue.com/develop/application-design-guidance/using-https/">Hue HTTPS Documentation</a>
+   * Creates an SSL Context that only contains the Signify CA certificate of Hue bridges
+   *
    * @return An SSL Context containing only the Hue certificate
-   * @throws IOException if the resource couldn't be read
-   * @throws KeyStoreException if the Java-Keystore Provider is missing
-   * @throws CertificateException if the X.509 certification type Provider is missing
+   * @throws IOException              if the resource couldn't be read
+   * @throws KeyStoreException        if the Java-Keystore Provider is missing
+   * @throws CertificateException     if the X.509 certification type Provider is missing
    * @throws NoSuchAlgorithmException if no Provider supports the default TrustManager algorithm or the TLS Provider is missing
-   * @throws KeyManagementException if the SSLContext initiation fails
+   * @throws KeyManagementException   if the SSLContext initiation fails
+   * @see <a href="https://developers.meethue.com/develop/application-design-guidance/using-https/">Hue HTTPS Documentation</a>
    */
   protected SSLContext createHueSSLContext() throws IOException, KeyStoreException,
       CertificateException, NoSuchAlgorithmException, KeyManagementException {
@@ -111,6 +112,10 @@ public class SecureJsonFactory extends MappingJsonFactory {
 
   public X509TrustManager getTrustManager() {
     return trustManager;
+  }
+
+  public HostnameVerifier getHostnameVerifier() {
+    return hostnameVerifier;
   }
 
   /**
