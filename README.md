@@ -106,6 +106,25 @@ which will then attempt to parse it by finding its red, green and blue component
 In the pre-2.x.x versions of this library, one could set the color directly using `java.awt.Color` objects only.
 This was all nice and fine, except for the fact that Android environments do not have that class at their disposal.
 
+### Setting gradients
+
+The following piece of code would set a nice red to green to blue gradient for a light strip:
+
+[//]: # (requires-init)
+[//]: # (import java.util.ArrayList;)
+```java
+final List<Color> colors = new ArrayList<>();
+colors.add(Color.of(255, 0, 0));
+colors.add(Color.of(0, 255, 0));
+colors.add(Color.of(0, 0, 255));
+hue.getRoomByName("room name").get()
+    .getLightByName("lightstrip name").get()
+    .setState(new UpdateState()
+        .gradient(colors)
+        .brightness(50)
+        .on());
+```
+
 ### Lights that belong to a room or a zone
 
 Note that in the context of this library both rooms and zones are collectively called _groups_:
@@ -150,14 +169,8 @@ lights.values().forEach(Light::turnOn);
 ### Caching
 
 By default this library always queries the Bridge every time you query the state of a light, a room, or a sensor.
-When querying the states of several items in quick succession, it is better to use caching. You can turn it on
-by calling the `setCaching(true)` method of the `Hue` object. Subsequent `getState()` calls well *not* trigger a
-query to the Bridge. Instead they will return the state that was current when caching was toggled on, or the last time
-that the `refresh()` method of the `Hue` object was called. Toggling caching off by calling `setCaching(false)`
-will direct subsequent state queries to the Bridge again. Caching is off by default. When toggling caching on/off
-there is no need to get the `Light`, `Room` or `Sensor` from the `Hue` object again: you can keep using the same
-object reference all the time. Objects that return a cached state will accept and execute state changes (calls to
-the `setState` method) just fine, but they will *not* update their cached state with those calls.
+When querying the states of several items in quick succession, it would be better to use caching. Please monitor this
+space for instructions once it has been reimplemented for version 3.x.x.
 
 ### Switches
 
