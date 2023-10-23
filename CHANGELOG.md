@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 * Updated dependencies, most importantly okhttp-eventsource from 2.x.x to 4.x.x.
 
+### Added
+
+* `Hue#getBridgeIp()` method that returns the technical ID of the Bridge.
+* Made the `Color(float,float,float)` constructor public, no need to use the static `Color.of(float,float,float)` method
+  anymore if you prefer not to.
+
 3.0.0-beta-2
 ------------
 
