@@ -20,7 +20,18 @@ public final class Color {
         (color & 0xFF) / 255f);
   }
 
-  private Color(final float red, final float green, final float blue) {
+  /**
+   * Creates a {@code Color} object with the specified red, green, and blue parts.
+   * Same as {@link Color#of(float, float, float)}.
+   *
+   * @param red   A float number from 0 to 1 inclusive
+   * @param green A float number from 0 to 1 inclusive
+   * @param blue  A float number from 0 to 1 inclusive
+   * @return A {@code Color} object
+   * @throws IllegalArgumentException if the values are out of range
+   * @since 3.0.0
+   */
+  public Color(final float red, final float green, final float blue) {
     if (Stream.of(red, green, blue).anyMatch(value -> !MathUtil.isInRange(value, 0f, 1f))) {
       throw new IllegalArgumentException("Color value out of range");
     }
@@ -43,6 +54,7 @@ public final class Color {
 
   /**
    * Creates a {@code Color} object with the specified red, green, and blue parts.
+   * Same as {@link Color#Color(float, float, float)}.
    *
    * @param red   A float number from 0 to 1 inclusive
    * @param green A float number from 0 to 1 inclusive

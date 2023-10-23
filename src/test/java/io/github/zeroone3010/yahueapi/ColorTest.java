@@ -147,6 +147,9 @@ class ColorTest {
       assertEquals(red, color.getRed());
       assertEquals(green, color.getGreen());
       assertEquals(blue, color.getBlue());
+
+      final Color colorByConstructor = new Color(red, green, blue);
+      assertEquals(color, colorByConstructor);
     }
 
     @ParameterizedTest
