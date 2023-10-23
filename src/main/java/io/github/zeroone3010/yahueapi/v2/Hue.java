@@ -10,6 +10,7 @@ import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
 import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.SecureJsonFactory;
 import io.github.zeroone3010.yahueapi.TrustEverythingManager;
+import io.github.zeroone3010.yahueapi.v2.domain.BridgeResource;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
 import io.github.zeroone3010.yahueapi.v2.domain.GroupResource;
@@ -73,6 +74,7 @@ public class Hue {
   private Map<UUID, TemperatureSensor> temperatureSensors;
   private final String bridgeIp;
   private final HueBridgeProtocol protocol;
+  private String bridgeId;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
@@ -177,6 +179,13 @@ public class Hue {
         .map(r -> (GroupResource) r)
         .map(this::buildGroup)
         .collect(toMap(GroupImpl::getId, group -> group));
+
+    bridgeId = allResources.values().stream()
+        .filter(r -> r instanceof BridgeResource)
+        .map(r -> (BridgeResource) r)
+        .map(bridge -> bridge.getBridgeId())
+        .findFirst()
+        .orElse(null);
   }
 
   URLConnection getUrlConnection(final String path) {
@@ -324,6 +333,16 @@ public class Hue {
    */
   public Optional<Group> getZoneByName(final String zoneName) {
     return getZones().values().stream().filter(group -> Objects.equals(group.getName(), zoneName)).findFirst();
+  }
+
+  /**
+   * Returns the technical ID of the Bridge.
+   *
+   * @return A String such as "00173321ae25bae8"
+   * @since 3.0.0
+   */
+  public String getBridgeId() {
+    return bridgeId;
   }
 
   public HueEventSource subscribeToEvents(final HueEventListener eventListener) {

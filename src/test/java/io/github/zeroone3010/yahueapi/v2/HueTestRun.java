@@ -16,6 +16,8 @@ public class HueTestRun {
 
     final Hue hue = new Hue(ip, apiKey);
 
+    System.out.println("Bridge ID: " + hue.getBridgeId());
+
     System.out.println("\nLights:");
     hue.getLights().values().stream()
         .sorted(Comparator.comparing(Light::getName))
