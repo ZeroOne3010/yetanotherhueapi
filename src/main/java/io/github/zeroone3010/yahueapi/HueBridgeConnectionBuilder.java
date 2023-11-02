@@ -3,6 +3,7 @@ package io.github.zeroone3010.yahueapi;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.domain.ApiInitializationStatus;
+import io.github.zeroone3010.yahueapi.v2.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+
 /**
  * Use this class to initialize a connection with your Bridge once you know the IP address of the Bridge.
  */
@@ -24,9 +26,11 @@ public class HueBridgeConnectionBuilder {
 
   private static final int MAX_TRIES = 30;
   private final String urlString;
+  private final String bridgeIp;
 
   public HueBridgeConnectionBuilder(final String bridgeIp) {
     this.urlString = "https://" + bridgeIp;
+    this.bridgeIp = bridgeIp;
   }
 
   /**
@@ -39,8 +43,8 @@ public class HueBridgeConnectionBuilder {
   public CompletableFuture<Boolean> isHueBridgeEndpoint() {
     final Supplier<Boolean> isBridgeSupplier = () -> {
       try {
-        URL url = new URL(urlString + "/api/config");
-        HttpsURLConnection connection = TrustEverythingManager.createAllTrustedConnection(url);
+        final URL url = new URL(urlString + "/api/config");
+        final HttpsURLConnection connection = HttpUtil.getAnonymousUrlConnection(url);
         final int responseCode = connection.getResponseCode();
         return HttpURLConnection.HTTP_OK == responseCode;
       } catch (final IOException e) {

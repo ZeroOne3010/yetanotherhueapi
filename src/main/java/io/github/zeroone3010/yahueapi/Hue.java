@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static io.github.zeroone3010.yahueapi.HueBridgeProtocol.UNVERIFIED_HTTPS;
 import static io.github.zeroone3010.yahueapi.RoomFactory.ALL_LIGHTS_GROUP_ID;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
@@ -60,7 +59,6 @@ public final class Hue {
 
   /**
    * The basic constructor for initializing the Hue Bridge connection for this library.
-   * Sets up an encrypted but unverified HTTPS connection -- see {@link HueBridgeProtocol#UNVERIFIED_HTTPS}.
    * Use the {@link #hueBridgeConnectionBuilder(String)} method instead if you do not have an API key yet.
    *
    * @param bridgeIp The IP address of the Hue Bridge.
@@ -68,10 +66,9 @@ public final class Hue {
    * @since 1.0.0
    */
   public Hue(final String bridgeIp, final String apiKey) {
-    final HueBridgeProtocol protocol = UNVERIFIED_HTTPS;
-    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
+    this.uri = "https://" + bridgeIp + "/api/" + apiKey + "/";
 
-    SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp, protocol);
+    SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp);
     objectMapper = secureJsonFactory.getCodec();
 
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -114,35 +111,6 @@ public final class Hue {
    */
   public boolean isCaching() {
     return caching;
-  }
-
-  /**
-   * A basic constructor for initializing the Hue Bridge connection for this library.
-   * Use the {@link #hueBridgeConnectionBuilder(String)} method if you do not have an API key yet.
-   *
-   * @param protocol The desired protocol for the Bridge connection. Older Bridges require HTTP or UNVERIFIED_HTTPS,
-   *                 as the certificate that the Bridge uses cannot be verified. Defaults to UNVERIFIED_HTTPS
-   *                 since version 2.4.0 when using the other constructor (used to default to HTTP before that),
-   *                 for Philips will eventually deprecate the plain HTTP connection altogether.
-   * @param bridgeIp The IP address of the Hue Bridge.
-   * @param apiKey   The API key of your application.
-   * @since 1.0.0
-   */
-  public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
-    this.uri = protocol.getProtocol() + "://" + bridgeIp + "/api/" + apiKey + "/";
-
-    if (protocol == HueBridgeProtocol.HTTPS || protocol == HueBridgeProtocol.UNVERIFIED_HTTPS) {
-      SecureJsonFactory secureJsonFactory = new SecureJsonFactory(bridgeIp, protocol);
-      objectMapper = secureJsonFactory.getCodec();
-    } else {
-      objectMapper = new ObjectMapper();
-    }
-
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    objectMapper.addHandler(new UnauthorizedUserHandler());
-    sensorFactory = new SensorFactory(this, objectMapper);
-    roomFactory = new RoomFactory(this, objectMapper, uri);
-    lightFactory = new LightFactory(this, objectMapper);
   }
 
   private void doInitialDataLoadIfRequired() {

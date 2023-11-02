@@ -1,11 +1,11 @@
 package io.github.zeroone3010.yahueapi;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
@@ -27,12 +27,7 @@ final class HttpUtil {
   private static String getString(final URL baseUrl, final String path, final String body, final String method) {
     try {
       URL url = new URL(baseUrl.toString() + path);
-      HttpURLConnection connection;
-      if (url.getProtocol().equals("https")) {
-        connection = TrustEverythingManager.createAllTrustedConnection(url);
-      } else {
-        connection = (HttpURLConnection) url.openConnection();
-      }
+      HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
       connection.setDoOutput(true);
       connection.setRequestMethod(method);

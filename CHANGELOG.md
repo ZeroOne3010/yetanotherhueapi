@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 3.0.0-RC (unpublished)
 ----------------------
 
+### Removed
+
+* Support for HTTP. Only HTTPS is supported anymore. Should work both with the updated Bridges that have a
+  Signify-signed certificate, as well as the older Bridges that have a self-signed certificate. With this change
+  certain constructors have been removed. The same ones should still be present without the protocol, so the migration
+  guide is to just remove the offending parameter.
+
 ### Changed
 
 * Updated dependencies, most importantly okhttp-eventsource from 2.x.x to 4.x.x.

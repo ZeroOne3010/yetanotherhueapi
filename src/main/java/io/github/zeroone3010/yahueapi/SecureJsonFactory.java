@@ -22,23 +22,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 
 public class SecureJsonFactory extends MappingJsonFactory {
   private final HostnameVerifier hostnameVerifier;
   private final SSLSocketFactory socketFactory;
   private X509TrustManager trustManager;
 
-  public SecureJsonFactory(String bridgeIp, HueBridgeProtocol protocol) {
+  public SecureJsonFactory(String bridgeIp) {
     try {
-      if (protocol == HueBridgeProtocol.HTTPS) {
-        this.socketFactory = createHueSSLContext().getSocketFactory();
-      } else if (protocol == HueBridgeProtocol.UNVERIFIED_HTTPS) {
-        this.socketFactory = TrustEverythingManager.createSSLSocketFactory();
-        this.trustManager = TrustEverythingManager.getTrustEverythingTrustManager();
-      } else {
-        throw new IllegalStateException("Unsupported protocol");
-      }
+      this.socketFactory = createHueSSLContext().getSocketFactory();
 
       this.hostnameVerifier = (hostname, session) -> {
         if (bridgeIp == null) {
@@ -107,8 +99,8 @@ public class SecureJsonFactory extends MappingJsonFactory {
     trustManagerFactory.init(keystore);
 
     X509TrustManager defaultTrustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
-    this.trustManager = new SavingTrustManager(defaultTrustManager);
-    context.init(null, new TrustManager[] {trustManager}, null);
+    this.trustManager = new SelfSignedHueBridgeCertificateAcceptingTrustManager(defaultTrustManager);
+    context.init(null, new TrustManager[]{trustManager}, null);
     return context;
   }
 
@@ -123,29 +115,4 @@ public class SecureJsonFactory extends MappingJsonFactory {
   public HostnameVerifier getHostnameVerifier() {
     return hostnameVerifier;
   }
-
-  /**
-   * A trust manager that disables client
-   */
-  private static class SavingTrustManager implements X509TrustManager {
-    private final X509TrustManager trustManager;
-
-    private SavingTrustManager(X509TrustManager trustManager) {
-      this.trustManager = trustManager;
-    }
-
-    public X509Certificate[] getAcceptedIssuers() {
-      return new X509Certificate[0];
-    }
-
-    public void checkClientTrusted(X509Certificate[] chain, String authType) {
-      throw new UnsupportedOperationException();
-    }
-
-    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-      trustManager.checkServerTrusted(chain, authType);
-    }
-
-  }
-
 }

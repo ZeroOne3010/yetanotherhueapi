@@ -7,9 +7,7 @@ import com.launchdarkly.eventsource.EventSource;
 import com.launchdarkly.eventsource.background.BackgroundEventSource;
 import io.github.zeroone3010.yahueapi.HueApiException;
 import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
-import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.SecureJsonFactory;
-import io.github.zeroone3010.yahueapi.TrustEverythingManager;
 import io.github.zeroone3010.yahueapi.v2.domain.BridgeResource;
 import io.github.zeroone3010.yahueapi.v2.domain.ButtonResource;
 import io.github.zeroone3010.yahueapi.v2.domain.DeviceResource;
@@ -73,22 +71,16 @@ public class Hue {
   private Map<UUID, MotionSensor> motionSensors;
   private Map<UUID, TemperatureSensor> temperatureSensors;
   private final String bridgeIp;
-  private final HueBridgeProtocol protocol;
   private String bridgeId;
 
   /**
    * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
-   * Sets up an encrypted but unverified HTTPS connection,
-   * as the Bridge uses a self-signed certificate that cannot be verified.
    *
-   * @param protocol The desired protocol for the Bridge connection. UNVERIFIED_HTTPS is only recommended if
-   *                 the certificate that the Bridge uses cannot be verified.
    * @param bridgeIp The IP address of the Hue Bridge.
    * @param apiKey   The API key of your application.
    * @since 3.0.0
    */
-  public Hue(final HueBridgeProtocol protocol, final String bridgeIp, final String apiKey) {
-    this.protocol = protocol;
+  public Hue(final String bridgeIp, final String apiKey) {
     this.bridgeIp = bridgeIp;
     try {
       this.resourceUrl = new URL("https://" + this.bridgeIp + "/clip/v2/resource");
@@ -102,7 +94,7 @@ public class Hue {
     }
 
     this.apiKey = apiKey;
-    this.objectMapper = HttpUtil.buildObjectMapper(this.bridgeIp, this.protocol);
+    this.objectMapper = HttpUtil.buildObjectMapper(this.bridgeIp);
 
     lightFactory = new LightFactory(this, objectMapper);
     switchFactory = new SwitchFactory(this, objectMapper);
@@ -110,19 +102,6 @@ public class Hue {
     motionSensorFactory = new MotionSensorFactory(this, objectMapper);
     temperatureSensorFactory = new TemperatureSensorFactory(this, objectMapper);
     refresh();
-  }
-
-  /**
-   * The basic constructor for initializing the Hue Bridge APIv2 connection for this library.
-   * Sets up an encrypted but unverified HTTPS connection,
-   * as the Bridge uses a self-signed certificate that cannot be verified.
-   *
-   * @param bridgeIp The IP address of the Hue Bridge.
-   * @param apiKey   The API key of your application.
-   * @since 3.0.0
-   */
-  public Hue(final String bridgeIp, final String apiKey) {
-    this(HueBridgeProtocol.UNVERIFIED_HTTPS, bridgeIp, apiKey);
   }
 
   URL getResourceUrl() {
@@ -197,18 +176,12 @@ public class Hue {
     }
   }
 
-  URLConnection getUrlConnection(final URL url) {
+  HttpsURLConnection getUrlConnection(final URL url) {
     try {
       final HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-      if (this.protocol == HueBridgeProtocol.UNVERIFIED_HTTPS
-          && objectMapper.getFactory() instanceof SecureJsonFactory) {
-
-        final SecureJsonFactory factory = (SecureJsonFactory) objectMapper.getFactory();
-        urlConnection.setSSLSocketFactory(factory.getSocketFactory());
-        urlConnection.setHostnameVerifier(factory.getHostnameVerifier());
-      }
-
+      final SecureJsonFactory factory = (SecureJsonFactory) objectMapper.getFactory();
+      urlConnection.setSSLSocketFactory(factory.getSocketFactory());
+      urlConnection.setHostnameVerifier(factory.getHostnameVerifier());
       urlConnection.setRequestProperty(HUE_APPLICATION_KEY_HEADER, apiKey);
       return urlConnection;
     } catch (IOException e) {
@@ -351,20 +324,15 @@ public class Hue {
       X509TrustManager trustManager;
 
       JsonFactory jsonFactory = objectMapper.getFactory();
-      if (jsonFactory instanceof SecureJsonFactory) {
-        SecureJsonFactory secureJsonFactory = (SecureJsonFactory) jsonFactory;
-        factory = secureJsonFactory.getSocketFactory();
-        trustManager = secureJsonFactory.getTrustManager();
-      } else {
-        factory = TrustEverythingManager.createSSLSocketFactory();
-        trustManager = TrustEverythingManager.getTrustEverythingTrustManager();
-      }
+      SecureJsonFactory secureJsonFactory = (SecureJsonFactory) jsonFactory;
+      factory = secureJsonFactory.getSocketFactory();
+      trustManager = secureJsonFactory.getTrustManager();
 
       final OkHttpClient client = new OkHttpClient.Builder()
           .sslSocketFactory(factory, trustManager)
           .connectTimeout(Duration.ofMinutes(EVENTS_CONNECTION_TIMEOUT_MINUTES))
           .readTimeout(EVENTS_READ_TIMEOUT)
-          .hostnameVerifier(TrustEverythingManager.createHostnameVerifier(null))
+          .hostnameVerifier(secureJsonFactory.getHostnameVerifier())
           .build();
 
       final BasicHueEventHandler eventHandler = new BasicHueEventHandler(this, eventListener);

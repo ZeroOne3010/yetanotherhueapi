@@ -3,7 +3,6 @@ package io.github.zeroone3010.yahueapi.discovery;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
-import io.github.zeroone3010.yahueapi.HueBridgeProtocol;
 import io.github.zeroone3010.yahueapi.SecureJsonFactory;
 import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
 import org.slf4j.Logger;
@@ -76,12 +75,6 @@ public final class HueBridgeDiscoveryService {
    * of this method (List of HueBridge objects) can actually be discarded completely.
    * </p>
    *
-   * <p>
-   * This is different from the {@link #discoverBridges(Consumer bridgeDiscoverer, HueBridgeProtocol, DiscoveryMethod...)}
-   * method in that the default protocol used for Bridge discovery is set, and the default value is {@link HueBridgeProtocol#UNVERIFIED_HTTPS}.
-   * This allows discovering older Bridges that are still using self-signed certificates.
-   * </p>
-   *
    * @param bridgeDiscoverer A Consumer that is called whenever a new Bridge is encountered during
    *                         the discovery process. Even if multiple discovery methods are used the Consumer will only
    *                         be called once per Bridge, even if all the different methods would actually discover
@@ -91,49 +84,13 @@ public final class HueBridgeDiscoveryService {
    *                         try to use the NUPNP method in vain, but instead use just the MDNS method only.
    * @return A Future that is completed once the discovery processes have been finished.
    * As a result, the Future will hold a list of any and all Hue Bridges that were found,
-   * ready to be given to the {@link io.github.zeroone3010.yahueapi.Hue#hueBridgeConnectionBuilder(String)}
+   * ready to be given to the {@link io.github.zeroone3010.yahueapi.v2.Hue#hueBridgeConnectionBuilder(String)}
    * method for establishing an authorized connection with the Bridge. If the {@code bridgeDiscoverer} Consumer is
    * implemented, this result can be safely ignored.
    */
   public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
                                                  final DiscoveryMethod... discoveryMethods) {
-    return discoverBridges(bridgeDiscoverer, HueBridgeProtocol.UNVERIFIED_HTTPS, discoveryMethods);
-  }
-
-  /**
-   * <p>Discover the Hue Bridges in the current network, using the given discovery methods. Giving no discovery methods
-   * means that all available methods will be used.</p>
-   *
-   * <p>As some discovery methods may take a while (let's say 5-10 seconds) to complete, this method returns a
-   * {@link java.util.concurrent.Future} once the discovery process is completed and no Bridges can be found anymore.
-   * As users may rightly get impatient while waiting, this method also takes a {@code Consumer<HueBridge>} as
-   * an argument. This Consumer is called whenever a new Bridge is discovered at any time during the discovery process.
-   * </p>
-   *
-   * <p>
-   * The Consumer can be used, for example, to populate a list of Bridges for the end-user to choose from, while the
-   * actual discovery process still continues in the background. If the Consumer is implemented properly, the result
-   * of this method (List of HueBridge objects) can actually be discarded completely.
-   * </p>
-   *
-   * @param bridgeDiscoverer A Consumer that is called whenever a new Bridge is encountered during
-   *                         the discovery process. Even if multiple discovery methods are used the Consumer will only
-   *                         be called once per Bridge, even if all the different methods would actually discover
-   *                         the same Bridge independently.
-   * @param protocol The protocol used for fetching the configuration of found bridges
-   * @param discoveryMethods With this argument one can limit the methods being used. For example, if it is known
-   *                         that this local network has no access to the outside internet, then one should not
-   *                         try to use the NUPNP method in vain, but instead use just the MDNS method only.
-   * @return A Future that is completed once the discovery processes have been finished.
-   * As a result, the Future will hold a list of any and all Hue Bridges that were found,
-   * ready to be given to the {@link io.github.zeroone3010.yahueapi.Hue#hueBridgeConnectionBuilder(String)}
-   * method for establishing an authorized connection with the Bridge. If the {@code bridgeDiscoverer} Consumer is
-   * implemented, this result can be safely ignored.
-   */
-  public Future<List<HueBridge>> discoverBridges(final Consumer<HueBridge> bridgeDiscoverer,
-                                                 final HueBridgeProtocol protocol,
-                                                 final DiscoveryMethod... discoveryMethods) {
-    SecureJsonFactory factory = new SecureJsonFactory(null, protocol);
+    SecureJsonFactory factory = new SecureJsonFactory(null);
     ObjectMapper objectMapper = factory.getCodec();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
