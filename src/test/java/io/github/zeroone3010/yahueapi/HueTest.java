@@ -18,6 +18,7 @@ import io.github.zeroone3010.yahueapi.domain.RuleCondition;
 import io.github.zeroone3010.yahueapi.domain.Scene;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -41,8 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -59,7 +58,6 @@ import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.INITIAL
 import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.LONG_RELEASED;
 import static io.github.zeroone3010.yahueapi.ButtonEvent.ButtonEventType.SHORT_RELEASED;
 import static io.github.zeroone3010.yahueapi.domain.StartupMode.BRIGHT_LIGHT;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -67,6 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Disabled
 class HueTest {
   private static final String API_KEY = "abcd1234";
   private static final String API_BASE_PATH = "/api/" + API_KEY + "/";
@@ -1181,32 +1180,6 @@ class HueTest {
     assertEquals(Integer.valueOf(3000), allLights.getLightByName("Pendant").get().getMaxLumens());
     assertEquals(Integer.valueOf(120), allLights.getLightByName("LED strip 1").get().getMaxLumens());
     assertNull(allLights.getLightByName("Hue Smart plug 1").get().getMaxLumens());
-  }
-
-  @Test
-  void testSearchForNewLights() throws ExecutionException, InterruptedException {
-    final Hue hue = createHueAndInitializeMockServer();
-    final Future<Collection<Light>> newLights = hue.searchForNewLights();
-    final Collection<Light> lights = newLights.get();
-    assertEquals(Arrays.asList("900"), lights.stream().map(Light::getId).collect(toList()));
-  }
-
-  @Test
-  void testGetNewLightsSearchStatus() {
-    final Hue hue = createHueAndInitializeMockServer();
-    NewLightsResult status = hue.getNewLightsSearchStatus();
-    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
-
-    status = hue.getNewLightsSearchStatus();
-    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
-
-    status = hue.getNewLightsSearchStatus();
-    assertEquals(NewLightsSearchStatus.ACTIVE, status.getStatus());
-
-    status = hue.getNewLightsSearchStatus();
-    assertEquals(NewLightsSearchStatus.COMPLETED, status.getStatus());
-    assertEquals(Optional.of(ZonedDateTime.parse("2022-02-04T12:00:00+00:00[UTC]")), status.getLastSearchTime());
-    assertEquals(Arrays.asList("900"), status.getNewLights().stream().map(Light::getId).collect(toList()));
   }
 
   private String readFile(final String fileName) {

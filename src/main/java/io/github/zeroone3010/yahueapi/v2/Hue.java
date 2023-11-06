@@ -1,6 +1,7 @@
 package io.github.zeroone3010.yahueapi.v2;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.launchdarkly.eventsource.ConnectStrategy;
 import com.launchdarkly.eventsource.EventSource;
@@ -32,12 +33,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static io.github.zeroone3010.yahueapi.v2.domain.ResourceType.MOTION;
@@ -48,7 +56,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class Hue {
   private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
-
+  private static final int EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS = 50;
   public static final String HUE_APPLICATION_KEY_HEADER = "hue-application-key";
   public static final long EVENTS_CONNECTION_TIMEOUT_MINUTES = 1L;
   public static final Duration EVENTS_READ_TIMEOUT = Duration.ofMillis(Integer.MAX_VALUE);
@@ -352,6 +360,95 @@ public class Hue {
       throw new HueApiException(e);
     }
 
+  }
+
+
+  /**
+   * Orders the Bridge to search for new lights. The operation takes some 40-60 seconds -- longer, if there are many
+   * new lights found. Returns a {@code Future} that is resolved with a collection of new lights found, if any.
+   *
+   * @return A {@code Future} that is resolved in some 40-60 seconds with the new lights that have been found, if any.
+   */
+  public Future<Collection<Light>> searchForNewLights() {
+    try {
+      final String searchStartResult = HttpUtil.post(new URL("https://" + bridgeIp + "/api/" + apiKey + "/lights"), "", null);
+      logger.info("Starting to search for new lights: " + searchStartResult);
+      final Supplier<Collection<Light>> newLightsSupplier = () -> {
+        NewLightsResult newLightsResult = getNewLightsSearchStatus();
+        int seconds = EXPECTED_NEW_LIGHTS_SEARCH_TIME_IN_SECONDS;
+        while (newLightsResult.getStatus() != NewLightsSearchStatus.COMPLETED) {
+          try {
+            TimeUnit.SECONDS.sleep(1L);
+            logger.info("Searching for new lights. Approximately " + (seconds--) + " seconds left.");
+            newLightsResult = getNewLightsSearchStatus();
+          } catch (final InterruptedException e) {
+            throw new HueApiException("Search for new lights was interrupted unexpectedly");
+          }
+        }
+        return newLightsResult.getNewLights();
+      };
+      return CompletableFuture.supplyAsync(newLightsSupplier);
+    } catch (final Exception e) {
+      throw new HueApiException("Failed to search for new lights", e);
+    }
+  }
+
+  /**
+   * Returns the status of new lights search -- see {@link #searchForNewLights()}. Note that
+   * you do not need to call this method manually when you are using the {@link #searchForNewLights()}
+   * method: internally it checks whether the search is finished by calling this exact method.
+   * This method is provided as public for convenience in case you need to return to the results
+   * later or need to find out about searches performed by some other means than this library.
+   *
+   * @return Status of the last search for new lights, and the new lights, if any.
+   * @see #searchForNewLights()
+   */
+  public NewLightsResult getNewLightsSearchStatus() {
+
+    final JsonNode result;
+    try {
+      result = objectMapper.readTree(new URL("https://" + bridgeIp + "/api/" + apiKey + "/lights/new"));
+    } catch (final IOException e) {
+      throw new HueApiException(e);
+    }
+    final String rawLastScan = result.get("lastscan").textValue();
+    final NewLightsSearchStatus status;
+    final ZonedDateTime lastScanTime;
+    final Collection<Light> newLights = new ArrayList<>();
+    switch (rawLastScan) {
+
+      case "active":
+        status = NewLightsSearchStatus.ACTIVE;
+        lastScanTime = null;
+        break;
+
+      case "none":
+        status = NewLightsSearchStatus.NONE;
+        lastScanTime = null;
+        break;
+
+      default:
+        status = NewLightsSearchStatus.COMPLETED;
+        lastScanTime = TimeUtil.stringTimestampToZonedDateTime(rawLastScan);
+        refresh();
+        final Iterator<String> fieldNameIterator = result.fieldNames();
+        while (fieldNameIterator.hasNext()) {
+          final String lightIdField = fieldNameIterator.next();
+          if ("lastscan".equals(lightIdField)) {
+            continue;
+          }
+          final Optional<Light> light = getLights().values().stream()
+              .filter(aLight -> Objects.equals(String.format("/lights/%s", lightIdField), ((LightImpl) aLight).getIdV1()))
+              .findFirst();
+          if (light.isPresent()) {
+            newLights.add(light.get());
+          } else {
+            logger.warn("New light {} not found. Weird.", lightIdField);
+          }
+        }
+        break;
+    }
+    return new NewLightsResult(newLights, status, lastScanTime);
   }
 
   /**

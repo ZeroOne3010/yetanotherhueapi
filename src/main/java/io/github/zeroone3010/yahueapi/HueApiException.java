@@ -9,7 +9,7 @@ public final class HueApiException extends RuntimeException {
     super(message);
   }
 
-  HueApiException(final String message, final Throwable cause) {
+  public HueApiException(final String message, final Throwable cause) {
     super(message, cause);
   }
 }

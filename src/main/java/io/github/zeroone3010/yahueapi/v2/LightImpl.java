@@ -22,6 +22,7 @@ public class LightImpl implements Light {
   private static final Logger logger = LoggerFactory.getLogger("io.github.zeroone3010.yahueapi");
 
   private final UUID id;
+  private final String idV1;
   private final UUID ownerId;
   private final String name;
   private final Supplier<LightResource> stateProvider;
@@ -37,11 +38,16 @@ public class LightImpl implements Light {
     this.stateProvider = stateProvider;
     this.stateSetter = stateSetter;
     this.ownerId = light.getOwner().getResourceId();
+    this.idV1 = light.getIdV1();
   }
 
   @Override
   public UUID getId() {
     return id;
+  }
+
+  public String getIdV1() {
+    return idV1;
   }
 
   @Override

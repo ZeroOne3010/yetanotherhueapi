@@ -212,9 +212,9 @@ resolved with the found lights (if any) once the scan is finished. The scan seem
 
 [//]: # (throws-InterruptedException|java.util.concurrent.ExecutionException)
 ```java
-io.github.zeroone3010.yahueapi.Hue hue = new io.github.zeroone3010.yahueapi.Hue("bridge IP","API key");
-Future<Collection<io.github.zeroone3010.yahueapi.Light>> lightSearch = hue.searchForNewLights();
-Collection<io.github.zeroone3010.yahueapi.Light> foundLights = lightSearch.get();
+Hue hue = new Hue("bridge IP","API key");
+Future<Collection<Light>> lightSearch = hue.searchForNewLights();
+Collection<Light> foundLights = lightSearch.get();
 System.out.println("Lights found: " + foundLights);
 
 // If new lights have been found, you can add them into a room:

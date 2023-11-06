@@ -1,4 +1,4 @@
-package io.github.zeroone3010.yahueapi;
+package io.github.zeroone3010.yahueapi.v2;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
