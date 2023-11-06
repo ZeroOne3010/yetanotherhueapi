@@ -11,8 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Removed
 
+* The entire old `io.github.zeroone3010.yahueapi.Hue` class. Use `io.github.zeroone3010.yahueapi.v2.Hue` instead.
+  Not every method might yet be available with it yet, but most, anyway. With this, also the related classes, returned
+  by the various method there, were removed; use the ones used by the new `Hue` class instead.
 * Support for HTTP. Only HTTPS is supported anymore. Should work both with the updated Bridges that have a
-  Signify-signed certificate, as well as the older Bridges that have a self-signed certificate. With this change
+  Signify-signed certificate and the older Bridges that have a self-signed certificate. With this change
   certain constructors have been removed. The same ones should still be present without the protocol, so the migration
   guide is to just remove the offending parameter.
 
