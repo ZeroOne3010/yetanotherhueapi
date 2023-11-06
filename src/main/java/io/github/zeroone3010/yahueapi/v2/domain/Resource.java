@@ -3,7 +3,6 @@ package io.github.zeroone3010.yahueapi.v2.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 import java.util.UUID;
 

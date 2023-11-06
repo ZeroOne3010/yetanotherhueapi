@@ -1,4 +1,4 @@
-package io.github.zeroone3010.yahueapi.domain;
+package io.github.zeroone3010.yahueapi.v2.domain;
 
 public class ApiInitializationStatus {
   private ApiInitializationError error;

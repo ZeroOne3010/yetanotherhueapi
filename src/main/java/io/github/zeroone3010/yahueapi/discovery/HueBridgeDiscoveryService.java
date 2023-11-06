@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.zeroone3010.yahueapi.HueBridge;
 import io.github.zeroone3010.yahueapi.SecureJsonFactory;
-import io.github.zeroone3010.yahueapi.domain.BridgeConfig;
+import io.github.zeroone3010.yahueapi.v2.domain.BridgeConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

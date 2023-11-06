@@ -2,20 +2,18 @@ package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Metadata {
-
-  @JsonProperty("archetype")
-  private String archetype;
-
+public class BridgeConfig {
   @JsonProperty("name")
   private String name;
-
-  public String getArchetype() {
-    return archetype;
-  }
+  @JsonProperty("mac")
+  private String mac;
 
   public String getName() {
     return name;
+  }
+
+  public String getMac() {
+    return mac;
   }
 
   @Override

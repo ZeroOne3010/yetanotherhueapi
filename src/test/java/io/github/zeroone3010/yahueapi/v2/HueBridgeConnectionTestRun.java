@@ -1,4 +1,6 @@
-package io.github.zeroone3010.yahueapi;
+package io.github.zeroone3010.yahueapi.v2;
+
+import io.github.zeroone3010.yahueapi.HueBridgeConnectionBuilder;
 
 import java.util.concurrent.CompletableFuture;
 

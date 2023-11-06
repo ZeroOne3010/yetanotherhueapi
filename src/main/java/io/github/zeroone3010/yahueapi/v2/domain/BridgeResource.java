@@ -2,7 +2,6 @@ package io.github.zeroone3010.yahueapi.v2.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.github.zeroone3010.yahueapi.domain.JsonStringUtil;
 
 @JsonTypeName("bridge")
 public class BridgeResource extends Resource {

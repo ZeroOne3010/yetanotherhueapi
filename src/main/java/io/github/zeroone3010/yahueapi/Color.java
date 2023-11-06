@@ -27,7 +27,6 @@ public final class Color {
    * @param red   A float number from 0 to 1 inclusive
    * @param green A float number from 0 to 1 inclusive
    * @param blue  A float number from 0 to 1 inclusive
-   * @return A {@code Color} object
    * @throws IllegalArgumentException if the values are out of range
    * @since 3.0.0
    */
